@@ -1,0 +1,17 @@
+E:\Facultate\Remi\TestChat\TestChat\bin\Debug\TestChat.exe.config
+E:\Facultate\Remi\TestChat\TestChat\obj\Debug\MainWindow.baml
+E:\Facultate\Remi\TestChat\TestChat\obj\Debug\MainWindow.g.cs
+E:\Facultate\Remi\TestChat\TestChat\obj\Debug\App.g.cs
+E:\Facultate\Remi\TestChat\TestChat\obj\Debug\TestChat_MarkupCompile.cache
+E:\Facultate\Remi\TestChat\TestChat\obj\Debug\TestChat.g.resources
+E:\Facultate\Remi\TestChat\TestChat\obj\Debug\TestChat.Properties.Resources.resources
+E:\Facultate\Remi\TestChat\TestChat\obj\Debug\TestChat.csproj.GenerateResource.Cache
+E:\Facultate\Remi\TestChat\TestChat\bin\Debug\TestChat.exe
+E:\Facultate\Remi\TestChat\TestChat\bin\Debug\TestChat.pdb
+E:\Facultate\Remi\TestChat\TestChat\obj\Debug\TestChat.exe
+E:\Facultate\Remi\TestChat\TestChat\obj\Debug\TestChat.pdb
+E:\Facultate\Remi\TestChat\TestChat\obj\Debug\TestChat.csprojResolveAssemblyReference.cache
+E:\Facultate\Remi\TestChat\TestChat\obj\Debug\Game.baml
+E:\Facultate\Remi\TestChat\TestChat\obj\Debug\Game.g.cs
+E:\Facultate\Remi\TestChat\TestChat\obj\Debug\Login.baml
+E:\Facultate\Remi\TestChat\TestChat\obj\Debug\Login.g.cs

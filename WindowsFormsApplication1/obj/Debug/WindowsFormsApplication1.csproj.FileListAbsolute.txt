@@ -1,0 +1,12 @@
+E:\Facultate\Remi\TestChat\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe.config
+E:\Facultate\Remi\TestChat\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe
+E:\Facultate\Remi\TestChat\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.pdb
+E:\Facultate\Remi\TestChat\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csprojResolveAssemblyReference.cache
+E:\Facultate\Remi\TestChat\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Form1.resources
+E:\Facultate\Remi\TestChat\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Properties.Resources.resources
+E:\Facultate\Remi\TestChat\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csproj.GenerateResource.Cache
+E:\Facultate\Remi\TestChat\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe
+E:\Facultate\Remi\TestChat\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.pdb
+E:\Facultate\Remi\TestChat\WindowsFormsApplication1\bin\Debug\Server.exe
+E:\Facultate\Remi\TestChat\WindowsFormsApplication1\bin\Debug\Server.pdb
+E:\Facultate\Remi\TestChat\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Form2.resources
