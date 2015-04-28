@@ -15,3 +15,6 @@ E:\Facultate\Remi\TestChat\TestChat\obj\Debug\Client.g.resources
 E:\Facultate\Remi\TestChat\TestChat\obj\Debug\Client.Properties.Resources.resources
 E:\Facultate\Remi\TestChat\TestChat\obj\Debug\Client.exe
 E:\Facultate\Remi\TestChat\TestChat\obj\Debug\Client.pdb
+E:\Facultate\ProiectParc\Remi\TestChat\bin\Debug\Client.exe.config
+E:\Facultate\ProiectParc\Remi\TestChat\obj\Debug\Client.exe
+E:\Facultate\ProiectParc\Remi\TestChat\obj\Debug\Client.pdb
