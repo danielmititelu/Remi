@@ -43,30 +43,6 @@ namespace TestChat {
             _reader.Close ();
         }
 
-        //public void Connect (string ip, int p) {
-        //    _tcpClient.Connect (ip, p);
-        //}
-        //public void SetServerStream () {
-        //    _serverStream=_tcpClient.GetStream ();
-        //}
-
-        //public void SetWriter () {
-        //    try {
-        //        _writer=new StreamWriter (_serverStream);
-        //    } catch (Exception) {
-
-        //    }
-        //}
-
-        //public void SetReader () {
-        //    try {
-        //        _reader=new StreamReader (_serverStream);
-        //    } catch (Exception) {
-
-        //    }
-
-        //}
-
         public string ReadLine () {
             try {
                 return _reader.ReadLine ();
