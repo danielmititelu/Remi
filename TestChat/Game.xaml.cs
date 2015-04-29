@@ -28,8 +28,8 @@ namespace TestChat {
         Image[] image=new Image[106];
         int[] selectedImages=null;
         int n=0;
-        int row =-1;
-
+        int row=-1;
+        Image temp_img;
 
         CroppedBitmap[] objImg=new CroppedBitmap[65];
 
@@ -50,7 +50,7 @@ namespace TestChat {
             String ip=ipAddress.Trim ();
             _client=new Client (ip);
             Thread gameThread=new Thread (new ThreadStart (getMessage));
-            gameThread.Name= "GetMessage";
+            gameThread.Name="GetMessage";
             gameThread.Start ();
             _client.WriteLine ("g:"+nickname);
         }
@@ -66,7 +66,7 @@ namespace TestChat {
                             this.Dispatcher.Invoke ((Action) (() => { received.AppendText (readData+"\n"); }));
                             break;
                         case "FORMATION":
-                            if (dataReceived[1]=="Pereche") {                            
+                            if (dataReceived[1]=="Pereche") {
                                 this.Dispatcher.Invoke ((Action) (() => { Formation (image[selectedImages[0]], image[selectedImages[1]], image[selectedImages[2]]); }));
                             } else if (dataReceived[1]=="Numaratoare") {
                                 this.Dispatcher.Invoke ((Action) (() => { Formation (image[selectedImages[0]], image[selectedImages[1]], image[selectedImages[2]]); }));
@@ -91,7 +91,7 @@ namespace TestChat {
         }
 
         private void Formation (Image image1, Image image2, Image image3) {
-            
+
             canvas.Children.Remove (image1);
             canvas.Children.Remove (image2);
             canvas.Children.Remove (image3);
@@ -110,7 +110,11 @@ namespace TestChat {
 
             removeImgListeners (image1);
             removeImgListeners (image2);
-            //removeImgListeners (image3);
+            removeImgListeners (image3);
+
+            etalonListener (image1);
+            etalonListener (image2);
+            etalonListener (image3);
         }
 
         private void send_KeyDown (object sender, KeyEventArgs e) {
@@ -131,12 +135,31 @@ namespace TestChat {
         }
         private void removeImgListeners (Image img) {
 
-            img.PreviewMouseDown-= myimg_MouseDown;
-            img.PreviewMouseMove-= myimg_MouseMove;
-            img.PreviewMouseUp-= myimg_MouseUp;
+            img.PreviewMouseDown-=myimg_MouseDown;
+            img.PreviewMouseMove-=myimg_MouseMove;
+            img.PreviewMouseUp-=myimg_MouseUp;
             //img.TextInput-= myimg_TextInput;
-            img.LostMouseCapture-= myimg_LostMouseCapture;
+            img.LostMouseCapture-=myimg_LostMouseCapture;
+        }
+        private void etalonListener (Image img) {
+            img.MouseUp+=etalon_MouseUp;
+        }
 
+        private void etalon_MouseUp (object sender, MouseButtonEventArgs e) {
+            if(temp_img !=null){
+                var element=(Image) sender;
+                int c=Grid.GetColumn (element);
+                int r=Grid.GetRow (element);
+
+                canvas.Children.Remove (temp_img);
+                etalon.Children.Add (temp_img);
+                Grid.SetRow (temp_img, r);
+                Grid.SetColumn (temp_img, c);
+                etalonListener (temp_img);
+                removeImgListeners (temp_img);
+                temp_img=null;
+            }
+           
         }
 
         private void myimg_LostMouseCapture (object sender, MouseEventArgs e) {
@@ -172,7 +195,22 @@ namespace TestChat {
             if (stack.IsMouseOver) {
                 canvas.Children.Remove (((Image) sender));
                 stack.Children.Add (((Image) sender));
-               // removeImgListeners (((Image) sender));
+                removeImgListeners (((Image) sender));
+            }
+            if (etalon.IsMouseOver) {
+                temp_img=((Image) sender);
+            }
+            if (formatie) {
+                for (int i=0; i<image.Length; i++) {
+                    if (((Image) sender).Equals (image[i])) {
+                        selectedImages[n]=i;
+                        n++;
+                        if (n==3) {
+                            formatie=false;
+                            _client.WriteLine ("FOR:"+selectedImages[0]+":"+selectedImages[1]+":"+selectedImages[2]);
+                        }
+                    }
+                }
             }
         }
 
@@ -194,31 +232,21 @@ namespace TestChat {
             canvasLeft=Canvas.GetLeft ((Image) sender);
             canvasTop=Canvas.GetTop ((Image) sender);
             ((Image) sender).CaptureMouse ();
-            if (formatie) {
-                for (int i=0; i<image.Length; i++) {
-                    if (((Image) sender).Equals (image[i])) {    
-                        selectedImages[n]=i;
-                        n++;
-                        if (n==3) {
-                            formatie=false;
-                            _client.WriteLine ("FOR:"+selectedImages[0]+":"+selectedImages[1]+":"+selectedImages[2]);
-                        }
-                    }
-                }
-            }
         }
 
         private void Button_Click (object sender, RoutedEventArgs e) {
             _client.WriteLine ("DRAW:Trage o piesa");
         }
+        //delete meeeeee
         int a;
+
         private void DrawCard (int i) {
             a++;
             Canvas.SetLeft (image[a], 0);
             Canvas.SetTop (image[a], 0);
             canvas.Children.Add (image[a]);
             addImgListeners (image[a]);
-          
+
             //row++;
             //image[i].SetValue (Grid.ColumnProperty, row);
             //image[i].SetValue (Grid.RowProperty, 0);
@@ -267,8 +295,5 @@ namespace TestChat {
             n=0;
         }
 
-        private void Button_Click_2 (object sender, RoutedEventArgs e) {
-
-        }
     }
 }
