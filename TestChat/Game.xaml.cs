@@ -27,8 +27,11 @@ namespace TestChat {
         double scale=2;
         Image[] image=new Image[106];
         int[] selectedImages=null;
+        String[] formations=new String[100];
         int n=0;
         int row=-1;
+        int c;
+        int r;
         Image temp_img;
 
         CroppedBitmap[] objImg=new CroppedBitmap[65];
@@ -66,15 +69,26 @@ namespace TestChat {
                             this.Dispatcher.Invoke ((Action) (() => { received.AppendText (readData+"\n"); }));
                             break;
                         case "FORMATION":
-                            if (dataReceived[1]=="Pereche") {
+                            if (dataReceived[1]=="Numaratoare") {
                                 this.Dispatcher.Invoke ((Action) (() => { Formation (image[selectedImages[0]], image[selectedImages[1]], image[selectedImages[2]]); }));
-                            } else if (dataReceived[1]=="Numaratoare") {
+                                // formations[row]=dataReceived[2]+":"+dataReceived[3];
+                            } else if (dataReceived[1]=="Pereche") {
                                 this.Dispatcher.Invoke ((Action) (() => { Formation (image[selectedImages[0]], image[selectedImages[1]], image[selectedImages[2]]); }));
+                                // formations[row]=dataReceived[2]+":"+dataReceived[3];
                             }
                             this.Dispatcher.Invoke ((Action) (() => { error.Content=dataReceived[1]; }));
                             break;
                         case "DRAW":
                             this.Dispatcher.Invoke ((Action) (() => { DrawCard (Int32.Parse (dataReceived[1])); }));
+                            break;
+                        case "ADD_PIECE":
+                            this.Dispatcher.Invoke ((Action) (() => { Add_piece (); }));
+                            break;
+                        case "ADD_PIECE_ON_FIRST_COL":
+                            this.Dispatcher.Invoke ((Action) (() => { Add_piece_on_first_col (); }));
+                            break;
+                        case "DONT_ADD_PIECE":
+                            this.Dispatcher.Invoke ((Action) (() => { error.Content="Nu se lipeste!"; }));
                             break;
                         case "NEW_USER":
                             readData=dataReceived[1];
@@ -112,9 +126,9 @@ namespace TestChat {
             removeImgListeners (image2);
             removeImgListeners (image3);
 
-            etalonListener (image1);
-            etalonListener (image2);
-            etalonListener (image3);
+            addEtalonListener (image1);
+            //etalonListener (image2);
+            addEtalonListener (image3);
         }
 
         private void send_KeyDown (object sender, KeyEventArgs e) {
@@ -141,25 +155,55 @@ namespace TestChat {
             //img.TextInput-= myimg_TextInput;
             img.LostMouseCapture-=myimg_LostMouseCapture;
         }
-        private void etalonListener (Image img) {
+        private void addEtalonListener (Image img) {
             img.MouseUp+=etalon_MouseUp;
+        }
+        private void removeEtalonListener (Image img) {
+            img.MouseUp-=etalon_MouseUp;
         }
 
         private void etalon_MouseUp (object sender, MouseButtonEventArgs e) {
-            if(temp_img !=null){
+            if (temp_img!=null) {
                 var element=(Image) sender;
-                int c=Grid.GetColumn (element);
-                int r=Grid.GetRow (element);
+                c=Grid.GetColumn (element);
+                r=Grid.GetRow (element);
 
-                canvas.Children.Remove (temp_img);
-                etalon.Children.Add (temp_img);
-                Grid.SetRow (temp_img, r);
-                Grid.SetColumn (temp_img, c);
-                etalonListener (temp_img);
-                removeImgListeners (temp_img);
-                temp_img=null;
+                for (int i=0; i<image.Length; i++) {
+                    if (temp_img.Equals (image[i])) {
+                        _client.WriteLine ("ADD_PIECE:"+r+":"+i+":"+c);
+                    }
+                }
             }
-           
+        }
+        private void Add_piece () {
+            canvas.Children.Remove (temp_img);
+            removeImgListeners (temp_img);
+            etalon.Children.Add (temp_img);
+            Grid.SetRow (temp_img, r);
+            Grid.SetColumn (temp_img, c+1);
+            addEtalonListener (temp_img);
+            Image temp_img2=etalon.Children.Cast<Image> ().First (e => Grid.GetRow (e)==r&&Grid.GetColumn (e)==c);
+            removeEtalonListener (temp_img2);
+            temp_img=null;
+        }
+        private void Add_piece_on_first_col () {
+            canvas.Children.Remove (temp_img);
+            removeImgListeners (temp_img);
+
+            IEnumerable<Image> imagesOnRow;
+            imagesOnRow=etalon.Children.Cast<Image> ().Where (e => Grid.GetRow (e)==r);
+
+            Image temp_img2=etalon.Children.Cast<Image> ().First (e => Grid.GetRow (e)==r&&Grid.GetColumn (e)==c);
+            removeEtalonListener (temp_img2);
+            foreach (Image i in imagesOnRow) {
+                Grid.SetColumn (i, Grid.GetColumn (i)+1);
+            }
+            etalon.Children.Add (temp_img);
+            addEtalonListener (temp_img);
+            Grid.SetRow (temp_img, r);
+            Grid.SetColumn (temp_img, c);
+
+            temp_img=null;
         }
 
         private void myimg_LostMouseCapture (object sender, MouseEventArgs e) {

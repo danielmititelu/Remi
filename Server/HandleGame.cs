@@ -9,10 +9,11 @@ using System.Threading.Tasks;
 namespace Server {
     class HandleGame {
 
-        int[] piese=new int[106];
+        int[] pieces=new int[106];
         TcpClient clientSocket;
         String nickname;
-        int i=-1;
+        String[] formations=new String[100];
+        int row=-1;
 
         public HandleGame (TcpClient clientSocket, String nickname) {
             this.clientSocket=clientSocket;
@@ -41,8 +42,30 @@ namespace Server {
                             case "MESSAGE":
                                 Server.BroadcastInGame (nickname, msg[1]);
                                 break;
+                            case "ADD_PIECE":
+                                String s = formations[Int32.Parse(msg[1])];
+                                String[] s1 = s.Split(':');//1:405:406
+                                if(s1[0].Equals("1")){
+                                    if (testInitialNum (pieces[Int32.Parse (msg[2])],Int32.Parse (s1[1])) && msg[3].Equals("0")) {
+                                        Server.MsgtoGameClient (nickname, "ADD_PIECE_ON_FIRST_COL");
+                                        formations[row]=s1[0]+":"+pieces[Int32.Parse (msg[2])]+":"+s1[2];
+                                    } else if (testFinalNum (Int32.Parse (s1[2]), pieces[Int32.Parse (msg[2])])&& !msg[3].Equals ("0")) {
+                                        Server.MsgtoGameClient (nickname, "ADD_PIECE");
+                                        formations[row]=s1[0]+":"+s1[1]+":"+pieces[Int32.Parse (msg[2])];
+                                    } else {
+                                        Server.MsgtoGameClient (nickname, "DONT_ADD_PIECE");
+                                    }
+                                }else if(s1[0].Equals("2")){
+                                    if(pieces[Int32.Parse(msg[2])] == Int32.Parse(s1[1])){
+                                        Server.MsgtoGameClient (nickname, "ADD_PIECE");
+                                        formations[row]="0";
+                                    } else {
+                                        Server.MsgtoGameClient (nickname, "DONT_ADD_PIECE");
+                                    }
+                                }
+                                break;
                             case "DRAW":
-                                i=random.Next ();
+                                int i=random.Next ();
                                 Server.MsgtoGameClient (nickname, "DRAW:"+i);
                                 break;
                             case "EXIT":
@@ -54,56 +77,17 @@ namespace Server {
                         }
                     }
                 }
-            } catch (Exception) {
-
+            } catch (Exception ) {
+                
 
             }
         }
 
-        public void GenereazaPiese () {
-            int c=0;
-            int n=1;
-            string zero="0";
-            for (int i=0; i<=104; i++) {
-                if (i==52) {
-                  
-                    c=0;
-                }
-                if (i<52) {
-                    if (i%13!=0) {
-                        n++;
-                    }
-                    if (i%13==0) {
-                        c++;
-                        n=1;
-                    }
-                } else {
-                    if ((i-1)%13!=0) {
-                        n++;
-                    }
-                    if ((i-1)%13==0) {
-                        c++;
-                        n=1;
-                    }
-                }
-                if (n<10) {
-                    zero="0";
-                } else {
-                    zero="";
-                }
-                piese[i]=Int32.Parse (c.ToString ()+zero+n.ToString ());
-            }
-            piese[52]=500;
-            piese[105]=500;
-        }
+        
         private void Formatie (String msg1, String msg2, String msg3) {
-            //string a1=(piese[Int32.Parse (msg1)].ToString ()).Substring (0, 3);
-            //string b1=(piese[Int32.Parse (msg2)].ToString ()).Substring (0, 3);
-            //string c1=(piese[Int32.Parse (msg3)].ToString ()).Substring (0, 3);
-
-            int a=piese[Int32.Parse (msg1)];
-            int b=piese[Int32.Parse (msg2)];
-            int c=piese[Int32.Parse (msg3)];
+            int a=pieces[Int32.Parse (msg1)];
+            int b=pieces[Int32.Parse (msg2)];
+            int c=pieces[Int32.Parse (msg3)];
             Console.WriteLine (a+":"+b+":"+c);
             String res=testeaza (a, b, c);
             Server.MsgtoGameClient (nickname, "FORMATION:"+res);
@@ -112,12 +96,31 @@ namespace Server {
 
         private string testeaza (int a, int b, int c) {
             if (testInitialNum (a, b)&&testFinalNum (b, c)&&testIntNum (a, c)) {
+                row++;
+                formations[row]=numCode (a, b, c);  
                 return "Numaratoare";
             } else if (testPereche (a, b)&&testPereche (b, c)&&testPereche (a, c)) {
-                return "Pereche";
+                row++;
+                formations[row]=missingPiece (a, b, c);
+                return "Pereche"; 
             } else {
                 return "Nu este o formatie";
             }
+        }
+
+        private string numCode (int a, int b, int c) {
+            String a1=a.ToString ();
+            String c1=c.ToString ();          
+            return "1:"+a1+":"+c1;
+        }
+
+        private string missingPiece (int a, int b, int c) {
+            int a1=Int32.Parse(a.ToString ().Substring(0,1));
+            int b1=Int32.Parse(b.ToString ().Substring(0,1));
+            int c1=Int32.Parse(c.ToString ().Substring (0, 1));
+            String number=a.ToString ().Substring (1,2);
+            int res=10-(a1+b1+c1);
+            return "2:"+res+number;
         }
         public bool testInitialNum (int a, int b) {
             if (a==500&&(b==101||b==201||b==301||b==401)) {
@@ -148,6 +151,42 @@ namespace Server {
             } else {
                 return false;
             }
+        }
+        public void GenereazaPiese () {
+            int c=0;
+            int n=1;
+            string zero="0";
+            for (int i=0; i<=104; i++) {
+                if (i==52) {
+
+                    c=0;
+                }
+                if (i<52) {
+                    if (i%13!=0) {
+                        n++;
+                    }
+                    if (i%13==0) {
+                        c++;
+                        n=1;
+                    }
+                } else {
+                    if ((i-1)%13!=0) {
+                        n++;
+                    }
+                    if ((i-1)%13==0) {
+                        c++;
+                        n=1;
+                    }
+                }
+                if (n<10) {
+                    zero="0";
+                } else {
+                    zero="";
+                }
+                pieces[i]=Int32.Parse (c.ToString ()+zero+n.ToString ());
+            }
+            pieces[52]=500;
+            pieces[105]=500;
         }
     }
 }
