@@ -47,20 +47,20 @@ namespace Server {
                                 String[] s1 = s.Split(':');//1:405:406
                                 if(s1[0].Equals("1")){
                                     if (testInitialNum (pieces[Int32.Parse (msg[2])],Int32.Parse (s1[1])) && msg[3].Equals("0")) {
-                                        Server.MsgtoGameClient (nickname, "ADD_PIECE_ON_FIRST_COL");
+                                        Server.MsgtoGameClient (nickname, "ADD_PIECE_ON_FIRST_COL:"+nickname);
                                         formations[row]=s1[0]+":"+pieces[Int32.Parse (msg[2])]+":"+s1[2];
                                     } else if (testFinalNum (Int32.Parse (s1[2]), pieces[Int32.Parse (msg[2])])&& !msg[3].Equals ("0")) {
-                                        Server.MsgtoGameClient (nickname, "ADD_PIECE");
+                                        Server.MsgtoGameClient (nickname, "ADD_PIECE:"+nickname);
                                         formations[row]=s1[0]+":"+s1[1]+":"+pieces[Int32.Parse (msg[2])];
                                     } else {
-                                        Server.MsgtoGameClient (nickname, "DONT_ADD_PIECE");
+                                        Server.MsgtoGameClient (nickname, "DONT_ADD_PIECE:"+nickname);
                                     }
                                 }else if(s1[0].Equals("2")){
                                     if(pieces[Int32.Parse(msg[2])] == Int32.Parse(s1[1])){
-                                        Server.MsgtoGameClient (nickname, "ADD_PIECE");
+                                        Server.MsgtoGameClient (nickname, "ADD_PIECE:"+nickname);
                                         formations[row]="0";
                                     } else {
-                                        Server.MsgtoGameClient (nickname, "DONT_ADD_PIECE");
+                                        Server.MsgtoGameClient (nickname, "DONT_ADD_PIECE:"+nickname);
                                     }
                                 }
                                 break;

@@ -40,19 +40,18 @@ namespace Server {
                             write.Flush ();
                             Console.WriteLine ("Client "+nickname+" already exists");
                         } else {
-                           
                             clientsList.Add (nickname, client);
                             Thread chatThread=new Thread (() => ConnectToChat (client, nickname));
                             chatThread.Start ();
                             Console.WriteLine ("A new client has connected to chat "+nickname);
                             AllUsers ();
                         }
-                        
                     } else if (keyword.Equals ("g")) {
                         clientsInGame.Add (nickname, client);
                         Thread gameThread=new Thread (() => ConnectToGame (client, nickname));
                         gameThread.Start ();
                         Console.WriteLine ("A new client is in game "+nickname);
+                        AllUsersInGame ();
                     }
                 }
             }
@@ -115,13 +114,37 @@ namespace Server {
                     write=new StreamWriter (broadcastSocket.GetStream ());
 
                     write.WriteLine ("NEW_USER"+allNicknames);
-                    Console.WriteLine ("Useri conectati"+allNicknames);
+
                     write.Flush ();
                     write=null;
                 } catch (Exception ex) {
                     Console.WriteLine (ex.ToString ());
                 }
             }
+            Console.WriteLine ("Useri conectati in chat"+allNicknames);
+        }
+        public static void AllUsersInGame () {
+            String allNicknames=null;
+            TcpClient broadcastSocket=null;
+            StreamWriter write=null;
+
+            foreach (DictionaryEntry item1 in clientsInGame) {
+                allNicknames=allNicknames+":"+item1.Key;
+            }
+            foreach (DictionaryEntry item in clientsInGame) {
+                try {
+                    broadcastSocket=(TcpClient) item.Value;
+                    write=new StreamWriter (broadcastSocket.GetStream ());
+
+                    write.WriteLine ("NEW_USER"+allNicknames);
+
+                    write.Flush ();
+                    write=null;
+                } catch (Exception ex) {
+                    Console.WriteLine (ex.ToString ());
+                }
+            }
+            Console.WriteLine ("Useri conectati in game"+allNicknames);
         }
 
 
@@ -129,37 +152,37 @@ namespace Server {
             TcpClient clientSocket=null;
             StreamWriter write=null;
             if (clientsList.ContainsKey (nickname)) {
-                    clientSocket=(TcpClient) clientsList[nickname];
-                    write=new StreamWriter (clientSocket.GetStream ());
-                    write.WriteLine (msg);
-                    write.Flush ();
-                    write=null;
+                clientSocket=(TcpClient) clientsList[nickname];
+                write=new StreamWriter (clientSocket.GetStream ());
+                write.WriteLine (msg);
+                write.Flush ();
+                write=null;
             }
         }
         public static void MsgtoGameClient (String nickname, String msg) {
             TcpClient clientSocket=null;
             StreamWriter write=null;
             if (clientsInGame.ContainsKey (nickname)) {
-                    clientSocket=(TcpClient) clientsInGame[nickname];
-                    write=new StreamWriter (clientSocket.GetStream ());
-                    write.WriteLine (msg);
-                    write.Flush ();
-                    write=null;
-
+                clientSocket=(TcpClient) clientsInGame[nickname];
+                write=new StreamWriter (clientSocket.GetStream ());
+                write.WriteLine (msg);
+                write.Flush ();
+                write=null;
+                Console.WriteLine (nickname+":"+msg);
             }
         }
 
 
         public static void RemoveUser (string nickname) {
             if (clientsList.ContainsKey (nickname)) {
-                    clientsList.Remove (nickname);
-                    AllUsers ();
+                clientsList.Remove (nickname);
+                AllUsers ();
             }
         }
         public static void RemoveUserFromGame (string nickname) {
             if (clientsList.ContainsKey (nickname)) {
-               
-                    clientsInGame.Remove (nickname);
+                clientsInGame.Remove (nickname);
+                AllUsersInGame ();
             }
         }
         static void Main (string[] args) {

@@ -23,7 +23,7 @@ namespace TestChat {
         private double canvasTop;
         public Client _client;
         bool formatie=false;
-
+        String _nickname;
         double scale=2;
         Image[] image=new Image[106];
         int[] selectedImages=null;
@@ -47,7 +47,8 @@ namespace TestChat {
             CutImage ();
             LoadImage ();
             connect (ipAddress, nickname);
-            player1.Content=nickname;
+            _nickname=nickname;
+
         }
         private void connect (String ipAddress, String nickname) {
             String ip=ipAddress.Trim ();
@@ -58,28 +59,30 @@ namespace TestChat {
             _client.WriteLine ("g:"+nickname);
         }
         private void getMessage () {
-            String[] dataReceived=null;
+            String message=null;
+            String keyword=null;
             String readData=null;
+
             try {
                 while (true) {
-                    dataReceived=_client.ReadLine ().Split (':');
-                    switch (dataReceived[0]) {
+                    message=_client.ReadLine ();
+                    keyword=message.Substring (0, message.IndexOf (':'));
+                    readData=message.Substring (message.IndexOf (':')+1, message.Length-message.IndexOf (':')-1);
+                    switch (keyword) {
                         case "MESSAGE":
-                            readData=dataReceived[1]+":"+dataReceived[2];
+                            //readData=dataReceived[1]+":"+dataReceived[2];
                             this.Dispatcher.Invoke ((Action) (() => { received.AppendText (readData+"\n"); }));
                             break;
                         case "FORMATION":
-                            if (dataReceived[1]=="Numaratoare") {
+                            if (readData=="Numaratoare") {
                                 this.Dispatcher.Invoke ((Action) (() => { Formation (image[selectedImages[0]], image[selectedImages[1]], image[selectedImages[2]]); }));
-                                // formations[row]=dataReceived[2]+":"+dataReceived[3];
-                            } else if (dataReceived[1]=="Pereche") {
+                            } else if (readData=="Pereche") {
                                 this.Dispatcher.Invoke ((Action) (() => { Formation (image[selectedImages[0]], image[selectedImages[1]], image[selectedImages[2]]); }));
-                                // formations[row]=dataReceived[2]+":"+dataReceived[3];
                             }
-                            this.Dispatcher.Invoke ((Action) (() => { error.Content=dataReceived[1]; }));
+                            this.Dispatcher.Invoke ((Action) (() => { error.Content=readData; }));
                             break;
                         case "DRAW":
-                            this.Dispatcher.Invoke ((Action) (() => { DrawCard (Int32.Parse (dataReceived[1])); }));
+                            this.Dispatcher.Invoke ((Action) (() => { DrawCard (Int32.Parse (readData)); }));
                             break;
                         case "ADD_PIECE":
                             this.Dispatcher.Invoke ((Action) (() => { Add_piece (); }));
@@ -91,8 +94,7 @@ namespace TestChat {
                             this.Dispatcher.Invoke ((Action) (() => { error.Content="Nu se lipeste!"; }));
                             break;
                         case "NEW_USER":
-                            readData=dataReceived[1];
-                            this.Dispatcher.Invoke ((Action) (() => { received.AppendText (readData+"\n"); }));
+                            this.Dispatcher.Invoke ((Action) (() => { new_user (readData); }));
                             break;
                         default:
                             this.Dispatcher.Invoke ((Action) (() => { error.Content="Error 404:Keyword not found"; }));
@@ -101,6 +103,46 @@ namespace TestChat {
                 }
             } catch (Exception ex) {
                 Console.WriteLine (ex.ToString ());
+            }
+        }
+
+        private void new_user (string readData) {
+            String[] users=readData.Split (':');
+            player1.Content="[empty]";
+            player2.Content="[empty]";
+            player3.Content="[empty]";
+            player4.Content="[empty]";
+            int pos=0;
+            for (int i=0; i<users.Count (); i++) {
+                if (users[i].Equals (_nickname)) {
+                    pos=i;
+                }
+            }
+            for (int i=pos; i<users.Count (); i++) {
+
+                if (i==pos) {
+                    player1.Content=users[i];
+                } else if (i==pos+1) {
+                    player2.Content=users[i];
+                } else if (i==pos+2) {
+                    player3.Content=users[i];
+                } else if (i==pos+3) {
+                    player4.Content=users[i];
+                }
+
+            }
+            for (int i=pos; i>=0; i--) {
+
+                if (i==pos) {
+                    player1.Content=users[i];
+                } else if (i==pos-1) {
+                    player4.Content=users[i];
+                } else if (i==pos-2) {
+                    player3.Content=users[i];
+                } else if (i==pos-3) {
+                    player2.Content=users[i];
+                }
+
             }
         }
 
