@@ -184,7 +184,7 @@ namespace Server {
             }
         }
         public static void RemoveUserFromGame (string nickname) {
-            if (clientsList.ContainsKey (nickname)) {
+            if (clientsInGame.ContainsKey (nickname)) {
                 clientsInGame.Remove (nickname);
                 AllUsersInGame ();
             }

@@ -412,6 +412,11 @@ namespace TestChat {
                 }
             }
         }
+        private void Button_Click_1 (object sender, RoutedEventArgs e) {
+            selectedImages=new int[3];
+            formatie=true;
+            n=0;
+        }
         private void Window_Closing (object sender, System.ComponentModel.CancelEventArgs e) {
             if (_client.ClientConnected ()) {
                 _client.WriteLine ("EXIT:Am iesit din joc");
@@ -419,11 +424,7 @@ namespace TestChat {
             }
         }
 
-        private void Button_Click_1 (object sender, RoutedEventArgs e) {
-            selectedImages=new int[3];
-            formatie=true;
-            n=0;
-        }
+       
 
     }
 }
