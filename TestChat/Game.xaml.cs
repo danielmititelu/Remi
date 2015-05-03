@@ -69,8 +69,7 @@ namespace TestChat {
                     keyword=message.Substring (0, message.IndexOf (':'));
                     readData=message.Substring (message.IndexOf (':')+1, message.Length-message.IndexOf (':')-1);
                     switch (keyword) {
-                        case "MESSAGE":
-                            //readData=dataReceived[1]+":"+dataReceived[2];
+                        case "MESSAGE":                            
                             this.Dispatcher.Invoke ((Action) (() => { received.AppendText (readData+"\n"); }));
                             break;
                         case "FORMATION":
@@ -323,20 +322,12 @@ namespace TestChat {
         private void Button_Click (object sender, RoutedEventArgs e) {
             _client.WriteLine ("DRAW:Trage o piesa");
         }
-        //delete meeeeee
-        int a;
-
+ 
         private void DrawCard (int i) {
-            a++;
-            Canvas.SetLeft (image[a], 0);
-            Canvas.SetTop (image[a], 0);
-            canvas.Children.Add (image[a]);
-            addImgListeners (image[a]);
-
-            //row++;
-            //image[i].SetValue (Grid.ColumnProperty, row);
-            //image[i].SetValue (Grid.RowProperty, 0);
-            //etalon.Children.Add (image[i]);
+            Canvas.SetLeft (image[i], 0);
+            Canvas.SetTop (image[i], 0);
+            canvas.Children.Add (image[i]);
+            addImgListeners (image[i]);
         }
 
         private void CutImage () {

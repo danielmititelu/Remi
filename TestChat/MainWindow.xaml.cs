@@ -37,7 +37,7 @@ namespace TestChat {
             String ip=ipAddress.Trim ();
             _client=new Client (ip);
             Thread chatThread=new Thread (new ThreadStart (getMessage));
-            //chatThread.SetApartmentState (ApartmentState.STA);
+            
             chatThread.Start ();
             _client.WriteLine ("c:"+nickname);
         }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Server {
     class HandleGame {
 
-        int[] pieces=new int[106];
+        
         TcpClient clientSocket;
         String nickname;
         String[] formations=new String[100];
@@ -17,10 +17,8 @@ namespace Server {
 
         public HandleGame (TcpClient clientSocket, String nickname) {
             this.clientSocket=clientSocket;
-            this.nickname=nickname;
-            GenereazaPiese ();
+            this.nickname=nickname; 
             doChat ();
-    
         }
 
         private void doChat () {
@@ -28,7 +26,7 @@ namespace Server {
             StreamReader read=new StreamReader (networkStream);
             String[] msg=null;
             String message=null;
-            UniqueRandom random=new UniqueRandom (Enumerable.Range (0, 105));
+            
             try {
                 while (networkStream.CanRead) {
                     message=read.ReadLine ();
@@ -46,17 +44,17 @@ namespace Server {
                                 String s = formations[Int32.Parse(msg[1])];
                                 String[] s1 = s.Split(':');//1:405:406
                                 if(s1[0].Equals("1")){
-                                    if (testInitialNum (pieces[Int32.Parse (msg[2])],Int32.Parse (s1[1])) && msg[3].Equals("0")) {
+                                    if (testInitialNum (Server.pieces[Int32.Parse (msg[2])],Int32.Parse (s1[1])) && msg[3].Equals("0")) {
                                         Server.MsgtoGameClient (nickname, "ADD_PIECE_ON_FIRST_COL:"+nickname);
-                                        formations[row]=s1[0]+":"+pieces[Int32.Parse (msg[2])]+":"+s1[2];
-                                    } else if (testFinalNum (Int32.Parse (s1[2]), pieces[Int32.Parse (msg[2])])&& !msg[3].Equals ("0")) {
+                                        formations[row]=s1[0]+":"+Server.pieces[Int32.Parse (msg[2])]+":"+s1[2];
+                                    } else if (testFinalNum (Int32.Parse (s1[2]), Server.pieces[Int32.Parse (msg[2])])&&!msg[3].Equals ("0")) {
                                         Server.MsgtoGameClient (nickname, "ADD_PIECE:"+nickname);
-                                        formations[row]=s1[0]+":"+s1[1]+":"+pieces[Int32.Parse (msg[2])];
+                                        formations[row]=s1[0]+":"+s1[1]+":"+Server.pieces[Int32.Parse (msg[2])];
                                     } else {
                                         Server.MsgtoGameClient (nickname, "DONT_ADD_PIECE:"+nickname);
                                     }
                                 }else if(s1[0].Equals("2")){
-                                    if(pieces[Int32.Parse(msg[2])] == Int32.Parse(s1[1])){
+                                    if (Server.pieces[Int32.Parse (msg[2])]==Int32.Parse (s1[1])) {
                                         Server.MsgtoGameClient (nickname, "ADD_PIECE:"+nickname);
                                         formations[row]="0";
                                     } else {
@@ -65,7 +63,7 @@ namespace Server {
                                 }
                                 break;
                             case "DRAW":
-                                int i=random.Next ();
+                                int i=Server.random.Next ();                             
                                 Server.MsgtoGameClient (nickname, "DRAW:"+i);
                                 break;
                             case "EXIT":
@@ -78,16 +76,15 @@ namespace Server {
                     }
                 }
             } catch (Exception ) {
-                
 
             }
         }
 
         
         private void Formatie (String msg1, String msg2, String msg3) {
-            int a=pieces[Int32.Parse (msg1)];
-            int b=pieces[Int32.Parse (msg2)];
-            int c=pieces[Int32.Parse (msg3)];
+            int a=Server.pieces[Int32.Parse (msg1)];
+            int b=Server.pieces[Int32.Parse (msg2)];
+            int c=Server.pieces[Int32.Parse (msg3)];
             Console.WriteLine (a+":"+b+":"+c);
             String res=testeaza (a, b, c);
             Server.MsgtoGameClient (nickname, "FORMATION:"+res);
@@ -108,14 +105,12 @@ namespace Server {
             }
         }
 
-        private string numCode (int a, int b, int c) {
-            String a1=a.ToString ();
-            String c1=c.ToString ();          
-            return "1:"+a1+":"+c1;
+        private string numCode (int a, int b, int c) {     
+            return "1:"+a+":"+c;
         }
 
         private string missingPiece (int a, int b, int c) {
-            int a1=Int32.Parse(a.ToString ().Substring(0,1));
+            int a1=Int32.Parse(a.ToString ().Substring(0,1));//102:202:302:402:500
             int b1=Int32.Parse(b.ToString ().Substring(0,1));
             int c1=Int32.Parse(c.ToString ().Substring (0, 1));
             String number=a.ToString ().Substring (1,2);
@@ -151,42 +146,6 @@ namespace Server {
             } else {
                 return false;
             }
-        }
-        public void GenereazaPiese () {
-            int c=0;
-            int n=1;
-            string zero="0";
-            for (int i=0; i<=104; i++) {
-                if (i==52) {
-
-                    c=0;
-                }
-                if (i<52) {
-                    if (i%13!=0) {
-                        n++;
-                    }
-                    if (i%13==0) {
-                        c++;
-                        n=1;
-                    }
-                } else {
-                    if ((i-1)%13!=0) {
-                        n++;
-                    }
-                    if ((i-1)%13==0) {
-                        c++;
-                        n=1;
-                    }
-                }
-                if (n<10) {
-                    zero="0";
-                } else {
-                    zero="";
-                }
-                pieces[i]=Int32.Parse (c.ToString ()+zero+n.ToString ());
-            }
-            pieces[52]=500;
-            pieces[105]=500;
-        }
+        }     
     }
 }
