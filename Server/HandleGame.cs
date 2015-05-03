@@ -38,7 +38,7 @@ namespace Server {
                                 Formatie (msg[1], msg[2], msg[3]);
                                 break;
                             case "MESSAGE":
-                                Server.BroadcastInGame (nickname, msg[1]);
+                                Server.BroadcastInGame (nickname, message.Substring (message.IndexOf (':')+1, message.Length-message.IndexOf (':')-1));   
                                 break;
                             case "ADD_PIECE":
                                 String s = formations[Int32.Parse(msg[1])];

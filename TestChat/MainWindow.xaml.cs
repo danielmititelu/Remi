@@ -43,14 +43,16 @@ namespace TestChat {
         }
 
         private void getMessage () {
-
+            String message=null;
             String[] dataReceived=null;
             String readData=null;
+           
                 while (_client.ClientConnected ()) {
-                    dataReceived=_client.ReadLine ().Split (':'); 
+                    message=_client.ReadLine ();
+                    dataReceived=message.Split (':');
+                    readData=message.Substring (message.IndexOf (':')+1, message.Length-message.IndexOf (':')-1);
                     switch (dataReceived[0]) {
-                        case "MESSAGE":
-                            readData=dataReceived[1]+":"+dataReceived[2];
+                        case "MESSAGE":                          
                             this.Dispatcher.Invoke ((Action) (() => { received.AppendText (readData+"\n"); }));
                             break;
                         case "ALR":

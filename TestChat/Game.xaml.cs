@@ -64,7 +64,7 @@ namespace TestChat {
             String readData=null;
 
             try {
-                while (true) {
+                while (_client.ClientConnected ()) {
                     message=_client.ReadLine ();
                     keyword=message.Substring (0, message.IndexOf (':'));
                     readData=message.Substring (message.IndexOf (':')+1, message.Length-message.IndexOf (':')-1);
@@ -128,7 +128,6 @@ namespace TestChat {
                 } else if (i==pos+3) {
                     player4.Content=users[i];
                 }
-
             }
             for (int i=pos; i>=0; i--) {
 

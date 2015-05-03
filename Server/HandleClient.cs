@@ -30,7 +30,7 @@ namespace Server {
                         Console.WriteLine ("From client- "+nickname+": "+message);
                         switch (msg[0]) {  
                             case "MESSAGE":
-                                Server.Broadcast (nickname, msg[1]);
+                                Server.Broadcast (nickname, message.Substring (message.IndexOf (':')+1, message.Length-message.IndexOf (':')-1));
                                 break;
                             case "EXIT":
                                 Server.RemoveUser (nickname);
