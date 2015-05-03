@@ -16,6 +16,8 @@ namespace Server {
         StreamReader read;
         public static int[] pieces=new int[106];
         public static UniqueRandom random=new UniqueRandom (Enumerable.Range (0, 105));
+        public static int[] pieces_on_board=new int[106];
+        public static int a=-1;
 
         public Server () {
             TcpClient client=null;
@@ -84,7 +86,7 @@ namespace Server {
                 }
             }
         }
-        public static void BroadcastInGame (String nickname, String msg) {
+        public static void BroadcastInGame (String keyword,String nickname, String msg) {
             TcpClient broadcastSocket=null;
             StreamWriter write=null;
             foreach (DictionaryEntry item in clientsInGame) {
@@ -94,7 +96,7 @@ namespace Server {
 
                     broadcastSocket=(TcpClient) item.Value;
                     write=new StreamWriter (broadcastSocket.GetStream ());
-                    write.WriteLine ("MESSAGE:"+nickname+":"+msg);
+                    write.WriteLine (keyword+nickname+":"+msg);
                     write.Flush ();
                     write=null;
                 } catch (Exception ex) {
