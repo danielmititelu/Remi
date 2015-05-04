@@ -34,8 +34,6 @@ namespace TestChat {
             _writer.WriteLine (message);
             _writer.Flush ();
         }
-
-
         public void Close () {
             _tcpClient.Close ();
             _serverStream.Close ();
@@ -46,10 +44,10 @@ namespace TestChat {
         public string ReadLine () {
             try {
                 return _reader.ReadLine ();
-            } catch(Exception) {
-                return "eroare";
-            }
-            
+            } catch(Exception e) {
+               Console.WriteLine(e.StackTrace);
+               return "DONT:eroare" ;
+            }     
         }
         public bool ClientConnected () {
             return _tcpClient.Connected;

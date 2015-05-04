@@ -40,7 +40,7 @@ namespace Server {
                             case "MESSAGE":
                                 Server.BroadcastInGame ("MESSAGE:", nickname, message.Substring (message.IndexOf (':')+1, message.Length-message.IndexOf (':')-1));
                                 break;
-                            case "ADD_PIECE":
+                            case "ADD_PIECE"://row:image:column:client_to_add
                                 String s=formations[Int32.Parse (msg[1])];
                                 String[] s1=s.Split (':');//1:405:406
                                 if (s1[0].Equals ("1")) {
@@ -48,14 +48,16 @@ namespace Server {
                                         Server.MsgtoGameClient (nickname, "ADD_PIECE_ON_FIRST_COL:"+nickname);
                                         formations[row]=s1[0]+":"+Server.pieces[Int32.Parse (msg[2])]+":"+s1[2];
                                     } else if (testFinalNum (Int32.Parse (s1[2]), Server.pieces[Int32.Parse (msg[2])])&&!msg[3].Equals ("0")) {
-                                        Server.MsgtoGameClient (nickname, "ADD_PIECE:"+nickname);
+                                        //Server.MsgtoGameClient (nickname, "ADD_PIECE:"+nickname);
+                                        Server.BroadcastInGame ("ADD_PIECE:", msg[4], msg[1]+":"+msg[2]+":"+msg[3]);
                                         formations[row]=s1[0]+":"+s1[1]+":"+Server.pieces[Int32.Parse (msg[2])];
                                     } else {
                                         Server.MsgtoGameClient (nickname, "DONT:Nu se lipeste!");
                                     }
                                 } else if (s1[0].Equals ("2")) {
                                     if (Server.pieces[Int32.Parse (msg[2])]==Int32.Parse (s1[1])) {
-                                        Server.MsgtoGameClient (nickname, "ADD_PIECE:"+nickname);
+                                        //Server.MsgtoGameClient (nickname, "ADD_PIECE:"+msg[1]+":"+msg[2]+":"+msg[3]);
+                                        Server.BroadcastInGame ("ADD_PIECE:", msg[4], msg[1]+":"+msg[2]+":"+msg[3]);
                                         formations[row]="0";
                                     } else {
                                         Server.MsgtoGameClient (nickname, "DONT:Nu se lipeste!");

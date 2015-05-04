@@ -24,8 +24,8 @@ namespace TestChat {
         public Client _client;
         bool formatie=false;
         String _nickname;
-        double scale=2;
-        Image[] image=new Image[106];
+        //double scale=2;
+        //Image[] image=new Image[106];
         int[] selectedImages=null;
         String[] formations=new String[100];
         int n=0;
@@ -33,22 +33,23 @@ namespace TestChat {
         int _row2=-1;
         int _row3=-1;
         int _row4=-1;
-        int c;
-        int r;
         Image temp_img;
+        String client_to_add;
+        ImageLoader image=new ImageLoader ();
 
-        CroppedBitmap[] objImg=new CroppedBitmap[65];
+        //CroppedBitmap[] objImg=new CroppedBitmap[65];
 
         public Game () {
             InitializeComponent ();
-            CutImage ();
-            LoadImage ();
+            //CutImage ();
+            //LoadImage ();
         }
 
         public Game (String ipAddress, String nickname) {
             InitializeComponent ();
-            CutImage ();
-            LoadImage ();
+            //CutImage ();
+            //LoadImage ();
+            
             connect (ipAddress, nickname);
             _nickname=nickname;
 
@@ -82,7 +83,7 @@ namespace TestChat {
                             this.Dispatcher.Invoke ((Action) (() => { DrawCard (Int32.Parse (readData)); }));
                             break;
                         case "ADD_PIECE":
-                            this.Dispatcher.Invoke ((Action) (() => { Add_piece (); }));
+                            this.Dispatcher.Invoke ((Action) (() => { Add_piece (readData); }));
                             break;
                         case "ADD_PIECE_ON_FIRST_COL":
                             this.Dispatcher.Invoke ((Action) (() => { Add_piece_on_first_col (); }));
@@ -109,10 +110,10 @@ namespace TestChat {
         private void put_piece_on_board (string readData) {
             String[] mes=readData.Split (':');
             if (mes[0].Equals (_nickname)) {
-                removeImgListeners (image[Int32.Parse (mes[1])]);
-                canvas.Children.Remove (image[Int32.Parse (mes[1])]);
+                removeImgListeners (image.getImage[Int32.Parse (mes[1])]);
+                canvas.Children.Remove (image.getImage[Int32.Parse (mes[1])]);
             }
-            stack.Children.Add (image[Int32.Parse (mes[1])]);
+            stack.Children.Add (image.getImage[Int32.Parse (mes[1])]);
         }
 
         private void new_user (string readData) {
@@ -155,70 +156,73 @@ namespace TestChat {
         }
 
         private void formation (String readData) {
-            String[] mes=readData.Split (':');
-            if (mes[0].Equals (_nickname)) {
-                removeImgListeners (image[Int32.Parse (mes[1])]);
-                removeImgListeners (image[Int32.Parse (mes[2])]);
-                removeImgListeners (image[Int32.Parse (mes[3])]);
+            String[] msg=readData.Split (':');
+            Image local_image1=image.getImage[Int32.Parse (msg[1])];
+            Image local_image2=image.getImage[Int32.Parse (msg[2])];
+            Image local_image3=image.getImage[Int32.Parse (msg[3])];
+            if (msg[0].Equals (_nickname)) {
+                removeImgListeners (local_image1);
+                removeImgListeners (local_image2);
+                removeImgListeners (local_image3);
 
-                canvas.Children.Remove (image[Int32.Parse (mes[1])]);
-                canvas.Children.Remove (image[Int32.Parse (mes[2])]);
-                canvas.Children.Remove (image[Int32.Parse (mes[3])]);
+                canvas.Children.Remove (local_image1);
+                canvas.Children.Remove (local_image2);
+                canvas.Children.Remove (local_image3);
 
                 _row1++;
                 etalon1.RowDefinitions.Add (new RowDefinition ());
-                etalon1.Children.Add (image[Int32.Parse (mes[1])]);
-                etalon1.Children.Add (image[Int32.Parse (mes[2])]);
-                etalon1.Children.Add (image[Int32.Parse (mes[3])]);
+                etalon1.Children.Add (local_image1);
+                etalon1.Children.Add (local_image2);
+                etalon1.Children.Add (local_image3);
 
-                image[Int32.Parse (mes[1])].SetValue (Grid.ColumnProperty, 0);
-                image[Int32.Parse (mes[1])].SetValue (Grid.RowProperty, _row1);
-                image[Int32.Parse (mes[2])].SetValue (Grid.ColumnProperty, 1);
-                image[Int32.Parse (mes[2])].SetValue (Grid.RowProperty, _row1);
-                image[Int32.Parse (mes[3])].SetValue (Grid.ColumnProperty, 2);
-                image[Int32.Parse (mes[3])].SetValue (Grid.RowProperty, _row1);
-            } else if (mes[0].Equals (player2.Content)) {
+                local_image1.SetValue (Grid.ColumnProperty, 0);
+                local_image1.SetValue (Grid.RowProperty, _row1);
+                local_image2.SetValue (Grid.ColumnProperty, 1);
+                local_image2.SetValue (Grid.RowProperty, _row1);
+                local_image3.SetValue (Grid.ColumnProperty, 2);
+                local_image3.SetValue (Grid.RowProperty, _row1);
+            } else if (msg[0].Equals (player2.Content)) {
                 _row2++;
                 etalon2.RowDefinitions.Add (new RowDefinition ());
-                etalon2.Children.Add (image[Int32.Parse (mes[1])]);
-                etalon2.Children.Add (image[Int32.Parse (mes[2])]);
-                etalon2.Children.Add (image[Int32.Parse (mes[3])]);
+                etalon2.Children.Add (local_image1);
+                etalon2.Children.Add (local_image2);
+                etalon2.Children.Add (local_image3);
 
-                image[Int32.Parse (mes[1])].SetValue (Grid.ColumnProperty, 0);
-                image[Int32.Parse (mes[1])].SetValue (Grid.RowProperty, _row2);
-                image[Int32.Parse (mes[2])].SetValue (Grid.ColumnProperty, 1);
-                image[Int32.Parse (mes[2])].SetValue (Grid.RowProperty, _row2);
-                image[Int32.Parse (mes[3])].SetValue (Grid.ColumnProperty, 2);
-                image[Int32.Parse (mes[3])].SetValue (Grid.RowProperty, _row2);
-            } else if (mes[0].Equals (player3.Content)) {
+                local_image1.SetValue (Grid.ColumnProperty, 0);
+                local_image1.SetValue (Grid.RowProperty, _row2);
+                local_image2.SetValue (Grid.ColumnProperty, 1);
+                local_image2.SetValue (Grid.RowProperty, _row2);
+                local_image3.SetValue (Grid.ColumnProperty, 2);
+                local_image3.SetValue (Grid.RowProperty, _row2);
+            } else if (msg[0].Equals (player3.Content)) {
                 _row3++;
                 etalon3.RowDefinitions.Add (new RowDefinition ());
-                etalon3.Children.Add (image[Int32.Parse (mes[1])]);
-                etalon3.Children.Add (image[Int32.Parse (mes[2])]);
-                etalon3.Children.Add (image[Int32.Parse (mes[3])]);
+                etalon3.Children.Add (image.getImage[Int32.Parse (msg[1])]);
+                etalon3.Children.Add (local_image2);
+                etalon3.Children.Add (local_image3);
 
-                image[Int32.Parse (mes[1])].SetValue (Grid.ColumnProperty, 0);
-                image[Int32.Parse (mes[1])].SetValue (Grid.RowProperty, _row3);
-                image[Int32.Parse (mes[2])].SetValue (Grid.ColumnProperty, 1);
-                image[Int32.Parse (mes[2])].SetValue (Grid.RowProperty, _row3);
-                image[Int32.Parse (mes[3])].SetValue (Grid.ColumnProperty, 2);
-                image[Int32.Parse (mes[3])].SetValue (Grid.RowProperty, _row3);
-            } else if (mes[0].Equals (player4.Content)) {
+                local_image1.SetValue (Grid.ColumnProperty, 0);
+                local_image1.SetValue (Grid.RowProperty, _row3);
+                local_image2.SetValue (Grid.ColumnProperty, 1);
+                local_image2.SetValue (Grid.RowProperty, _row3);
+                local_image3.SetValue (Grid.ColumnProperty, 2);
+                local_image3.SetValue (Grid.RowProperty, _row3);
+            } else if (msg[0].Equals (player4.Content)) {
                 _row4++;
                 etalon4.RowDefinitions.Add (new RowDefinition ());
-                etalon4.Children.Add (image[Int32.Parse (mes[1])]);
-                etalon4.Children.Add (image[Int32.Parse (mes[2])]);
-                etalon4.Children.Add (image[Int32.Parse (mes[3])]);
+                etalon4.Children.Add (local_image1);
+                etalon4.Children.Add (local_image2);
+                etalon4.Children.Add (local_image3);
 
-                image[Int32.Parse (mes[1])].SetValue (Grid.ColumnProperty, 0);
-                image[Int32.Parse (mes[1])].SetValue (Grid.RowProperty, _row4);
-                image[Int32.Parse (mes[2])].SetValue (Grid.ColumnProperty, 1);
-                image[Int32.Parse (mes[2])].SetValue (Grid.RowProperty, _row4);
-                image[Int32.Parse (mes[3])].SetValue (Grid.ColumnProperty, 2);
-                image[Int32.Parse (mes[3])].SetValue (Grid.RowProperty, _row4);
+                local_image1.SetValue (Grid.ColumnProperty, 0);
+                local_image1.SetValue (Grid.RowProperty, _row4);
+                local_image2.SetValue (Grid.ColumnProperty, 1);
+                local_image2.SetValue (Grid.RowProperty, _row4);
+                local_image3.SetValue (Grid.ColumnProperty, 2);
+                local_image3.SetValue (Grid.RowProperty, _row4);
             }
-            addEtalonListener (image[Int32.Parse (mes[1])]);
-            addEtalonListener (image[Int32.Parse (mes[3])]);
+            addEtalonListener (local_image1);
+            addEtalonListener (local_image3);
         }
 
         private void send_KeyDown (object sender, KeyEventArgs e) {
@@ -254,46 +258,76 @@ namespace TestChat {
 
         private void etalon_MouseUp (object sender, MouseButtonEventArgs e) {
             if (temp_img!=null) {
-                var element=(Image) sender;
-                c=Grid.GetColumn (element);
-                r=Grid.GetRow (element);
+                Image element=(Image) sender;
+                int c=Grid.GetColumn (element);
+                int r=Grid.GetRow (element);
 
-                for (int i=0; i<image.Length; i++) {
-                    if (temp_img.Equals (image[i])) {
-                        _client.WriteLine ("ADD_PIECE:"+r+":"+i+":"+c);
+                for (int i=0; i<image.getImage.Length; i++) {
+                    if (temp_img.Equals (image.getImage[i])) {
+                        _client.WriteLine ("ADD_PIECE:"+r+":"+i+":"+c+":"+client_to_add);
                     }
                 }
             }
         }
-        private void Add_piece () {
-            canvas.Children.Remove (temp_img);
-            removeImgListeners (temp_img);
-            etalon1.Children.Add (temp_img);
-            Grid.SetRow (temp_img, r);
-            Grid.SetColumn (temp_img, c+1);
-            addEtalonListener (temp_img);
-            Image temp_img2=etalon1.Children.Cast<Image> ().First (e => Grid.GetRow (e)==r&&Grid.GetColumn (e)==c);
-            removeEtalonListener (temp_img2);
+        private void Add_piece (String readData) {
+            String[] msg=readData.Split (':');//nickname:row:image.getImage:column
+            int r=Int32.Parse (msg[1]);
+            int c=Int32.Parse (msg[3]);
+            Image local_image=image.getImage[Int32.Parse (msg[2])];
+
+            if (msg[0].Equals (_nickname)) {
+                Image local_image2=etalon1.Children.Cast<Image> ().First (e => Grid.GetRow (e)==r&&Grid.GetColumn (e)==c);
+                removeEtalonListener (local_image2);
+
+                removeImgListeners (local_image);
+                canvas.Children.Remove (local_image);
+                etalon1.Children.Add (local_image);
+                Grid.SetRow (local_image, r);
+                Grid.SetColumn (local_image, c+1);
+            } else if (msg[0].Equals (player2.Content)) {
+                Image local_image2=etalon2.Children.Cast<Image> ().First (e => Grid.GetRow (e)==r&&Grid.GetColumn (e)==c);
+                removeEtalonListener (local_image2);
+
+                etalon2.Children.Add (local_image);
+                Grid.SetRow (local_image, r);
+                Grid.SetColumn (local_image, c+1);
+            } else if (msg[0].Equals (player3.Content)) {
+                Image local_image2=etalon3.Children.Cast<Image> ().First (e => Grid.GetRow (e)==r&&Grid.GetColumn (e)==c);
+                removeEtalonListener (local_image2);
+
+                etalon3.Children.Add (local_image);
+                Grid.SetRow (local_image, r);
+                Grid.SetColumn (local_image, c+1);
+            } else if (msg[0].Equals (player4.Content)) {
+                Image local_image2=etalon4.Children.Cast<Image> ().First (e => Grid.GetRow (e)==r&&Grid.GetColumn (e)==c);
+                removeEtalonListener (local_image2);
+
+                etalon4.Children.Add (local_image);
+                Grid.SetRow (local_image, r);
+                Grid.SetColumn (local_image, c+1);
+                addEtalonListener (local_image);
+            }
+            addEtalonListener (local_image);
             temp_img=null;
         }
         private void Add_piece_on_first_col () {
-            canvas.Children.Remove (temp_img);
-            removeImgListeners (temp_img);
+            //canvas.Children.Remove (temp_img);
+            //removeImgListeners (temp_img);
 
-            IEnumerable<Image> imagesOnRow;
-            imagesOnRow=etalon1.Children.Cast<Image> ().Where (e => Grid.GetRow (e)==r);
+            //IEnumerable<Image> imagesOnRow;
+            //imagesOnRow=etalon1.Children.Cast<Image> ().Where (e => Grid.GetRow (e)==r);
 
-            Image temp_img2=etalon1.Children.Cast<Image> ().First (e => Grid.GetRow (e)==r&&Grid.GetColumn (e)==c);
-            removeEtalonListener (temp_img2);
-            foreach (Image i in imagesOnRow) {
-                Grid.SetColumn (i, Grid.GetColumn (i)+1);
-            }
-            etalon1.Children.Add (temp_img);
-            addEtalonListener (temp_img);
-            Grid.SetRow (temp_img, r);
-            Grid.SetColumn (temp_img, c);
+            //Image temp_img2=etalon1.Children.Cast<Image> ().First (e => Grid.GetRow (e)==r&&Grid.GetColumn (e)==c);
+            //removeEtalonListener (temp_img2);
+            //foreach (Image i in imagesOnRow) {
+            //    Grid.SetColumn (i, Grid.GetColumn (i)+1);
+            //}
+            //etalon1.Children.Add (temp_img);
+            //addEtalonListener (temp_img);
+            //Grid.SetRow (temp_img, r);
+            //Grid.SetColumn (temp_img, c);
 
-            temp_img=null;
+            //temp_img=null;
         }
 
         private void myimg_LostMouseCapture (object sender, MouseEventArgs e) {
@@ -327,20 +361,28 @@ namespace TestChat {
             ((Image) sender).ReleaseMouseCapture ();
 
             if (stack.IsMouseOver) {
-                for (int i=0; i<image.Length; i++) {
-                    if (((Image) sender).Equals (image[i])) {
+                for (int i=0; i<image.getImage.Length; i++) {
+                    if (((Image) sender).Equals (image.getImage[i])) {
                         _client.WriteLine ("PUT_PIECE_ON_BORD:"+i);
                     }
                 }
-                temp_img=((Image) sender);
-
             }
             if (etalon1.IsMouseOver) {
                 temp_img=((Image) sender);
+                client_to_add=_nickname;
+            } else if (etalon2.IsMouseOver) {
+                temp_img=((Image) sender);
+                client_to_add=(String)player2.Content;
+            } else if (etalon3.IsMouseOver) {
+                client_to_add=(String) player3.Content;
+                temp_img=((Image) sender);
+            } else if (etalon4.IsMouseOver) {
+                client_to_add=(String) player4.Content;
+                temp_img=((Image) sender);
             }
             if (formatie) {
-                for (int i=0; i<image.Length; i++) {
-                    if (((Image) sender).Equals (image[i])) {
+                for (int i=0; i<image.getImage.Length; i++) {
+                    if (((Image) sender).Equals (image.getImage[i])) {
                         selectedImages[n]=i;
                         n++;
                         if (n==3) {
@@ -377,41 +419,41 @@ namespace TestChat {
         }
 
         private void DrawCard (int i) {
-            Canvas.SetLeft (image[i], 0);
-            Canvas.SetTop (image[i], 0);
-            canvas.Children.Add (image[i]);
-            addImgListeners (image[i]);
+            Canvas.SetLeft (image.getImage[i], 0);
+            Canvas.SetTop (image.getImage[i], 0);
+            canvas.Children.Add (image.getImage[i]);
+            addImgListeners (image.getImage[i]);
         }
 
-        private void CutImage () {
-            int count=0;
+        //private void CutImage () {
+        //    int count=0;
 
-            BitmapImage src=new BitmapImage ();
-            src.BeginInit ();
-            src.UriSource=new Uri ("pack://application:,,,/Image/Tiles.png", UriKind.Absolute);
-            src.CacheOption=BitmapCacheOption.OnLoad;
-            src.EndInit ();
+        //    BitmapImage src=new BitmapImage ();
+        //    src.BeginInit ();
+        //    src.UriSource=new Uri ("pack://application:,,,/Image/Tiles.png", UriKind.Absolute);
+        //    src.CacheOption=BitmapCacheOption.OnLoad;
+        //    src.EndInit ();
 
-            for (int i=0; i<5; i++)
-                for (int j=0; j<13; j++)
-                    objImg[count++]=new CroppedBitmap (src, new Int32Rect (j*32, i*48, 32, 48));
-        }
+        //    for (int i=0; i<5; i++)
+        //        for (int j=0; j<13; j++)
+        //            objImg[count++]=new CroppedBitmap (src, new Int32Rect (j*32, i*48, 32, 48));
+        //}
 
-        private void LoadImage () {
-            for (int i=0; i<106; i++) {
-                if (i<53) {
-                    image[i]=new Image ();
-                    image[i].Source=objImg[i];
-                    image[i].Width=objImg[i].Width*scale;
-                    image[i].Height=objImg[i].Height*scale;
-                } else {
-                    image[i]=new Image ();
-                    image[i].Source=objImg[i-53];
-                    image[i].Width=objImg[i-53].Width*scale;
-                    image[i].Height=objImg[i-53].Height*scale;
-                }
-            }
-        }
+        //private void LoadImage () {
+        //    for (int i=0; i<106; i++) {
+        //        if (i<53) {
+        //            image[i]=new Image ();
+        //            image[i].Source=objImg[i];
+        //            image[i].Width=objImg[i].Width*scale;
+        //            image[i].Height=objImg[i].Height*scale;
+        //        } else {
+        //            image[i]=new Image ();
+        //            image[i].Source=objImg[i-53];
+        //            image[i].Width=objImg[i-53].Width*scale;
+        //            image[i].Height=objImg[i-53].Height*scale;
+        //        }
+        //    }
+        //}
         private void Button_Click_1 (object sender, RoutedEventArgs e) {
             selectedImages=new int[3];
             formatie=true;
@@ -423,8 +465,5 @@ namespace TestChat {
                 _client.Close ();
             }
         }
-
-       
-
     }
 }
