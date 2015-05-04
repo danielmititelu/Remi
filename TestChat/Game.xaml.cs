@@ -24,8 +24,6 @@ namespace TestChat {
         public Client _client;
         bool formatie=false;
         String _nickname;
-        //double scale=2;
-        //Image[] image=new Image[106];
         int[] selectedImages=null;
         String[] formations=new String[100];
         int n=0;
@@ -37,22 +35,14 @@ namespace TestChat {
         String client_to_add;
         ImageLoader image=new ImageLoader ();
 
-        //CroppedBitmap[] objImg=new CroppedBitmap[65];
-
         public Game () {
             InitializeComponent ();
-            //CutImage ();
-            //LoadImage ();
         }
 
         public Game (String ipAddress, String nickname) {
             InitializeComponent ();
-            //CutImage ();
-            //LoadImage ();
-            
             connect (ipAddress, nickname);
             _nickname=nickname;
-
         }
         private void connect (String ipAddress, String nickname) {
             String ip=ipAddress.Trim ();
@@ -168,61 +158,34 @@ namespace TestChat {
                 canvas.Children.Remove (local_image1);
                 canvas.Children.Remove (local_image2);
                 canvas.Children.Remove (local_image3);
-
                 _row1++;
-                etalon1.RowDefinitions.Add (new RowDefinition ());
-                etalon1.Children.Add (local_image1);
-                etalon1.Children.Add (local_image2);
-                etalon1.Children.Add (local_image3);
-
-                local_image1.SetValue (Grid.ColumnProperty, 0);
-                local_image1.SetValue (Grid.RowProperty, _row1);
-                local_image2.SetValue (Grid.ColumnProperty, 1);
-                local_image2.SetValue (Grid.RowProperty, _row1);
-                local_image3.SetValue (Grid.ColumnProperty, 2);
-                local_image3.SetValue (Grid.RowProperty, _row1);
+                add_formation (etalon1, _row1, local_image1, local_image2, local_image3);
             } else if (msg[0].Equals (player2.Content)) {
                 _row2++;
-                etalon2.RowDefinitions.Add (new RowDefinition ());
-                etalon2.Children.Add (local_image1);
-                etalon2.Children.Add (local_image2);
-                etalon2.Children.Add (local_image3);
-
-                local_image1.SetValue (Grid.ColumnProperty, 0);
-                local_image1.SetValue (Grid.RowProperty, _row2);
-                local_image2.SetValue (Grid.ColumnProperty, 1);
-                local_image2.SetValue (Grid.RowProperty, _row2);
-                local_image3.SetValue (Grid.ColumnProperty, 2);
-                local_image3.SetValue (Grid.RowProperty, _row2);
+                add_formation (etalon2, _row2, local_image1, local_image2, local_image3);
             } else if (msg[0].Equals (player3.Content)) {
                 _row3++;
-                etalon3.RowDefinitions.Add (new RowDefinition ());
-                etalon3.Children.Add (image.getImage[Int32.Parse (msg[1])]);
-                etalon3.Children.Add (local_image2);
-                etalon3.Children.Add (local_image3);
-
-                local_image1.SetValue (Grid.ColumnProperty, 0);
-                local_image1.SetValue (Grid.RowProperty, _row3);
-                local_image2.SetValue (Grid.ColumnProperty, 1);
-                local_image2.SetValue (Grid.RowProperty, _row3);
-                local_image3.SetValue (Grid.ColumnProperty, 2);
-                local_image3.SetValue (Grid.RowProperty, _row3);
+                add_formation (etalon3, _row3, local_image1, local_image2, local_image3);
             } else if (msg[0].Equals (player4.Content)) {
                 _row4++;
-                etalon4.RowDefinitions.Add (new RowDefinition ());
-                etalon4.Children.Add (local_image1);
-                etalon4.Children.Add (local_image2);
-                etalon4.Children.Add (local_image3);
-
-                local_image1.SetValue (Grid.ColumnProperty, 0);
-                local_image1.SetValue (Grid.RowProperty, _row4);
-                local_image2.SetValue (Grid.ColumnProperty, 1);
-                local_image2.SetValue (Grid.RowProperty, _row4);
-                local_image3.SetValue (Grid.ColumnProperty, 2);
-                local_image3.SetValue (Grid.RowProperty, _row4);
+                add_formation (etalon4, _row4, local_image1, local_image2, local_image3);
             }
             addEtalonListener (local_image1);
             addEtalonListener (local_image3);
+        }
+
+        private void add_formation (Grid etalon, int _row, Image local_image1, Image local_image2, Image local_image3) {
+            etalon.RowDefinitions.Add (new RowDefinition ());
+            etalon.Children.Add (local_image1);
+            etalon.Children.Add (local_image2);
+            etalon.Children.Add (local_image3);
+
+            local_image1.SetValue (Grid.ColumnProperty, 0);
+            local_image1.SetValue (Grid.RowProperty, _row);
+            local_image2.SetValue (Grid.ColumnProperty, 1);
+            local_image2.SetValue (Grid.RowProperty, _row);
+            local_image3.SetValue (Grid.ColumnProperty, 2);
+            local_image3.SetValue (Grid.RowProperty, _row);
         }
 
         private void send_KeyDown (object sender, KeyEventArgs e) {
@@ -276,39 +239,29 @@ namespace TestChat {
             Image local_image=image.getImage[Int32.Parse (msg[2])];
 
             if (msg[0].Equals (_nickname)) {
-                Image local_image2=etalon1.Children.Cast<Image> ().First (e => Grid.GetRow (e)==r&&Grid.GetColumn (e)==c);
-                removeEtalonListener (local_image2);
-
-                removeImgListeners (local_image);
-                canvas.Children.Remove (local_image);
-                etalon1.Children.Add (local_image);
-                Grid.SetRow (local_image, r);
-                Grid.SetColumn (local_image, c+1);
+                sub_add_piece (etalon1, local_image, r, c);
             } else if (msg[0].Equals (player2.Content)) {
-                Image local_image2=etalon2.Children.Cast<Image> ().First (e => Grid.GetRow (e)==r&&Grid.GetColumn (e)==c);
-                removeEtalonListener (local_image2);
-
-                etalon2.Children.Add (local_image);
-                Grid.SetRow (local_image, r);
-                Grid.SetColumn (local_image, c+1);
+                sub_add_piece (etalon2, local_image, r, c);
             } else if (msg[0].Equals (player3.Content)) {
-                Image local_image2=etalon3.Children.Cast<Image> ().First (e => Grid.GetRow (e)==r&&Grid.GetColumn (e)==c);
-                removeEtalonListener (local_image2);
-
-                etalon3.Children.Add (local_image);
-                Grid.SetRow (local_image, r);
-                Grid.SetColumn (local_image, c+1);
+                sub_add_piece (etalon3, local_image, r, c);
             } else if (msg[0].Equals (player4.Content)) {
-                Image local_image2=etalon4.Children.Cast<Image> ().First (e => Grid.GetRow (e)==r&&Grid.GetColumn (e)==c);
-                removeEtalonListener (local_image2);
-
-                etalon4.Children.Add (local_image);
-                Grid.SetRow (local_image, r);
-                Grid.SetColumn (local_image, c+1);
-                addEtalonListener (local_image);
+                sub_add_piece (etalon4, local_image, r, c);
             }
             addEtalonListener (local_image);
             temp_img=null;
+        }
+
+        private void sub_add_piece (Grid etalon, Image local_image, int r, int c) {
+            Image local_image2=etalon.Children.Cast<Image> ().First (e => Grid.GetRow (e)==r&&Grid.GetColumn (e)==c);
+            removeEtalonListener (local_image2);
+
+            if (canvas.Children.Contains (local_image)) {
+                removeImgListeners (local_image);
+                canvas.Children.Remove (local_image);
+            }
+            etalon.Children.Add (local_image);
+            Grid.SetRow (local_image, r);
+            Grid.SetColumn (local_image, c+1);
         }
         private void Add_piece_on_first_col () {
             //canvas.Children.Remove (temp_img);
@@ -372,7 +325,7 @@ namespace TestChat {
                 client_to_add=_nickname;
             } else if (etalon2.IsMouseOver) {
                 temp_img=((Image) sender);
-                client_to_add=(String)player2.Content;
+                client_to_add=(String) player2.Content;
             } else if (etalon3.IsMouseOver) {
                 client_to_add=(String) player3.Content;
                 temp_img=((Image) sender);
@@ -424,36 +377,6 @@ namespace TestChat {
             canvas.Children.Add (image.getImage[i]);
             addImgListeners (image.getImage[i]);
         }
-
-        //private void CutImage () {
-        //    int count=0;
-
-        //    BitmapImage src=new BitmapImage ();
-        //    src.BeginInit ();
-        //    src.UriSource=new Uri ("pack://application:,,,/Image/Tiles.png", UriKind.Absolute);
-        //    src.CacheOption=BitmapCacheOption.OnLoad;
-        //    src.EndInit ();
-
-        //    for (int i=0; i<5; i++)
-        //        for (int j=0; j<13; j++)
-        //            objImg[count++]=new CroppedBitmap (src, new Int32Rect (j*32, i*48, 32, 48));
-        //}
-
-        //private void LoadImage () {
-        //    for (int i=0; i<106; i++) {
-        //        if (i<53) {
-        //            image[i]=new Image ();
-        //            image[i].Source=objImg[i];
-        //            image[i].Width=objImg[i].Width*scale;
-        //            image[i].Height=objImg[i].Height*scale;
-        //        } else {
-        //            image[i]=new Image ();
-        //            image[i].Source=objImg[i-53];
-        //            image[i].Width=objImg[i-53].Width*scale;
-        //            image[i].Height=objImg[i-53].Height*scale;
-        //        }
-        //    }
-        //}
         private void Button_Click_1 (object sender, RoutedEventArgs e) {
             selectedImages=new int[3];
             formatie=true;

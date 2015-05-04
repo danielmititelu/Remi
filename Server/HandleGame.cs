@@ -12,8 +12,7 @@ namespace Server {
 
         TcpClient clientSocket;
         String nickname;
-        String[] formations=new String[100];
-        int row=-1;
+       
 
         public HandleGame (TcpClient clientSocket, String nickname) {
             this.clientSocket=clientSocket;
@@ -41,16 +40,16 @@ namespace Server {
                                 Server.BroadcastInGame ("MESSAGE:", nickname, message.Substring (message.IndexOf (':')+1, message.Length-message.IndexOf (':')-1));
                                 break;
                             case "ADD_PIECE"://row:image:column:client_to_add
-                                String s=formations[Int32.Parse (msg[1])];
+                                String s=Server.formations[Int32.Parse (msg[1])];
                                 String[] s1=s.Split (':');//1:405:406
                                 if (s1[0].Equals ("1")) {
                                     if (testInitialNum (Server.pieces[Int32.Parse (msg[2])], Int32.Parse (s1[1]))&&msg[3].Equals ("0")) {
                                         Server.MsgtoGameClient (nickname, "ADD_PIECE_ON_FIRST_COL:"+nickname);
-                                        formations[row]=s1[0]+":"+Server.pieces[Int32.Parse (msg[2])]+":"+s1[2];
+                                        Server.formations[Server.row]=s1[0]+":"+Server.pieces[Int32.Parse (msg[2])]+":"+s1[2];
                                     } else if (testFinalNum (Int32.Parse (s1[2]), Server.pieces[Int32.Parse (msg[2])])&&!msg[3].Equals ("0")) {
                                         //Server.MsgtoGameClient (nickname, "ADD_PIECE:"+nickname);
                                         Server.BroadcastInGame ("ADD_PIECE:", msg[4], msg[1]+":"+msg[2]+":"+msg[3]);
-                                        formations[row]=s1[0]+":"+s1[1]+":"+Server.pieces[Int32.Parse (msg[2])];
+                                        Server.formations[Server.row]=s1[0]+":"+s1[1]+":"+Server.pieces[Int32.Parse (msg[2])];
                                     } else {
                                         Server.MsgtoGameClient (nickname, "DONT:Nu se lipeste!");
                                     }
@@ -58,7 +57,7 @@ namespace Server {
                                     if (Server.pieces[Int32.Parse (msg[2])]==Int32.Parse (s1[1])) {
                                         //Server.MsgtoGameClient (nickname, "ADD_PIECE:"+msg[1]+":"+msg[2]+":"+msg[3]);
                                         Server.BroadcastInGame ("ADD_PIECE:", msg[4], msg[1]+":"+msg[2]+":"+msg[3]);
-                                        formations[row]="0";
+                                        Server.formations[Server.row]="0";
                                     } else {
                                         Server.MsgtoGameClient (nickname, "DONT:Nu se lipeste!");
                                     }
@@ -82,8 +81,8 @@ namespace Server {
                         }
                     }
                 }
-            } catch (Exception) {
-
+            } catch (Exception e) {
+                Console.WriteLine (e.StackTrace);
             }
         }
 
@@ -105,12 +104,12 @@ namespace Server {
 
         private string testeaza (int a, int b, int c) {
             if (testInitialNum (a, b)&&testFinalNum (b, c)&&testIntNum (a, c)) {
-                row++;
-                formations[row]=numCode (a, b, c);
+                Server.row++;
+                Server.formations[Server.row]=numCode (a, b, c);
                 return "formatie";
             } else if (testPereche (a, b)&&testPereche (b, c)&&testPereche (a, c)) {
-                row++;
-                formations[row]=missingPiece (a, b, c);
+                Server.row++;
+                Server.formations[Server.row]=missingPiece (a, b, c);
                 return "formatie";
             } else {
                 return "Nu este o formatie";

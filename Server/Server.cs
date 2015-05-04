@@ -15,9 +15,11 @@ namespace Server {
         public static Hashtable clientsInGame=new Hashtable ();
         StreamReader read;
         public static int[] pieces=new int[106];
+        public static String[] formations=new String[100];
         public static UniqueRandom random=new UniqueRandom (Enumerable.Range (0, 105));
         public static int[] pieces_on_board=new int[106];
         public static int a=-1;
+        public static int row=-1;
 
         public Server () {
             TcpClient client=null;
@@ -99,6 +101,7 @@ namespace Server {
                     write.WriteLine (keyword+nickname+":"+msg);
                     write.Flush ();
                     write=null;
+                    Console.WriteLine (keyword+nickname+":"+msg);
                 } catch (Exception ex) {
                     Console.WriteLine (ex.ToString ());
                 }
