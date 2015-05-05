@@ -198,7 +198,6 @@ namespace TestChat {
             img.PreviewMouseDown+=new MouseButtonEventHandler (myimg_MouseDown);
             img.PreviewMouseMove+=new MouseEventHandler (myimg_MouseMove);
             img.PreviewMouseUp+=new MouseButtonEventHandler (myimg_MouseUp);
-            //img.TextInput+=new TextCompositionEventHandler (myimg_TextInput);
             img.LostMouseCapture+=new MouseEventHandler (myimg_LostMouseCapture);
 
         }
@@ -207,7 +206,6 @@ namespace TestChat {
             img.PreviewMouseDown-=myimg_MouseDown;
             img.PreviewMouseMove-=myimg_MouseMove;
             img.PreviewMouseUp-=myimg_MouseUp;
-            //img.TextInput-= myimg_TextInput;
             img.LostMouseCapture-=myimg_LostMouseCapture;
         }
         private void addEtalonListener (Image img) {
@@ -293,10 +291,6 @@ namespace TestChat {
             ((Image) sender).ReleaseMouseCapture ();
         }
 
-        private void myimg_TextInput (object sender, TextCompositionEventArgs e) {
-            ((Image) sender).ReleaseMouseCapture ();
-        }
-
         private void myimg_MouseUp (object sender, MouseButtonEventArgs e) {
             mouseClick=e.GetPosition (null);
 
@@ -346,7 +340,7 @@ namespace TestChat {
                         n++;
                         if (n==3) {
                             formatie=false;
-                            _client.WriteLine ("FOR:"+selectedImages[0]+":"+selectedImages[1]+":"+selectedImages[2]);
+                            _client.WriteLine ("FOR:"+selectedImages[0]+":"+selectedImages[1]+":"+selectedImages[2]+":"+_nickname+":"+(_row1+1));
                         }
                     }
                 }

@@ -15,6 +15,7 @@ namespace Server {
         public static Hashtable clientsInGame=new Hashtable ();
         StreamReader read;
         public static int[] pieces=new int[106];
+        public static Hashtable clientsFormation=new Hashtable ();
         public static String[] formations=new String[100];
         public static UniqueRandom random=new UniqueRandom (Enumerable.Range (0, 105));
         public static int[] pieces_on_board=new int[106];
@@ -54,6 +55,7 @@ namespace Server {
                         }
                     } else if (keyword.Equals ("g")) {
                         clientsInGame.Add (nickname, client);
+                        clientsFormation.Add (nickname,formations);
                         Thread gameThread=new Thread (() => ConnectToGame (client, nickname));
                         gameThread.Start ();
                         Console.WriteLine ("A new client is in game "+nickname);
