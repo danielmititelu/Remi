@@ -26,11 +26,10 @@ namespace Server {
             String[] msg=null;
             String message=null;
 
-            try {
                 while (networkStream.CanRead) {
                     message=read.ReadLine ();
-                    msg=message.Split (':');
                     if (message!=null) {
+                    msg=message.Split (':'); 
                         Console.WriteLine ("From client in-game- "+nickname+": "+message);
                         switch (msg[0]) {
                             case "FOR":
@@ -44,7 +43,8 @@ namespace Server {
                                 String[] s1=s.Split (':');//1:405:406
                                 if (s1[0].Equals ("1")) {
                                     if (testInitialNum (Server.pieces[Int32.Parse (msg[2])], Int32.Parse (s1[1]))&&msg[3].Equals ("0")) {
-                                        Server.MsgtoGameClient (nickname, "ADD_PIECE_ON_FIRST_COL:"+nickname);
+                                       // Server.MsgtoGameClient (nickname, "ADD_PIECE_ON_FIRST_COL:"+nickname);
+                                        Server.BroadcastInGame ("ADD_PIECE_ON_FIRST_COL:", msg[4], msg[1]+":"+msg[2]+":"+msg[3]);
                                         Server.formations[Server.row]=s1[0]+":"+Server.pieces[Int32.Parse (msg[2])]+":"+s1[2];
                                     } else if (testFinalNum (Int32.Parse (s1[2]), Server.pieces[Int32.Parse (msg[2])])&&!msg[3].Equals ("0")) {
                                         //Server.MsgtoGameClient (nickname, "ADD_PIECE:"+nickname);
@@ -81,9 +81,6 @@ namespace Server {
                         }
                     }
                 }
-            } catch (Exception e) {
-                Console.WriteLine (e.StackTrace);
-            }
         }
 
 

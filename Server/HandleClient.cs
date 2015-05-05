@@ -22,11 +22,10 @@ namespace Server {
             StreamReader read=new StreamReader (networkStream);
             String[] msg=null;
             String message=null;
-            try {
                 while (networkStream.CanRead) {
                     message=read.ReadLine ();
-                    msg=message.Split(':');
                     if (message!=null) {
+                    msg=message.Split(':');        
                         Console.WriteLine ("From client- "+nickname+": "+message);
                         switch (msg[0]) {  
                             case "MESSAGE":
@@ -41,10 +40,6 @@ namespace Server {
                         }
                     }
                 }
-            } catch (Exception ) {
-
-               
-            }
         }
        
     }
