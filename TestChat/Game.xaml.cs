@@ -25,7 +25,6 @@ namespace TestChat {
         bool formatie=false;
         String _nickname;
         int[] selectedImages=null;
-        String[] formations=new String[100];
         int n=0;
         int _row1=-1;
         int _row2=-1;
@@ -43,7 +42,7 @@ namespace TestChat {
             InitializeComponent ();
             connect (ipAddress, nickname);
             _nickname=nickname;
-            
+
         }
         private void connect (String ipAddress, String nickname) {
             String ip=ipAddress.Trim ();
@@ -52,47 +51,50 @@ namespace TestChat {
             gameThread.Name="GetMessage";
             gameThread.Start ();
             _client.WriteLine ("g:"+nickname);
- 
+
         }
         private void getMessage () {
             String message=null;
             String keyword=null;
             String readData=null;
 
-                while (_client.ClientConnected ()) {
-                    message=_client.ReadLine ();
-                    keyword=message.Substring (0, message.IndexOf (':'));
-                    readData=message.Substring (message.IndexOf (':')+1, message.Length-message.IndexOf (':')-1);
-                    switch (keyword) {
-                        case "MESSAGE":
-                            this.Dispatcher.Invoke ((Action) (() => { received.AppendText (readData+"\n"); }));
-                            break;
-                        case "FORMATION":
-                            this.Dispatcher.Invoke ((Action) (() => { formation (readData); }));
-                            break;
-                        case "DRAW":
-                            this.Dispatcher.Invoke ((Action) (() => { DrawCard (Int32.Parse (readData)); }));
-                            break;
-                        case "ADD_PIECE":
-                            this.Dispatcher.Invoke ((Action) (() => { Add_piece (readData); }));
-                            break;
-                        case "ADD_PIECE_ON_FIRST_COL":
-                            this.Dispatcher.Invoke ((Action) (() => { Add_piece_on_first_col (readData); }));
-                            break;
-                        case "DONT":
-                            this.Dispatcher.Invoke ((Action) (() => { error.Content=readData; }));
-                            break;
-                        case "NEW_USER":
-                            this.Dispatcher.Invoke ((Action) (() => { new_user (readData); }));
-                            break;
-                        case "PUT_PIECE_ON_BORD":
-                            this.Dispatcher.Invoke ((Action) (() => { put_piece_on_board (readData); }));
-                            break;
-                        default:
-                            this.Dispatcher.Invoke ((Action) (() => { error.Content="Error 404:Keyword not found"; }));
-                            break;
-                    }
+            while (_client.ClientConnected ()) {
+                message=_client.ReadLine ();
+                keyword=message.Substring (0, message.IndexOf (':'));
+                readData=message.Substring (message.IndexOf (':')+1, message.Length-message.IndexOf (':')-1);
+                switch (keyword) {
+                    case "MESSAGE":
+                        this.Dispatcher.Invoke ((Action) (() => {
+                            received.AppendText (readData+"\n");
+                            received.ScrollToEnd ();
+                        }));
+                        break;
+                    case "FORMATION":
+                        this.Dispatcher.Invoke ((Action) (() => { formation (readData); }));
+                        break;
+                    case "DRAW":
+                        this.Dispatcher.Invoke ((Action) (() => { DrawCard (Int32.Parse (readData)); }));
+                        break;
+                    case "ADD_PIECE":
+                        this.Dispatcher.Invoke ((Action) (() => { Add_piece (readData); }));
+                        break;
+                    case "ADD_PIECE_ON_FIRST_COL":
+                        this.Dispatcher.Invoke ((Action) (() => { Add_piece_on_first_col (readData); }));
+                        break;
+                    case "DONT":
+                        this.Dispatcher.Invoke ((Action) (() => { error.Content=readData; }));
+                        break;
+                    case "NEW_USER":
+                        this.Dispatcher.Invoke ((Action) (() => { new_user (readData); }));
+                        break;
+                    case "PUT_PIECE_ON_BORD":
+                        this.Dispatcher.Invoke ((Action) (() => { put_piece_on_board (readData); }));
+                        break;
+                    default:
+                        this.Dispatcher.Invoke ((Action) (() => { error.Content="Error 404:Keyword not found"; }));
+                        break;
                 }
+            }
         }
 
         private void put_piece_on_board (string readData) {
@@ -220,12 +222,8 @@ namespace TestChat {
                 Image element=(Image) sender;
                 int c=Grid.GetColumn (element);
                 int r=Grid.GetRow (element);
-
-                for (int i=0; i<image.getImage.Length; i++) {
-                    if (temp_img.Equals (image.getImage[i])) {
-                        _client.WriteLine ("ADD_PIECE:"+r+":"+i+":"+c+":"+client_to_add);
-                    }
-                }
+                int index=Array.IndexOf (image.getImage.ToArray (), temp_img);
+                _client.WriteLine ("ADD_PIECE:"+r+":"+index+":"+c+":"+client_to_add);
             }
         }
         private void Add_piece (String readData) {
@@ -247,7 +245,7 @@ namespace TestChat {
             temp_img=null;
         }
 
-        private void sub_add_piece (Grid etalon, Image local_image, int r, int c, bool first_row) {   
+        private void sub_add_piece (Grid etalon, Image local_image, int r, int c, bool first_row) {
             if (first_row) {
                 Image local_image2=etalon.Children.Cast<Image> ().First (e => Grid.GetRow (e)==r&&Grid.GetColumn (e)==c);
                 removeEtalonListener (local_image2);
@@ -275,27 +273,29 @@ namespace TestChat {
             Image local_image=image.getImage[Int32.Parse (msg[2])];
 
             if (msg[0].Equals (_nickname)) {
-                sub_add_piece (etalon1, local_image, r, c,true);
+                sub_add_piece (etalon1, local_image, r, c, true);
             } else if (msg[0].Equals (player2.Content)) {
-                sub_add_piece (etalon2, local_image, r, c,true);
+                sub_add_piece (etalon2, local_image, r, c, true);
             } else if (msg[0].Equals (player3.Content)) {
-                sub_add_piece (etalon3, local_image, r, c,true);
+                sub_add_piece (etalon3, local_image, r, c, true);
             } else if (msg[0].Equals (player4.Content)) {
-                sub_add_piece (etalon4, local_image, r, c,true);
+                sub_add_piece (etalon4, local_image, r, c, true);
             }
             addEtalonListener (local_image);
             temp_img=null;
         }
 
         private void myimg_LostMouseCapture (object sender, MouseEventArgs e) {
-            ((Image) sender).ReleaseMouseCapture ();
+            Image selected_image=(Image) sender;
+            selected_image.ReleaseMouseCapture ();
         }
 
         private void myimg_MouseUp (object sender, MouseButtonEventArgs e) {
+            Image selected_image=(Image) sender;
             mouseClick=e.GetPosition (null);
 
-            canvasLeft=Canvas.GetLeft ((Image) sender);
-            canvasTop=Canvas.GetTop ((Image) sender);
+            canvasLeft=Canvas.GetLeft (selected_image);
+            canvasTop=Canvas.GetTop (selected_image);
 
             if (canvasLeft<0) {
                 canvasLeft=0;
@@ -304,67 +304,63 @@ namespace TestChat {
                 canvasTop=0;
             }
             if (canvasLeft>canvas.ActualWidth) {
-                canvasLeft=canvas.ActualWidth-((Image) sender).ActualWidth;
+                canvasLeft=canvas.ActualWidth-selected_image.ActualWidth;
             }
             if (canvasTop>canvas.ActualHeight) {
-                canvasTop=canvas.ActualHeight-((Image) sender).ActualHeight;
+                canvasTop=canvas.ActualHeight-selected_image.ActualHeight;
             }
-            ((Image) sender).SetValue (Canvas.LeftProperty, canvasLeft);
-            ((Image) sender).SetValue (Canvas.TopProperty, canvasTop);
-            ((Image) sender).ReleaseMouseCapture ();
+            selected_image.SetValue (Canvas.LeftProperty, canvasLeft);
+            selected_image.SetValue (Canvas.TopProperty, canvasTop);
+            selected_image.ReleaseMouseCapture ();
 
             if (stack.IsMouseOver) {
-                for (int i=0; i<image.getImage.Length; i++) {
-                    if (((Image) sender).Equals (image.getImage[i])) {
-                        _client.WriteLine ("PUT_PIECE_ON_BORD:"+i);
-                    }
-                }
+                int index=Array.IndexOf (image.getImage.ToArray (), selected_image);
+                _client.WriteLine ("PUT_PIECE_ON_BORD:"+index);
             }
             if (etalon1.IsMouseOver) {
-                temp_img=((Image) sender);
+                temp_img=selected_image;
                 client_to_add=_nickname;
             } else if (etalon2.IsMouseOver) {
-                temp_img=((Image) sender);
+                temp_img=selected_image;
                 client_to_add=(String) player2.Content;
             } else if (etalon3.IsMouseOver) {
                 client_to_add=(String) player3.Content;
-                temp_img=((Image) sender);
+                temp_img=selected_image;
             } else if (etalon4.IsMouseOver) {
                 client_to_add=(String) player4.Content;
-                temp_img=((Image) sender);
+                temp_img=selected_image;
             }
             if (formatie) {
-                for (int i=0; i<image.getImage.Length; i++) {
-                    if (((Image) sender).Equals (image.getImage[i])) {
-                        selectedImages[n]=i;
-                        n++;
-                        if (n==3) {
-                            formatie=false;
-                            _client.WriteLine ("FOR:"+selectedImages[0]+":"+selectedImages[1]+":"+selectedImages[2]+":"+_nickname+":"+(_row1+1));
-                        }
-                    }
+                int index=Array.IndexOf (image.getImage.ToArray (), selected_image);
+                selectedImages[n]=index;
+                n++;
+                if (n==3) {
+                    formatie=false;
+                    _client.WriteLine ("FOR:"+selectedImages[0]+":"+selectedImages[1]+":"+selectedImages[2]+":"+_nickname+":"+(_row1+1));
                 }
             }
         }
 
         private void myimg_MouseMove (object sender, MouseEventArgs e) {
-            if (((Image) sender).IsMouseCaptured) {
+            Image selected_image=(Image) sender;
+            if (selected_image.IsMouseCaptured) {
                 Point mouseCurrent=e.GetPosition (null);
                 double Left=mouseCurrent.X-mouseClick.X;
                 double Top=mouseCurrent.Y-mouseClick.Y;
                 mouseClick=e.GetPosition (null);
-                ((Image) sender).SetValue (Canvas.LeftProperty, canvasLeft+Left);
-                ((Image) sender).SetValue (Canvas.TopProperty, canvasTop+Top);
-                canvasLeft=Canvas.GetLeft (((Image) sender));
-                canvasTop=Canvas.GetTop (((Image) sender));
+                selected_image.SetValue (Canvas.LeftProperty, canvasLeft+Left);
+                selected_image.SetValue (Canvas.TopProperty, canvasTop+Top);
+                canvasLeft=Canvas.GetLeft (selected_image);
+                canvasTop=Canvas.GetTop (selected_image);
             }
         }
 
         private void myimg_MouseDown (object sender, MouseButtonEventArgs e) {
+            Image selected_image=(Image) sender;
             mouseClick=e.GetPosition (null);
-            canvasLeft=Canvas.GetLeft ((Image) sender);
-            canvasTop=Canvas.GetTop ((Image) sender);
-            ((Image) sender).CaptureMouse ();
+            canvasLeft=Canvas.GetLeft (selected_image);
+            canvasTop=Canvas.GetTop (selected_image);
+            selected_image.CaptureMouse ();
         }
 
         private void Button_Click (object sender, RoutedEventArgs e) {
@@ -377,7 +373,7 @@ namespace TestChat {
             canvas.Children.Add (image.getImage[i]);
             addImgListeners (image.getImage[i]);
         }
-        private void Button_Click_1 (object sender, RoutedEventArgs e) {      
+        private void Button_Click_1 (object sender, RoutedEventArgs e) {
             selectedImages=new int[3];
             formatie=true;
             n=0;

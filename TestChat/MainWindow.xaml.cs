@@ -37,7 +37,7 @@ namespace TestChat {
             String ip=ipAddress.Trim ();
             _client=new Client (ip);
             Thread chatThread=new Thread (new ThreadStart (getMessage));
-            
+
             chatThread.Start ();
             _client.WriteLine ("c:"+nickname);
         }
@@ -46,35 +46,39 @@ namespace TestChat {
             String message=null;
             String[] dataReceived=null;
             String readData=null;
-           
-                while (_client.ClientConnected ()) {
-                    message=_client.ReadLine ();
-                    dataReceived=message.Split (':');
-                    readData=message.Substring (message.IndexOf (':')+1, message.Length-message.IndexOf (':')-1);
-                    switch (dataReceived[0]) {
-                        case "MESSAGE":                          
-                            this.Dispatcher.Invoke ((Action) (() => { received.AppendText (readData+"\n"); }));
-                            break;
-                        case "ALR":
-                            
-                            //Login login=new Login ();
-                            //login.Show ();
-                            //this.Dispatcher.Invoke ((Action) (() => { this.Hide(); }));
-                            break;
-                        case "NEW_USER":
-                            this.Dispatcher.Invoke ((Action) (() => { listBox1.Items.Clear (); }));                          
-                            foreach (String user in dataReceived) {
-                                if (user==dataReceived[0])
-                                    continue;
 
-                                this.Dispatcher.Invoke ((Action) (() => { listBox1.Items.Add (user); }));
-                            }
-                            break;
-                        default:
-                            this.Dispatcher.Invoke ((Action) (() => { error.Content="Error 404:Keyword not found"; }));
-                            break;
-                    }
+            while (_client.ClientConnected ()) {
+                message=_client.ReadLine ();
+                dataReceived=message.Split (':');
+                readData=message.Substring (message.IndexOf (':')+1, message.Length-message.IndexOf (':')-1);
+                switch (dataReceived[0]) {
+                    case "MESSAGE":
+                        this.Dispatcher.Invoke ((Action) (() => {
+                            received.AppendText (readData+"\n");
+                            received.ScrollToEnd ();
+                        }));
+
+                        break;
+                    case "ALR":
+
+                        //Login login=new Login ();
+                        //login.Show ();
+                        //this.Dispatcher.Invoke ((Action) (() => { this.Hide(); }));
+                        break;
+                    case "NEW_USER":
+                        this.Dispatcher.Invoke ((Action) (() => { listBox1.Items.Clear (); }));
+                        foreach (String user in dataReceived) {
+                            if (user==dataReceived[0])
+                                continue;
+
+                            this.Dispatcher.Invoke ((Action) (() => { listBox1.Items.Add (user); }));
+                        }
+                        break;
+                    default:
+                        this.Dispatcher.Invoke ((Action) (() => { error.Content="Error 404:Keyword not found"; }));
+                        break;
                 }
+            }
         }
 
         private void send_KeyDown (object sender, KeyEventArgs e) {

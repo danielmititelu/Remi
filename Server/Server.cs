@@ -14,13 +14,11 @@ namespace Server {
         public static Hashtable clientsList=new Hashtable ();
         public static Hashtable clientsInGame=new Hashtable ();
         StreamReader read;
-        public static int[] pieces=new int[106];
+        public static List<int> pieces=new List<int> ();
         public static Hashtable clientsFormation=new Hashtable ();
-        public static String[] formations=new String[100];
+        public static List<String> formations=new List<String> ();
         public static UniqueRandom random=new UniqueRandom (Enumerable.Range (0, 105));
-        public static int[] pieces_on_board=new int[106];
-        public static int a=-1;
-        public static int row=-1;
+        public static List<int> pieces_on_board=new List<int> ();
 
         public Server () {
             TcpClient client=null;
@@ -55,7 +53,7 @@ namespace Server {
                         }
                     } else if (keyword.Equals ("g")) {
                         clientsInGame.Add (nickname, client);
-                        clientsFormation.Add (nickname,formations);
+                        clientsFormation.Add (nickname, formations);
                         Thread gameThread=new Thread (() => ConnectToGame (client, nickname));
                         gameThread.Start ();
                         Console.WriteLine ("A new client is in game "+nickname);
@@ -90,7 +88,7 @@ namespace Server {
                 }
             }
         }
-        public static void BroadcastInGame (String keyword,String nickname, String msg) {
+        public static void BroadcastInGame (String keyword, String nickname, String msg) {
             TcpClient broadcastSocket=null;
             StreamWriter write=null;
             foreach (DictionaryEntry item in clientsInGame) {
@@ -198,10 +196,11 @@ namespace Server {
             int c=0;
             int n=1;
             string zero="0";
-            for (int i=0; i<=104; i++) {
-                if (i==52) {
-
+            for (int i=0; i<=105; i++) {
+                if (i==52 || i==105) {
                     c=0;
+                    pieces.Insert (i, 500);
+                    continue;
                 }
                 if (i<52) {
                     if (i%13!=0) {
@@ -225,10 +224,8 @@ namespace Server {
                 } else {
                     zero="";
                 }
-                pieces[i]=Int32.Parse (c.ToString ()+zero+n.ToString ());
+                pieces.Insert (i, Int32.Parse (c.ToString ()+zero+n.ToString ()));
             }
-            pieces[52]=500;
-            pieces[105]=500;
         }
         static void Main (string[] args) {
             new Server ();

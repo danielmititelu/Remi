@@ -47,11 +47,11 @@ namespace Server {
                             if (s1[0].Equals ("1")) {
                                 if (testInitialNum (Server.pieces[Int32.Parse (msg[2])], Int32.Parse (s1[1]))&&msg[3].Equals ("0")) {
                                     Server.BroadcastInGame ("ADD_PIECE_ON_FIRST_COL:", msg[4], msg[1]+":"+msg[2]+":"+msg[3]);
-                                    int index=Array.IndexOf (Server.formations, s);
+                                    int index=Array.IndexOf (Server.formations.ToArray(), s);
                                     Server.formations[index]=s1[0]+":"+Server.pieces[Int32.Parse (msg[2])]+":"+s1[2]+":"+msg[4]+":"+msg[1];
                                 } else if (testFinalNum (Int32.Parse (s1[2]), Server.pieces[Int32.Parse (msg[2])])&&!msg[3].Equals ("0")) {
                                     Server.BroadcastInGame ("ADD_PIECE:", msg[4], msg[1]+":"+msg[2]+":"+msg[3]);
-                                    int index=Array.IndexOf (Server.formations,s);
+                                    int index=Array.IndexOf (Server.formations.ToArray(),s);
                                     Server.formations[index]=s1[0]+":"+s1[1]+":"+Server.pieces[Int32.Parse (msg[2])]+":"+msg[4]+":"+msg[1];
                                 } else {
                                     Server.MsgtoGameClient (nickname, "DONT:Nu se lipeste!");
@@ -59,7 +59,8 @@ namespace Server {
                             } else if (s1[0].Equals ("2")) {
                                 if (Server.pieces[Int32.Parse (msg[2])]==Int32.Parse (s1[1])) {
                                     Server.BroadcastInGame ("ADD_PIECE:", msg[4], msg[1]+":"+msg[2]+":"+msg[3]);
-                                    Server.formations[Server.row]="0";
+                                    int index=Array.IndexOf (Server.formations.ToArray (), s);
+                                    Server.formations[index]=s1[0]+":0:0:"+msg[4]+":"+msg[1]; ;
                                 } else {
                                     Server.MsgtoGameClient (nickname, "DONT:Nu se lipeste!");
                                 }
@@ -70,8 +71,7 @@ namespace Server {
                             Server.MsgtoGameClient (nickname, "DRAW:"+i);
                             break;
                         case "PUT_PIECE_ON_BORD":
-                            Server.a++;
-                            Server.pieces_on_board[Server.a]=Server.pieces[Int32.Parse (msg[1])];
+                            Server.pieces_on_board.Add(Server.pieces[Int32.Parse (msg[1])]);
                             Server.BroadcastInGame ("PUT_PIECE_ON_BORD:", nickname, msg[1]);
                             break;
                         case "EXIT":
@@ -103,12 +103,10 @@ namespace Server {
 
         private string testeaza (int a, int b, int c, String nickname, String row) {
             if (testInitialNum (a, b)&&testFinalNum (b, c)&&testIntNum (a, c)) {
-                Server.row++;
-                Server.formations[Server.row]=numCode (a, b, c,nickname,row);
+                Server.formations.Add(numCode (a, b, c,nickname,row));
                 return "formatie";
             } else if (testPereche (a, b)&&testPereche (b, c)&&testPereche (a, c)) {
-                Server.row++;
-                Server.formations[Server.row]=missingPiece (a, b, c,nickname,row);
+                Server.formations.Add(missingPiece (a, b, c,nickname,row));
                 return "formatie";
             } else {
                 return "Nu este o formatie";
@@ -123,6 +121,10 @@ namespace Server {
             int a1=Int32.Parse (a.ToString ().Substring (0, 1));//102:202:302:402:500
             int b1=Int32.Parse (b.ToString ().Substring (0, 1));
             int c1=Int32.Parse (c.ToString ().Substring (0, 1));
+            var list=new List<int> (new[] { 1, 2, 3, 4, 5 });
+            var result=list.Except (new[]{a1,b1,c1});
+            int test = result.ElementAt(0);
+            int test1 = result.ElementAt (1);//modify me
             String number=a.ToString ().Substring (1, 2);
             int res=10-(a1+b1+c1);
             return "2:"+res+number+":999"+":"+nickname+":"+row;
