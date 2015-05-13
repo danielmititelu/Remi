@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Game.MessageControl;
+using Game.Handlers;
 
 namespace Game {
     /// <summary>
@@ -26,13 +27,8 @@ namespace Game {
         String _nickname;
         int[] selectedImages=null;
         int n=0;
-        int _row1=-1;
-        int _row2=-1;
-        int _row3=-1;
-        int _row4=-1;
-        Image temp_img;
+        public Image temp_img;
         String client_to_add;
-        ImageLoader image=new ImageLoader();
 
         static GameWindow _instance;
 
@@ -70,17 +66,6 @@ namespace Game {
 
         public void ErrorText(string message) {
             this.Dispatcher.Invoke((Action) ( () => { error.Content=message; } ));
-        }
-
-        public void PutPieceOnBoard(string readData) {
-            this.Dispatcher.Invoke((Action) ( () => {
-                String[] mes=readData.Split(':');
-                if(mes[0].Equals(_nickname)) {
-                    removeImgListeners(image.getImage[Int32.Parse(mes[1])]);
-                    canvas.Children.Remove(image.getImage[Int32.Parse(mes[1])]);
-                }
-                stack.Children.Add(image.getImage[Int32.Parse(mes[1])]);
-            } ));
         }
 
         public void NewUser(string readData) {
@@ -124,51 +109,6 @@ namespace Game {
             } ));
         }
 
-        public void Formation(String readData) {
-            this.Dispatcher.Invoke((Action) ( () => {
-                String[] msg=readData.Split(':');
-                Image local_image1=image.getImage[Int32.Parse(msg[1])];
-                Image local_image2=image.getImage[Int32.Parse(msg[2])];
-                Image local_image3=image.getImage[Int32.Parse(msg[3])];
-                if(msg[0].Equals(_nickname)) {
-                    removeImgListeners(local_image1);
-                    removeImgListeners(local_image2);
-                    removeImgListeners(local_image3);
-
-                    canvas.Children.Remove(local_image1);
-                    canvas.Children.Remove(local_image2);
-                    canvas.Children.Remove(local_image3);
-                    _row1++;
-                    add_formation(etalon1, _row1, local_image1, local_image2, local_image3);
-                } else if(msg[0].Equals(player2.Content)) {
-                    _row2++;
-                    add_formation(etalon2, _row2, local_image1, local_image2, local_image3);
-                } else if(msg[0].Equals(player3.Content)) {
-                    _row3++;
-                    add_formation(etalon3, _row3, local_image1, local_image2, local_image3);
-                } else if(msg[0].Equals(player4.Content)) {
-                    _row4++;
-                    add_formation(etalon4, _row4, local_image1, local_image2, local_image3);
-                }
-                addEtalonListener(local_image1);
-                addEtalonListener(local_image3);
-            } ));
-        }
-
-        private void add_formation(Grid etalon, int _row, Image local_image1, Image local_image2, Image local_image3) {
-            etalon.RowDefinitions.Add(new RowDefinition());
-            etalon.Children.Add(local_image1);
-            etalon.Children.Add(local_image2);
-            etalon.Children.Add(local_image3);
-
-            local_image1.SetValue(Grid.ColumnProperty, 0);
-            local_image1.SetValue(Grid.RowProperty, _row);
-            local_image2.SetValue(Grid.ColumnProperty, 1);
-            local_image2.SetValue(Grid.RowProperty, _row);
-            local_image3.SetValue(Grid.ColumnProperty, 2);
-            local_image3.SetValue(Grid.RowProperty, _row);
-        }
-
         private void send_KeyDown(object sender, KeyEventArgs e) {
             if(e.Key==Key.Enter) {
                 Client.GetInstance().WriteLine("MESSAGE_GAME:"+send.Text);
@@ -177,83 +117,35 @@ namespace Game {
         }
 
         private void addImgListeners(Image img) {
-
             img.PreviewMouseDown+=new MouseButtonEventHandler(myimg_MouseDown);
             img.PreviewMouseMove+=new MouseEventHandler(myimg_MouseMove);
             img.PreviewMouseUp+=new MouseButtonEventHandler(myimg_MouseUp);
             img.LostMouseCapture+=new MouseEventHandler(myimg_LostMouseCapture);
 
         }
-        private void removeImgListeners(Image img) {
+        public void RemoveImgListeners(Image img) {
             img.PreviewMouseDown-=myimg_MouseDown;
             img.PreviewMouseMove-=myimg_MouseMove;
             img.PreviewMouseUp-=myimg_MouseUp;
             img.LostMouseCapture-=myimg_LostMouseCapture;
         }
-        private void addEtalonListener(Image img) {
+
+        public void AddEtalonListener(Image img) {
             img.MouseUp+=etalon_MouseUp;
         }
-        private void removeEtalonListener(Image img) {
+
+        public void RemoveEtalonListener(Image img) {
             img.MouseUp-=etalon_MouseUp;
         }
 
-        private void etalon_MouseUp(object sender, MouseButtonEventArgs e) {
+        public void etalon_MouseUp(object sender, MouseButtonEventArgs e) {
             if(temp_img!=null) {
                 Image element=(Image) sender;
                 int c=Grid.GetColumn(element);
                 int r=Grid.GetRow(element);
-                int index=Array.IndexOf(image.getImage.ToArray(), temp_img);
+                int index=Array.IndexOf(ImageLoader.ImageParser.getImage.ToArray(), temp_img);
                 Client.GetInstance().WriteLine("ADD_PIECE:"+r+":"+index+":"+c+":"+client_to_add);
             }
-        }
-
-        public void AddPiece(String readData, bool firstRow) {
-            this.Dispatcher.Invoke((Action) ( () => {
-                String[] msg=readData.Split(':');//nickname:row:image.getImage:column
-                int r=Int32.Parse(msg[1]);
-                int c;
-                if(firstRow) {
-                    c=Int32.Parse(msg[3]);
-                } else {
-                    c=Int32.Parse(msg[3])+1;
-                }
-
-                Image local_image=image.getImage[Int32.Parse(msg[2])];
-
-                if(msg[0].Equals(_nickname)) {
-                    sub_add_piece(etalon1, local_image, r, c, firstRow);
-                } else if(msg[0].Equals(player2.Content)) {
-                    sub_add_piece(etalon2, local_image, r, c, firstRow);
-                } else if(msg[0].Equals(player3.Content)) {
-                    sub_add_piece(etalon3, local_image, r, c, firstRow);
-                } else if(msg[0].Equals(player4.Content)) {
-                    sub_add_piece(etalon4, local_image, r, c, firstRow);
-                }
-                addEtalonListener(local_image);
-                temp_img=null;
-            } ));
-        }
-
-        private void sub_add_piece(Grid etalon, Image local_image, int r, int c, bool first_row) {
-            if(first_row) {
-                Image local_image2=etalon.Children.Cast<Image>().First(e => Grid.GetRow(e)==r&&Grid.GetColumn(e)==c);
-                removeEtalonListener(local_image2);
-                IEnumerable<Image> imagesOnRow;
-                imagesOnRow=etalon.Children.Cast<Image>().Where(e => Grid.GetRow(e)==r);
-                foreach(Image i in imagesOnRow) {
-                    Grid.SetColumn(i, Grid.GetColumn(i)+1);
-                }
-            } else {
-                Image local_image2=etalon.Children.Cast<Image>().First(e => Grid.GetRow(e)==r&&Grid.GetColumn(e)==c-1);
-                removeEtalonListener(local_image2);
-            }
-            if(canvas.Children.Contains(local_image)) {
-                removeImgListeners(local_image);
-                canvas.Children.Remove(local_image);
-            }
-            etalon.Children.Add(local_image);
-            Grid.SetRow(local_image, r);
-            Grid.SetColumn(local_image, c);
         }
 
         private void myimg_LostMouseCapture(object sender, MouseEventArgs e) {
@@ -274,18 +166,18 @@ namespace Game {
             if(canvasTop<0) {
                 canvasTop=0;
             }
-            if(canvasLeft>canvas.ActualWidth) {
-                canvasLeft=canvas.ActualWidth-selected_image.ActualWidth;
+            if(canvasLeft>MyTableCanvas.ActualWidth) {
+                canvasLeft=MyTableCanvas.ActualWidth-selected_image.ActualWidth;
             }
-            if(canvasTop>canvas.ActualHeight) {
-                canvasTop=canvas.ActualHeight-selected_image.ActualHeight;
+            if(canvasTop>MyTableCanvas.ActualHeight) {
+                canvasTop=MyTableCanvas.ActualHeight-selected_image.ActualHeight;
             }
             selected_image.SetValue(Canvas.LeftProperty, canvasLeft);
             selected_image.SetValue(Canvas.TopProperty, canvasTop);
             selected_image.ReleaseMouseCapture();
 
-            if(stack.IsMouseOver) {
-                int index=Array.IndexOf(image.getImage.ToArray(), selected_image);
+            if(StackCanvas.IsMouseOver) {
+                int index=Array.IndexOf(ImageLoader.ImageParser.getImage.ToArray(), selected_image);
                 Client.GetInstance().WriteLine("PUT_PIECE_ON_BORD:"+index);
             }
             if(etalon1.IsMouseOver) {
@@ -302,12 +194,12 @@ namespace Game {
                 temp_img=selected_image;
             }
             if(formatie) {
-                int index=Array.IndexOf(image.getImage.ToArray(), selected_image);
+                int index=Array.IndexOf(ImageLoader.ImageParser.getImage.ToArray(), selected_image);
                 selectedImages[n]=index;
                 n++;
                 if(n==3) {
                     formatie=false;
-                    Client.GetInstance().WriteLine("FOR:"+selectedImages[0]+":"+selectedImages[1]+":"+selectedImages[2]+":"+_nickname+":"+( _row1+1 ));
+                    Client.GetInstance().WriteLine("FOR:"+selectedImages[0]+":"+selectedImages[1]+":"+selectedImages[2]+":"+_nickname+":"+( PieceHandler._row1+1 ));
                 }
             }
         }
@@ -340,12 +232,13 @@ namespace Game {
 
         public void DrawCard(int i) {
             this.Dispatcher.Invoke((Action) ( () => {
-                Canvas.SetLeft(image.getImage[i], 0);
-                Canvas.SetTop(image.getImage[i], 0);
-                canvas.Children.Add(image.getImage[i]);
-                addImgListeners(image.getImage[i]);
+                Canvas.SetLeft(ImageLoader.ImageParser.getImage[i], 0);
+                Canvas.SetTop(ImageLoader.ImageParser.getImage[i], 0);
+                MyTableCanvas.Children.Add(ImageLoader.ImageParser.getImage[i]);
+                addImgListeners(ImageLoader.ImageParser.getImage[i]);
             } ));
         }
+
         private void Button_Click_1(object sender, RoutedEventArgs e) {
             selectedImages=new int[3];
             formatie=true;
@@ -357,5 +250,88 @@ namespace Game {
                 Client.GetInstance().Close();
             }
         }
+
+        public string GetNickName() {
+            return _nickname;
+        }
+
+        public string GetPlayerAt(int p) {
+            switch(p) {
+                case 2:
+                    return ""+player2.Content;
+                case 3:
+                    return ""+player2.Content;
+                case 4:
+                    return ""+player4.Content;
+                default:
+                    return "";
+            }
+        }
+
+        public Grid GetGridAt(int p) {
+            switch(p) {
+                case 1:
+                    return etalon1;
+                case 2:
+                    return etalon2;
+                case 3:
+                    return etalon3;
+                case 4:
+                    return etalon4;
+                default:
+                    return null;
+            }
+        }
+
+        public void RemoveFromMyTable(Image local_image1) {
+            this.Dispatcher.Invoke((Action) ( () => {
+                MyTableCanvas.Children.Remove(local_image1);
+            } ));
+        }
+
+        public void AddRowToGrid(Grid etalon) {
+            this.Dispatcher.Invoke((Action) ( () => {
+                etalon.RowDefinitions.Add(new RowDefinition());
+            } ));
+        }
+
+        public void AddChildToGrid(Grid etalon, Image local_image, int r, int c) {
+            this.Dispatcher.Invoke((Action) ( () => {
+                etalon.Children.Add(local_image);
+                Grid.SetRow(local_image, r);
+                Grid.SetColumn(local_image, c);
+            } ));
+        }
+
+        public void SetImageValue(Image local_image, DependencyProperty dependencyProperty, int p) {
+            this.Dispatcher.Invoke((Action) ( () => {
+                local_image.SetValue(dependencyProperty, p);
+            } ));
+        }
+
+        public Image GetToAdd(Grid etalon, int c, int r) {
+            Image img=null;
+            this.Dispatcher.Invoke((Action) ( () => {
+                img = etalon.Children.Cast<Image>().First(e => Grid.GetRow(e)==r&&Grid.GetColumn(e)==c);
+            } ));
+            return img;
+        }
+
+        public void MoveRow(Grid etalon, int r) {
+            this.Dispatcher.Invoke((Action) ( () => {
+                foreach(Image i in etalon.Children.Cast<Image>().Where(e => Grid.GetRow(e)==r)) {
+                    Grid.SetColumn(i, Grid.GetColumn(i)+1);
+                }
+            } ));
+        }
+
+        public bool MyTableContains(UIElement element) {
+            bool exists=false;
+            this.Dispatcher.Invoke((Action) ( () => {
+                exists=GameWindow.GetInstance().MyTableCanvas.Children.Contains(element);
+            } ));
+            return exists;
+        }
+
     }
 }

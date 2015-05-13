@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Game;
+using Game.Handlers;
 
 namespace Game.MessageControl {
     class MessageReader {
@@ -26,22 +27,22 @@ namespace Game.MessageControl {
                         GameWindow.GetInstance().SetText(readData);
                         break;
                     case "FORMATION":
-                        GameWindow.GetInstance().Formation(readData);
+                        PieceHandler.AddFormationToCanvas(readData);
                         break;
                     case "DRAW":
                         GameWindow.GetInstance().DrawCard(Int32.Parse(readData));
                         break;
                     case "ADD_PIECE":
-                        GameWindow.GetInstance().AddPiece(readData, false);
+                        PieceHandler.AddPieceToFormation(readData, false);
                         break;
                     case "ADD_PIECE_ON_FIRST_COL":
-                        GameWindow.GetInstance().AddPiece(readData, true);
+                        PieceHandler.AddPieceToFormation(readData, true);
                         break;
                     case "DONT":
                         GameWindow.GetInstance().ErrorText(readData);
                         break;
                     case "PUT_PIECE_ON_BORD":
-                        GameWindow.GetInstance().PutPieceOnBoard(readData);
+                        PieceHandler.PutPieceOnBoard(readData);
                         break;
                     case "MESSAGE_CHAT":
                         MainWindow.GetInstance().SetText(readData);

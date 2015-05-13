@@ -9,6 +9,9 @@ using System.Windows.Media.Imaging;
 
 namespace Game {
     class ImageLoader {
+
+        public static ImageLoader ImageParser=new ImageLoader();
+
         List<Image> image=new List<Image>();
         List<CroppedBitmap> objImg=new List<CroppedBitmap>();
         double scale=2;

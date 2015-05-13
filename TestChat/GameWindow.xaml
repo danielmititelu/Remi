@@ -6,10 +6,10 @@
         WindowStyle="None" ResizeMode="NoResize" 
         WindowState="Maximized" d:DesignWidth="1535.2" d:DesignHeight="859" Closing="Window_Closing">
     <Grid >
-        <Canvas x:Name="canvas" Background="Aquamarine" HorizontalAlignment="Left" Height="177" Margin="338,0,0,38.2" VerticalAlignment="Bottom" Width="606"/>
+        <Canvas x:Name="MyTableCanvas" Background="Aquamarine" HorizontalAlignment="Left" Height="177" Margin="338,0,0,38.2" VerticalAlignment="Bottom" Width="606"/>
         <Button Content="Trage o piesa" Click="Button_Click" Margin="338,0,0,229.2" Height="41" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="90" RenderTransformOrigin="0.5,0.505"  />
         <ScrollViewer Margin="388,392,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="778" HorizontalScrollBarVisibility="Auto" CanContentScroll="True" PanningMode="HorizontalOnly" VerticalScrollBarVisibility="Disabled" >
-            <StackPanel x:Name="stack" Background="Aquamarine" Orientation="Horizontal" Height="58" Width="778"/>
+            <StackPanel x:Name="StackCanvas" Background="Aquamarine" Orientation="Horizontal" Height="58" Width="778"/>
         </ScrollViewer>
             <Grid x:Name="etalon1" Background="Aquamarine" Height="321" Width="221" Margin="944,500,370.2,38.2" >
                 <Grid.RowDefinitions>
