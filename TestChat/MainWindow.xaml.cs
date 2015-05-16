@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Game.MessageControl;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -16,90 +17,82 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace TestChat {
+namespace Game {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
-        Client _client;
+
         String _ipAddress;
         String _nickname;
-        public MainWindow () {
-            InitializeComponent ();
+
+        static MainWindow instance;
+
+        public MainWindow() {
+            InitializeComponent();
         }
-        public MainWindow (String ipAddress, String nickname) {
-            InitializeComponent ();
+
+        public MainWindow(String ipAddress, String nickname) {
+            InitializeComponent();
             _ipAddress=ipAddress;
             _nickname=nickname;
-            connect (ipAddress, nickname);
-        }
-        private void connect (String ipAddress, String nickname) {
-            String ip=ipAddress.Trim ();
-            _client=new Client (ip);
-            Thread chatThread=new Thread (new ThreadStart (getMessage));
+            connect(ipAddress, nickname);
 
-            chatThread.Start ();
-            _client.WriteLine ("c:"+nickname);
+            instance=this;
         }
 
-        private void getMessage () {
-            String message=null;
-            String[] dataReceived=null;
-            String readData=null;
+        private void connect(String ipAddress, String nickname) {
+            String ip=ipAddress.Trim();
 
-            while (_client.ClientConnected ()) {
-                message=_client.ReadLine ();
-                dataReceived=message.Split (':');
-                readData=message.Substring (message.IndexOf (':')+1, message.Length-message.IndexOf (':')-1);
-                switch (dataReceived[0]) {
-                    case "MESSAGE":
-                        this.Dispatcher.Invoke ((Action) (() => {
-                            received.AppendText (readData+"\n");
-                            received.ScrollToEnd ();
-                        }));
+            new Client(ip);
+            Client.GetInstance().SetNickName(_nickname);
 
-                        break;
-                    case "ALR":
+            Thread messageReader=new Thread(() => MessageReader.getMessage());
+            messageReader.SetApartmentState(ApartmentState.STA);
+            messageReader.Name="MessageReader";
 
-                        //Login login=new Login ();
-                        //login.Show ();
-                        //this.Dispatcher.Invoke ((Action) (() => { this.Hide(); }));
-                        break;
-                    case "NEW_USER":
-                        this.Dispatcher.Invoke ((Action) (() => { listBox1.Items.Clear (); }));
-                        foreach (String user in dataReceived) {
-                            if (user==dataReceived[0])
-                                continue;
+            messageReader.Start();
 
-                            this.Dispatcher.Invoke ((Action) (() => { listBox1.Items.Add (user); }));
-                        }
-                        break;
-                    default:
-                        this.Dispatcher.Invoke ((Action) (() => { error.Content="Error 404:Keyword not found"; }));
-                        break;
-                }
-            }
+            Client.GetInstance().WriteLine(nickname);
         }
 
-        private void send_KeyDown (object sender, KeyEventArgs e) {
-            if (e.Key==Key.Enter) {
-                _client.WriteLine ("MESSAGE:"+send.Text);
+        private void send_KeyDown(object sender, KeyEventArgs e) {
+            if(e.Key==Key.Enter) {
+                Client.GetInstance().WriteLine("MESSAGE_CHAT:"+send.Text);
                 send.Text="";
             }
         }
 
-        private void Button_Click (object sender, RoutedEventArgs e) {
-            Game game=new Game (_ipAddress, _nickname);
-            game.Show ();
-            this.Close ();
+        private void Button_Click(object sender, RoutedEventArgs e) {
+            new GameWindow(_ipAddress, _nickname);
+            this.Close();
+            Client.GetInstance().WriteLine("SWITCH_TO_GAME:"+_nickname);
         }
-        private void Window_Closing (object sender, System.ComponentModel.CancelEventArgs e) {
-            if (_client.ClientConnected ()) {
-                _client.WriteLine ("EXIT:Am iesit din chat server");
-                _client.Close ();
+
+        public void SetText(string message) {
+            this.Dispatcher.Invoke((Action) ( () => {
+                received.AppendText(message+"\n");
+                received.ScrollToEnd();
+            } ));
+        }
+
+        public void AddPlayer(string message) {
+            this.Dispatcher.Invoke((Action) ( () => { listBox1.Items.Clear(); } ));
+            foreach(String user in message.Split(':')) {
+                if(user==Client.GetInstance().GetName())
+                    continue;
+
+                this.Dispatcher.Invoke((Action) ( () => { listBox1.Items.Add(user); } ));
             }
-
         }
 
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
+            if(Client.GetInstance().ClientConnected()) {
+                Client.GetInstance().WriteLine("EXIT_FROM_CHAT:Am iesit din chat server");
+            }
+        }
+        public static MainWindow GetInstance() {
+            return instance;
+        }
     }
 }

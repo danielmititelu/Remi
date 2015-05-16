@@ -12,20 +12,20 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace TestChat {
+namespace Game {
     /// <summary>
     /// Interaction logic for Login.xaml
     /// </summary>
-    public partial class Login : Window {
-        public Login () {
-            InitializeComponent ();
+    public partial class LoginWindow : Window {
+        public LoginWindow() {
+            InitializeComponent();
             ipAddress.Text="127.0.0.1";
         }
 
-        private void Button_Click (object sender, RoutedEventArgs e) {
-            MainWindow mainWindow=new MainWindow (ipAddress.Text,nickame.Text);
-            mainWindow.Show ();
-            this.Close ();
+        private void Button_Click(object sender, RoutedEventArgs e) {
+            MainWindow mainWindow=new MainWindow(ipAddress.Text, nickame.Text);
+            mainWindow.Show();
+            this.Close();
         }
     }
 }

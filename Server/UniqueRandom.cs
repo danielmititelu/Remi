@@ -7,22 +7,22 @@ using System.Threading.Tasks;
 namespace Server {
     class UniqueRandom {
         private readonly List<int> _currentList;
-        private readonly Random _random=new Random ();
+        private readonly Random _random=new Random();
 
-        public UniqueRandom (IEnumerable<int> seed) {
-            _currentList=new List<int> (seed);
+        public UniqueRandom(IEnumerable<int> seed) {
+            _currentList=new List<int>(seed);
         }
 
-        public int Next () {
-            if (_currentList.Count==0) {
-                throw new ApplicationException ("No more numbers");
+        public int Next() {
+            if(_currentList.Count==0) {
+                throw new ApplicationException("No more numbers");
             }
 
             //int i=_random.Next (_currentList.Count);
-            int i = 0;
+            int i=0;
             i++;
             int result=_currentList[i];
-            _currentList.RemoveAt (i);
+            _currentList.RemoveAt(i);
             return result;
         }
     }
