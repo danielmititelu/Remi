@@ -44,19 +44,19 @@ namespace Server {
                             foreach(int i in Server.random.Next14()) {
                                 s=s+":"+i;
                             }
-                            HandleFormations.MsgtoGameClient(nickname, "DRAW"+s);
+                            HandleGame.MsgtoGameClient(nickname, "DRAW"+s);
                             break;
                         case "FOR"://piece1:piece2:piece3:nickname:row+1
-                            HandleFormations.Formatie(msg[1], msg[2], msg[3], msg[4], msg[5]);
+                            HandleGame.Formatie(msg[1], msg[2], msg[3], msg[4], msg[5]);
                             break;
                         case "MESSAGE_GAME":
                             Server.BroadcastInGame("MESSAGE_GAME:", nickname, message.Substring(message.IndexOf(':')+1, message.Length-message.IndexOf(':')-1));
                             break;
                         case "ADD_PIECE"://row:imageIndex:column:clientToAdd
-                            HandleFormations.AddPiece(msg[1], msg[2], msg[3], msg[4],nickname);
+                            HandleGame.AddPiece(msg[1], msg[2], msg[3], msg[4],nickname);
                             break;
                         case "DRAW":
-                            HandleFormations.MsgtoGameClient(nickname, "DRAW:"+Server.random.Next());
+                            HandleGame.MsgtoGameClient(nickname, "DRAW:"+Server.random.Next());
                             break;
                         case "PUT_PIECE_ON_BORD":
                             Server.pieces_on_board.Add(Server.pieces[Int32.Parse(msg[1])]);

@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Server {
-    class HandleFormations {
+    class HandleGame {
 
         public static void MsgtoGameClient(String nickname, String msg) {
             TcpClient clientSocket=null;
