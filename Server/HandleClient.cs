@@ -47,37 +47,46 @@ namespace Server {
                         case "MESSAGE_GAME":
                             Server.BroadcastInGame("MESSAGE_GAME:", nickname, message.Substring(message.IndexOf(':')+1, message.Length-message.IndexOf(':')-1));
                             break;
-                        case "ADD_PIECE"://row:image:column:client_to_add
-                            //String s=Server.formations[Int32.Parse (msg[1])];
-
-                            String s=Server.formations.Cast<String>().First(e => e.Split(':').ElementAt(3).Equals(msg[4])&&
+                        case "ADD_PIECE"://row:imageIndex:column:client_to_add
+                            String formationCod=Server.formations.Cast<String>().First(e => e.Split(':').ElementAt(3).Equals(msg[4])&&
                                 e.Split(':').ElementAt(4).Equals(msg[1]));
-                            String[] s1=s.Split(':');//1:405:406:nickname:row
-                            if(s1[0].Equals("1")) {
-                                if(HandleGame.testInitialNum(Server.pieces[Int32.Parse(msg[2])], Int32.Parse(s1[1]))&&msg[3].Equals("0")) {
+                            string[] s=formationCod.Split(':');//1:404:406:nickname:row
+                            string form = s[0];
+                            int firstPiece = Int32.Parse(s[1]);
+                            int pieceAfterFirst=firstPiece+1;
+                            int lastPiece = Int32.Parse(s[2]);
+                            int pieceBeforeLast=lastPiece-1;
+                            int row = Int32.Parse(s[4]);
+                            int pieceToAdd=Server.pieces[Int32.Parse(msg[2])];
+                            if(form.Equals("1")) {//numaratoare
+                                if(HandleGame.testInitialNum(pieceToAdd, firstPiece)//pieceToAdd:firstPiece:pieceAfterFirst
+                                    &&HandleGame.testIntNum(pieceToAdd,pieceAfterFirst)
+                                    &&msg[3].Equals("0")) {
                                     Server.BroadcastInGame("ADD_PIECE_ON_FIRST_COL:", msg[4], msg[1]+":"+msg[2]+":"+msg[3]);
-                                    int index=Array.IndexOf(Server.formations.ToArray(), s);
-                                    Server.formations[index]=s1[0]+":"+Server.pieces[Int32.Parse(msg[2])]+":"+s1[2]+":"+msg[4]+":"+msg[1];
-                                } else if(HandleGame.testFinalNum(Int32.Parse(s1[2]), Server.pieces[Int32.Parse(msg[2])])&&!msg[3].Equals("0")) {
+                                    int index=Array.IndexOf(Server.formations.ToArray(), formationCod);
+                                    Server.formations[index]=form+":"+pieceToAdd+":"+lastPiece+":"+msg[4]+":"+msg[1];
+                                } else if(HandleGame.testFinalNum(lastPiece, pieceToAdd)//pieceBeforeLast:lastPiece:pieceToAdd
+                                    &&HandleGame.testIntNum(pieceBeforeLast, pieceToAdd)
+                                    &&!( pieceBeforeLast==100||pieceBeforeLast==200||pieceBeforeLast==300||pieceBeforeLast==400 )
+                                    &&!msg[3].Equals("0")) {
                                     Server.BroadcastInGame("ADD_PIECE:", msg[4], msg[1]+":"+msg[2]+":"+msg[3]);
-                                    int index=Array.IndexOf(Server.formations.ToArray(), s);
-                                    Server.formations[index]=s1[0]+":"+s1[1]+":"+Server.pieces[Int32.Parse(msg[2])]+":"+msg[4]+":"+msg[1];
+                                    int index=Array.IndexOf(Server.formations.ToArray(), formationCod);
+                                    Server.formations[index]=form+":"+firstPiece+":"+pieceToAdd+":"+msg[4]+":"+msg[1];
                                 } else {
                                     HandleGame.MsgtoGameClient(nickname, "DONT:Nu se lipeste!");
                                 }
-                            } else if(s1[0].Equals("2")) {
-                                if(Server.pieces[Int32.Parse(msg[2])]==Int32.Parse(s1[1])) {
+                            } else if(form.Equals("2")) {//pereche
+                                if(pieceToAdd==firstPiece || pieceToAdd==lastPiece) {
                                     Server.BroadcastInGame("ADD_PIECE:", msg[4], msg[1]+":"+msg[2]+":"+msg[3]);
-                                    int index=Array.IndexOf(Server.formations.ToArray(), s);
-                                    Server.formations[index]=s1[0]+":0:0:"+msg[4]+":"+msg[1]; ;
+                                    int index=Array.IndexOf(Server.formations.ToArray(), formationCod);
+                                    Server.formations[index]=form+":0:0:"+msg[4]+":"+msg[1]; 
                                 } else {
                                     HandleGame.MsgtoGameClient(nickname, "DONT:Nu se lipeste!");
                                 }
                             }
                             break;
                         case "DRAW":
-                            int i=Server.random.Next();
-                            HandleGame.MsgtoGameClient(nickname, "DRAW:"+i);
+                            HandleGame.MsgtoGameClient(nickname, "DRAW:"+Server.random.Next());
                             break;
                         case "PUT_PIECE_ON_BORD":
                             Server.pieces_on_board.Add(Server.pieces[Int32.Parse(msg[1])]);

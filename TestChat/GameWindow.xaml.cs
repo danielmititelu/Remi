@@ -234,12 +234,7 @@ namespace Game {
             formatie=true;
             n=0;
         }
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
-            if(Client.GetInstance().ClientConnected()) {
-                Client.GetInstance().WriteLine("EXIT_FROM_GAME:Am iesit din joc");
-                Client.GetInstance().Close();
-            }
-        }
+
 
         public string GetNickName() {
             return _nickname;
@@ -325,6 +320,12 @@ namespace Game {
                 exists=MyTableCanvas.Children.Contains(element);
             } ));
             return exists;
+        }
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
+            if(Client.GetInstance().ClientConnected()) {
+                Client.GetInstance().WriteLine("EXIT_FROM_GAME:Am iesit din joc");
+                Client.GetInstance().Close();
+            }
         }
 
     }

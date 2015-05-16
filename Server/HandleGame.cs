@@ -80,20 +80,36 @@ namespace Server {
         }
 
         private static string numCode(int a, int b, int c, String nickname, String row) {
+            if(a==500&&c==500) {
+                a=b-1;
+                c=b+1;
+            } else if(c==500) {
+                if(b.ToString().Substring(1, 2).Equals("13"))
+                    c=b-12;
+                else
+                    c=a+2;
+            } else if(a==500) {
+                a=c-2;
+            }
             return "1:"+a+":"+c+":"+nickname+":"+row;
         }
 
         private static string missingPiece(int a, int b, int c, String nickname, String row) {
-            int a1=Int32.Parse(a.ToString().Substring(0, 1));//102:202:302:402:500
+            int a1=Int32.Parse(a.ToString().Substring(0, 1));
             int b1=Int32.Parse(b.ToString().Substring(0, 1));
             int c1=Int32.Parse(c.ToString().Substring(0, 1));
             var list=new List<int>(new[] { 1, 2, 3, 4, 5 });
             var result=list.Except(new[] { a1, b1, c1 });
-            int test=result.ElementAt(0);
-            int test1=result.ElementAt(1);//modify me
+            int color1=result.ElementAt(0);
+            int color2=result.ElementAt(1);
             String number=a.ToString().Substring(1, 2);
-            int res=10-( a1+b1+c1 );
-            return "2:"+res+number+":999"+":"+nickname+":"+row;
+            if(number=="00") {
+                number=b.ToString().Substring(1, 2);
+            }
+            if(number=="00") {
+                number=c.ToString().Substring(1, 2);
+            }
+            return "2:"+color1+number+":"+color2+number+":"+nickname+":"+row;
         }
         public static bool testInitialNum(int a, int b) {
             if(a==500&&( b==101||b==201||b==301||b==401 )) {
@@ -111,7 +127,7 @@ namespace Server {
                 return false;
             }
         }
-        public static bool testIntNum(int a, int b) {
+        public static bool testIntNum(int a, int b) {// 11 12 13
             if(( b-a )==2||a==500||b==500||( a-b )==11) {
                 return true;
             } else {
