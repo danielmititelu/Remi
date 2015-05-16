@@ -13,7 +13,6 @@ namespace Server {
     class Server {
         public static Hashtable clientsList=new Hashtable();
         public static Hashtable clientsInGame=new Hashtable();
-        StreamReader read;
         public static List<int> pieces=new List<int>();
         public static Hashtable clientsFormation=new Hashtable();
         public static List<String> formations=new List<String>();
@@ -23,7 +22,8 @@ namespace Server {
         public Server() {
             TcpClient client=null;
             String nickname=null;
-            HandlePieces.GeneratePieces();
+            StreamReader read;
+            LoadPieces.GeneratePieces();
             TcpListener server=new TcpListener(IPAddress.Any, 5150);
             Console.WriteLine("Chat server started");
             server.Start();
@@ -52,9 +52,6 @@ namespace Server {
 
         private void ConnectToChat(TcpClient client, string nickname) {
             new HandleClient(client, nickname);
-        }
-        private void ConnectToGame(TcpClient client, string nickname) {
-            new HandleGame(client, nickname);
         }
 
         public static void Broadcast(String nickname, String msg) {

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Game {
     public class Client {
-        static Client instance;
+        static Client _instance;
 
         TcpClient _tcpClient=new TcpClient();
         NetworkStream _serverStream=default(NetworkStream);
@@ -21,14 +21,7 @@ namespace Game {
             _serverStream=_tcpClient.GetStream();
             _writer=new StreamWriter(_serverStream);
             _reader=new StreamReader(_serverStream);
-            instance=this;
-        }
-
-        public Client(Client client) {
-            _tcpClient=client._tcpClient;
-            _serverStream=client._serverStream;
-            _writer=client._writer;
-            _reader=client._reader;
+            _instance=this;
         }
 
         public void WriteLine(String message) {
@@ -48,8 +41,8 @@ namespace Game {
                 return _reader.ReadLine();
             } catch(Exception e) {
                 Console.WriteLine(e.StackTrace);
-                return "";
             }
+            return "";
         }
 
         public bool ClientConnected() {
@@ -57,7 +50,14 @@ namespace Game {
         }
 
         public static Client GetInstance() {
-            return instance;
+            return _instance;
+        }
+
+        public static bool Exists() {
+            if(_instance==null) {
+                return false;
+            }
+            return true;
         }
 
         public void SetNickName(string name) {

@@ -7,37 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Server {
-    class HandleGame {
-
-        TcpClient clientSocket;
-        String nickname;
-
-        public HandleGame(TcpClient clientSocket, String nickname) {
-            this.clientSocket=clientSocket;
-            this.nickname=nickname;
-            doChat();
-        }
-
-        private void doChat() {
-            NetworkStream networkStream=clientSocket.GetStream();
-            StreamReader read=new StreamReader(networkStream);
-            String[] msg=null;
-            String message=null;
-
-            while(networkStream.CanRead) {
-                message=read.ReadLine();
-                if(message!=null) {
-                    msg=message.Split(':');
-                    Console.WriteLine("From client in-game- "+nickname+": "+message);
-                    switch(msg[0]) {
-
-                        default:
-                            Console.WriteLine("Error 404: Keyword not found");
-                            break;
-                    }
-                }
-            }
-        }
+    class HandleFormations {
 
         public static void MsgtoGameClient(String nickname, String msg) {
             TcpClient clientSocket=null;
@@ -146,34 +116,34 @@ namespace Server {
             String formationCod=Server.formations.Cast<String>().First(e => e.Split(':').ElementAt(3).Equals(clientToAdd)&&
                              e.Split(':').ElementAt(4).Equals(row));
             string[] s=formationCod.Split(':');//1:404:406:nickname:row
-            string form=s[0];
+            string formationType=s[0];
             int firstPiece=Int32.Parse(s[1]);
             int pieceAfterFirst=firstPiece+1;
             int lastPiece=Int32.Parse(s[2]);
             int pieceBeforeLast=lastPiece-1;
             int pieceToAdd=Server.pieces[Int32.Parse(imageIndex)];
-            if(form.Equals("1")) {//numaratoare
+            if(formationType.Equals("1")) {//numaratoare
                 if(testInitialNum(pieceToAdd, firstPiece)//pieceToAdd:firstPiece:pieceAfterFirst
                     &&testIntNum(pieceToAdd, pieceAfterFirst)
                     &&column.Equals("0")) {
                     Server.BroadcastInGame("ADD_PIECE_ON_FIRST_COL:", clientToAdd, row+":"+imageIndex+":"+column);
                     int index=Array.IndexOf(Server.formations.ToArray(), formationCod);
-                    Server.formations[index]=form+":"+pieceToAdd+":"+lastPiece+":"+clientToAdd+":"+row;
+                    Server.formations[index]=formationType+":"+pieceToAdd+":"+lastPiece+":"+clientToAdd+":"+row;
                 } else if(testFinalNum(lastPiece, pieceToAdd)//pieceBeforeLast:lastPiece:pieceToAdd
                     &&testIntNum(pieceBeforeLast, pieceToAdd)
                     &&!( pieceBeforeLast==100||pieceBeforeLast==200||pieceBeforeLast==300||pieceBeforeLast==400 )
                     &&!column.Equals("0")) {
                     Server.BroadcastInGame("ADD_PIECE:", clientToAdd, row+":"+imageIndex+":"+column);
                     int index=Array.IndexOf(Server.formations.ToArray(), formationCod);
-                    Server.formations[index]=form+":"+firstPiece+":"+pieceToAdd+":"+clientToAdd+":"+row;
+                    Server.formations[index]=formationType+":"+firstPiece+":"+pieceToAdd+":"+clientToAdd+":"+row;
                 } else {
                     MsgtoGameClient(nickname, "DONT:Nu se lipeste!");
                 }
-            } else if(form.Equals("2")) {//pereche
+            } else if(formationType.Equals("2")) {//pereche
                 if(pieceToAdd==firstPiece||pieceToAdd==lastPiece) {
                     Server.BroadcastInGame("ADD_PIECE:", clientToAdd, row+":"+imageIndex+":"+column);
                     int index=Array.IndexOf(Server.formations.ToArray(), formationCod);
-                    Server.formations[index]=form+":0:0:"+clientToAdd+":"+row;
+                    Server.formations[index]=formationType+":0:0:"+clientToAdd+":"+row;
                 } else {
                     MsgtoGameClient(nickname, "DONT:Nu se lipeste!");
                 }

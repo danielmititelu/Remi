@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Server {
-    class HandlePieces {
+    class LoadPieces {
 
         public static void GeneratePieces() {
             int c=0;

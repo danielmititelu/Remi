@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Handlers;
 using Game;
-using Game.Handlers;
 
-namespace Game.MessageControl {
+namespace MessageControl {
     class MessageReader {
 
         public static void getMessage() {
@@ -45,7 +45,7 @@ namespace Game.MessageControl {
                         PieceHandler.PutPieceOnBoard(readData);
                         break;
                     case "MESSAGE_CHAT":
-                        MainWindow.GetInstance().SetText(readData);
+                        UserControls.MainUC.GetInstance().SetText(readData);
                         break;
                     case "ALR":
                         //Login login=new Login ();
@@ -53,7 +53,7 @@ namespace Game.MessageControl {
                         //this.Dispatcher.Invoke ((Action) (() => { this.Hide(); }));
                         break;
                     case "NEW_USER_IN_CHAT":
-                        MainWindow.GetInstance().AddPlayer(readData);
+                        UserControls.MainUC.GetInstance().AddPlayer(readData);
                         break;
                     case "NEW_USER_IN_GAME":
                         GameWindow.GetInstance().NewUser(readData);

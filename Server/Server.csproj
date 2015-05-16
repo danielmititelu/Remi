@@ -42,8 +42,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HandleClient.cs" />
-    <Compile Include="HandleGame.cs" />
-    <Compile Include="HandlePieces.cs" />
+    <Compile Include="HandleFormations.cs" />
+    <Compile Include="LoadPieces.cs" />
+    <Compile Include="Room.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UniqueRandom.cs" />

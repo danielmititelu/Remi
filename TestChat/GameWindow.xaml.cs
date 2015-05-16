@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Handlers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,8 +13,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using Game.MessageControl;
-using Game.Handlers;
 
 namespace Game {
     /// <summary>
@@ -45,6 +44,13 @@ namespace Game {
 
         public static GameWindow GetInstance() {
             return _instance;
+        }
+
+        public static bool Exists() {
+            if(_instance==null) {
+                return false;
+            }
+            return true;
         }
 
         public void SetText(string message) {
@@ -223,7 +229,7 @@ namespace Game {
         public void DrawCard(string readData) {
             string[] pieces=readData.Split(':');
             this.Dispatcher.Invoke((Action) ( () => {
-                foreach(string index in pieces){
+                foreach(string index in pieces) {
                     Canvas.SetLeft(CanvasItems.Pieces.GetInstance().getImage(index), 0);
                     Canvas.SetTop(CanvasItems.Pieces.GetInstance().getImage(index), 0);
                     MyTableCanvas.Children.Add(CanvasItems.Pieces.GetInstance().getImage(index));

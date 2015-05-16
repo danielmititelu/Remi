@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Game;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,22 +11,20 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Game {
+namespace UserControls {
     /// <summary>
-    /// Interaction logic for Login.xaml
+    /// Interaction logic for LoginUC.xaml
     /// </summary>
-    public partial class LoginWindow : Window {
-        public LoginWindow() {
+    public partial class LoginUC : UserControl{
+        public LoginUC() {
             InitializeComponent();
             ipAddress.Text="127.0.0.1";
         }
-
         private void Button_Click(object sender, RoutedEventArgs e) {
-            MainWindow mainWindow=new MainWindow(ipAddress.Text, nickame.Text);
-            mainWindow.Show();
-            this.Close();
+            MainWindow.GetInstance().Switch(new MainUC(ipAddress.Text, nickame.Text));
         }
     }
 }

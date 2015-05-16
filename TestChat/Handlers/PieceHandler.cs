@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Game;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace Game.Handlers {
+namespace Handlers {
     class PieceHandler {
 
         public static int _row1=-1; // TODO: Grid.child.count
