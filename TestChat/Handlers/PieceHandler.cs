@@ -24,7 +24,7 @@ namespace Game.Handlers {
                     c=Int32.Parse(msg[3])+1;
                 }
 
-                Image local_image=ImageLoader.GetInstance().getImage[Int32.Parse(msg[2])];
+                Image local_image=CanvasItems.Pieces.GetInstance().getImage(msg[2]);
 
                 if(msg[0].Equals(GameWindow.GetInstance().GetNickName())) {
                     AddPiece(GameWindow.GetInstance().GetGridAt(1), local_image, r, c, firstRow);
@@ -59,9 +59,9 @@ namespace Game.Handlers {
         public static void AddFormationToCanvas(String readData) {
             GameWindow.GetInstance().Dispatcher.Invoke((Action) ( () => {
                 String[] msg=readData.Split(':');
-                Image local_image1=ImageLoader.GetInstance().getImage[Int32.Parse(msg[1])];
-                Image local_image2=ImageLoader.GetInstance().getImage[Int32.Parse(msg[2])];
-                Image local_image3=ImageLoader.GetInstance().getImage[Int32.Parse(msg[3])];
+                Image local_image1=CanvasItems.Pieces.GetInstance().getImage(msg[1]);
+                Image local_image2=CanvasItems.Pieces.GetInstance().getImage(msg[2]);
+                Image local_image3=CanvasItems.Pieces.GetInstance().getImage(msg[3]);
                 if(msg[0].Equals(GameWindow.GetInstance().GetNickName())) {
                     GameWindow.GetInstance().RemoveImgListeners(local_image1);
                     GameWindow.GetInstance().RemoveImgListeners(local_image2);
@@ -98,10 +98,10 @@ namespace Game.Handlers {
             GameWindow.GetInstance().Dispatcher.Invoke((Action) ( () => {
                 String[] mes=readData.Split(':');
                 if(mes[0].Equals(GameWindow.GetInstance().GetNickName())) {
-                    GameWindow.GetInstance().RemoveImgListeners(ImageLoader.GetInstance().getImage[Int32.Parse(mes[1])]);
-                    GameWindow.GetInstance().RemoveFromMyTable(ImageLoader.GetInstance().getImage[Int32.Parse(mes[1])]);
+                    GameWindow.GetInstance().RemoveImgListeners(CanvasItems.Pieces.GetInstance().getImage(mes[1]));
+                    GameWindow.GetInstance().RemoveFromMyTable(CanvasItems.Pieces.GetInstance().getImage(mes[1]));
                 }
-                GameWindow.GetInstance().StackCanvas.Children.Add(ImageLoader.GetInstance().getImage[Int32.Parse(mes[1])]);
+                GameWindow.GetInstance().StackCanvas.Children.Add(CanvasItems.Pieces.GetInstance().getImage(mes[1]));
             } ));
         }
 

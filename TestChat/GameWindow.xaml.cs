@@ -38,7 +38,6 @@ namespace Game {
 
         public GameWindow(String ipAddress, String nickname) {
             InitializeComponent();
-            //connect( ipAddress, nickname );
             _nickname=nickname;
             _instance=this;
             this.Show();
@@ -131,25 +130,25 @@ namespace Game {
 
         public void etalon_MouseUp(object sender, MouseButtonEventArgs e) {
             if(temp_img!=null) {
-                Image element=(Image) sender;
-                int c=Grid.GetColumn(element);
-                int r=Grid.GetRow(element);
-                int index=Array.IndexOf(ImageLoader.GetInstance().getImage.ToArray(), temp_img);
+                Image selectedPiece=(Image) sender;
+                int c=Grid.GetColumn(selectedPiece);
+                int r=Grid.GetRow(selectedPiece);
+                int index=CanvasItems.Pieces.GetInstance().getIndex(temp_img);
                 Client.GetInstance().WriteLine("ADD_PIECE:"+r+":"+index+":"+c+":"+client_to_add);
             }
         }
 
         private void myimg_LostMouseCapture(object sender, MouseEventArgs e) {
-            Image selected_image=(Image) sender;
-            selected_image.ReleaseMouseCapture();
+            Image selectedPiece=(Image) sender;
+            selectedPiece.ReleaseMouseCapture();
         }
 
         private void myimg_MouseUp(object sender, MouseButtonEventArgs e) {
-            Image selected_image=(Image) sender;
+            Image selectedPiece=(Image) sender;
             mouseClick=e.GetPosition(null);
 
-            canvasLeft=Canvas.GetLeft(selected_image);
-            canvasTop=Canvas.GetTop(selected_image);
+            canvasLeft=Canvas.GetLeft(selectedPiece);
+            canvasTop=Canvas.GetTop(selectedPiece);
 
             if(canvasLeft<0) {
                 canvasLeft=0;
@@ -158,34 +157,34 @@ namespace Game {
                 canvasTop=0;
             }
             if(canvasLeft>MyTableCanvas.ActualWidth) {
-                canvasLeft=MyTableCanvas.ActualWidth-selected_image.ActualWidth;
+                canvasLeft=MyTableCanvas.ActualWidth-selectedPiece.ActualWidth;
             }
             if(canvasTop>MyTableCanvas.ActualHeight) {
-                canvasTop=MyTableCanvas.ActualHeight-selected_image.ActualHeight;
+                canvasTop=MyTableCanvas.ActualHeight-selectedPiece.ActualHeight;
             }
-            selected_image.SetValue(Canvas.LeftProperty, canvasLeft);
-            selected_image.SetValue(Canvas.TopProperty, canvasTop);
-            selected_image.ReleaseMouseCapture();
+            selectedPiece.SetValue(Canvas.LeftProperty, canvasLeft);
+            selectedPiece.SetValue(Canvas.TopProperty, canvasTop);
+            selectedPiece.ReleaseMouseCapture();
 
             if(StackCanvas.IsMouseOver) {
-                int index=Array.IndexOf(ImageLoader.GetInstance().getImage.ToArray(), selected_image);
+                int index=CanvasItems.Pieces.GetInstance().getIndex(selectedPiece);
                 Client.GetInstance().WriteLine("PUT_PIECE_ON_BORD:"+index);
             }
             if(etalon1.IsMouseOver) {
-                temp_img=selected_image;
+                temp_img=selectedPiece;
                 client_to_add=_nickname;
             } else if(etalon2.IsMouseOver) {
-                temp_img=selected_image;
+                temp_img=selectedPiece;
                 client_to_add=(String) player2.Content;
             } else if(etalon3.IsMouseOver) {
                 client_to_add=(String) player3.Content;
-                temp_img=selected_image;
+                temp_img=selectedPiece;
             } else if(etalon4.IsMouseOver) {
                 client_to_add=(String) player4.Content;
-                temp_img=selected_image;
+                temp_img=selectedPiece;
             }
             if(formatie) {
-                int index=Array.IndexOf(ImageLoader.GetInstance().getImage.ToArray(), selected_image);
+                int index=CanvasItems.Pieces.GetInstance().getIndex(selectedPiece);
                 selectedImages[n]=index;
                 n++;
                 if(n==3) {
@@ -196,37 +195,37 @@ namespace Game {
         }
 
         private void myimg_MouseMove(object sender, MouseEventArgs e) {
-            Image selected_image=(Image) sender;
-            if(selected_image.IsMouseCaptured) {
+            Image selectedPiece=(Image) sender;
+            if(selectedPiece.IsMouseCaptured) {
                 Point mouseCurrent=e.GetPosition(null);
                 double Left=mouseCurrent.X-mouseClick.X;
                 double Top=mouseCurrent.Y-mouseClick.Y;
                 mouseClick=e.GetPosition(null);
-                selected_image.SetValue(Canvas.LeftProperty, canvasLeft+Left);
-                selected_image.SetValue(Canvas.TopProperty, canvasTop+Top);
-                canvasLeft=Canvas.GetLeft(selected_image);
-                canvasTop=Canvas.GetTop(selected_image);
+                selectedPiece.SetValue(Canvas.LeftProperty, canvasLeft+Left);
+                selectedPiece.SetValue(Canvas.TopProperty, canvasTop+Top);
+                canvasLeft=Canvas.GetLeft(selectedPiece);
+                canvasTop=Canvas.GetTop(selectedPiece);
             }
         }
 
         private void myimg_MouseDown(object sender, MouseButtonEventArgs e) {
-            Image selected_image=(Image) sender;
+            Image selectedPiece=(Image) sender;
             mouseClick=e.GetPosition(null);
-            canvasLeft=Canvas.GetLeft(selected_image);
-            canvasTop=Canvas.GetTop(selected_image);
-            selected_image.CaptureMouse();
+            canvasLeft=Canvas.GetLeft(selectedPiece);
+            canvasTop=Canvas.GetTop(selectedPiece);
+            selectedPiece.CaptureMouse();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e) {
             Client.GetInstance().WriteLine("DRAW:Trage o piesa");
         }
 
-        public void DrawCard(int i) {
+        public void DrawCard(string index) {
             this.Dispatcher.Invoke((Action) ( () => {
-                Canvas.SetLeft(ImageLoader.GetInstance().getImage[i], 0);
-                Canvas.SetTop(ImageLoader.GetInstance().getImage[i], 0);
-                MyTableCanvas.Children.Add(ImageLoader.GetInstance().getImage[i]);
-                addImgListeners(ImageLoader.GetInstance().getImage[i]);
+                Canvas.SetLeft(CanvasItems.Pieces.GetInstance().getImage(index), 0);
+                Canvas.SetTop(CanvasItems.Pieces.GetInstance().getImage(index), 0);
+                MyTableCanvas.Children.Add(CanvasItems.Pieces.GetInstance().getImage(index));
+                addImgListeners(CanvasItems.Pieces.GetInstance().getImage(index));
             } ));
         }
 
@@ -323,7 +322,7 @@ namespace Game {
         public bool MyTableContains(UIElement element) {
             bool exists=false;
             this.Dispatcher.Invoke((Action) ( () => {
-                exists=GameWindow.GetInstance().MyTableCanvas.Children.Contains(element);
+                exists=MyTableCanvas.Children.Contains(element);
             } ));
             return exists;
         }

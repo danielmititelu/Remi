@@ -30,7 +30,7 @@ namespace Game.MessageControl {
                         PieceHandler.AddFormationToCanvas(readData);
                         break;
                     case "DRAW":
-                        GameWindow.GetInstance().DrawCard(Int32.Parse(readData));
+                        GameWindow.GetInstance().DrawCard(readData);
                         break;
                     case "ADD_PIECE":
                         PieceHandler.AddPieceToFormation(readData, false);
