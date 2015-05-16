@@ -48,15 +48,6 @@ namespace Game {
             return _instance;
         }
 
-        //private void connect( String ipAddress, String nickname ) {
-        //    String ip=ipAddress.Trim();
-        //    _client=new Client( ip );
-        //    Thread gameThread=new Thread( new ThreadStart( MessageReader.getMessage ) ); //TODO: CHANGE TO LINQ EXPRESION
-        //    gameThread.Name="GetMessage";
-        //    gameThread.Start();
-        //    _client.WriteLine( "g:"+nickname );
-        //}
-
         public void SetText(string message) {
             this.Dispatcher.Invoke((Action) ( () => {
                 received.AppendText(message+"\n");
@@ -143,7 +134,7 @@ namespace Game {
                 Image element=(Image) sender;
                 int c=Grid.GetColumn(element);
                 int r=Grid.GetRow(element);
-                int index=Array.IndexOf(ImageLoader.ImageParser.getImage.ToArray(), temp_img);
+                int index=Array.IndexOf(ImageLoader.GetInstance().getImage.ToArray(), temp_img);
                 Client.GetInstance().WriteLine("ADD_PIECE:"+r+":"+index+":"+c+":"+client_to_add);
             }
         }
@@ -177,7 +168,7 @@ namespace Game {
             selected_image.ReleaseMouseCapture();
 
             if(StackCanvas.IsMouseOver) {
-                int index=Array.IndexOf(ImageLoader.ImageParser.getImage.ToArray(), selected_image);
+                int index=Array.IndexOf(ImageLoader.GetInstance().getImage.ToArray(), selected_image);
                 Client.GetInstance().WriteLine("PUT_PIECE_ON_BORD:"+index);
             }
             if(etalon1.IsMouseOver) {
@@ -194,7 +185,7 @@ namespace Game {
                 temp_img=selected_image;
             }
             if(formatie) {
-                int index=Array.IndexOf(ImageLoader.ImageParser.getImage.ToArray(), selected_image);
+                int index=Array.IndexOf(ImageLoader.GetInstance().getImage.ToArray(), selected_image);
                 selectedImages[n]=index;
                 n++;
                 if(n==3) {
@@ -232,10 +223,10 @@ namespace Game {
 
         public void DrawCard(int i) {
             this.Dispatcher.Invoke((Action) ( () => {
-                Canvas.SetLeft(ImageLoader.ImageParser.getImage[i], 0);
-                Canvas.SetTop(ImageLoader.ImageParser.getImage[i], 0);
-                MyTableCanvas.Children.Add(ImageLoader.ImageParser.getImage[i]);
-                addImgListeners(ImageLoader.ImageParser.getImage[i]);
+                Canvas.SetLeft(ImageLoader.GetInstance().getImage[i], 0);
+                Canvas.SetTop(ImageLoader.GetInstance().getImage[i], 0);
+                MyTableCanvas.Children.Add(ImageLoader.GetInstance().getImage[i]);
+                addImgListeners(ImageLoader.GetInstance().getImage[i]);
             } ));
         }
 
@@ -256,13 +247,21 @@ namespace Game {
         }
 
         public string GetPlayerAt(int p) {
+            string player2a=null;
+            string player3a=null;
+            string player4a=null;
+            this.Dispatcher.Invoke((Action) ( () => {
+                player2a=""+player2.Content;
+                player3a=""+player3.Content;
+                player4a=""+player4.Content;
+            } ));
             switch(p) {
                 case 2:
-                    return ""+player2.Content;
+                    return player2a;
                 case 3:
-                    return ""+player2.Content;
+                    return player3a;
                 case 4:
-                    return ""+player4.Content;
+                    return player4a;
                 default:
                     return "";
             }
@@ -284,9 +283,7 @@ namespace Game {
         }
 
         public void RemoveFromMyTable(Image local_image1) {
-            this.Dispatcher.Invoke((Action) ( () => {
-                MyTableCanvas.Children.Remove(local_image1);
-            } ));
+            MyTableCanvas.Children.Remove(local_image1);
         }
 
         public void AddRowToGrid(Grid etalon) {
@@ -296,11 +293,9 @@ namespace Game {
         }
 
         public void AddChildToGrid(Grid etalon, Image local_image, int r, int c) {
-            this.Dispatcher.Invoke((Action) ( () => {
-                etalon.Children.Add(local_image);
-                Grid.SetRow(local_image, r);
-                Grid.SetColumn(local_image, c);
-            } ));
+            etalon.Children.Add(local_image);
+            Grid.SetRow(local_image, r);
+            Grid.SetColumn(local_image, c);
         }
 
         public void SetImageValue(Image local_image, DependencyProperty dependencyProperty, int p) {
@@ -312,7 +307,7 @@ namespace Game {
         public Image GetToAdd(Grid etalon, int c, int r) {
             Image img=null;
             this.Dispatcher.Invoke((Action) ( () => {
-                img = etalon.Children.Cast<Image>().First(e => Grid.GetRow(e)==r&&Grid.GetColumn(e)==c);
+                img=etalon.Children.Cast<Image>().First(e => Grid.GetRow(e)==r&&Grid.GetColumn(e)==c);
             } ));
             return img;
         }

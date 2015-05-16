@@ -46,9 +46,13 @@ namespace Game {
 
             new Client(ip);
             Client.GetInstance().SetNickName(_nickname);
-            Thread chatThread=new Thread(new ThreadStart(MessageReader.getMessage)); // TODO: REMOVE FROM GAME , NAME THE THREAD , USE LINQ
 
-            chatThread.Start();
+            Thread messageReader=new Thread(() => MessageReader.getMessage());
+            messageReader.SetApartmentState(ApartmentState.STA);
+            messageReader.Name="MessageReader";
+
+            messageReader.Start();
+
             Client.GetInstance().WriteLine(nickname);
         }
 

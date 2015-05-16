@@ -10,15 +10,23 @@ using System.Windows.Media.Imaging;
 namespace Game {
     class ImageLoader {
 
-        public static ImageLoader ImageParser=new ImageLoader();
+        private static ImageLoader _instance;
 
         List<Image> image=new List<Image>();
         List<CroppedBitmap> objImg=new List<CroppedBitmap>();
         double scale=2;
 
         public ImageLoader() {
+            _instance=this;
             CutImage();
             LoadImage();
+        }
+
+        public static ImageLoader GetInstance() {
+            if(_instance==null) {
+                _instance=new ImageLoader();
+            }
+            return _instance;
         }
 
         private void CutImage() {

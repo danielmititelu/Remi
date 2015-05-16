@@ -52,10 +52,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TestChat\Client.csproj">
-      <Project>{ac7b0be3-7983-45e0-8c02-f6aa519a0a9e}</Project>
-      <Name>Client</Name>
-    </ProjectReference>
     <ProjectReference Include="..\WindowsFormsApplication1\ClientForm.csproj">
       <Project>{e0cf3a86-a4a3-4599-b8dd-852755524b26}</Project>
       <Name>ClientForm</Name>
