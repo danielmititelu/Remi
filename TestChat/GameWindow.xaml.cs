@@ -220,12 +220,15 @@ namespace Game {
             Client.GetInstance().WriteLine("DRAW:Trage o piesa");
         }
 
-        public void DrawCard(string index) {
+        public void DrawCard(string readData) {
+            string[] pieces=readData.Split(':');
             this.Dispatcher.Invoke((Action) ( () => {
-                Canvas.SetLeft(CanvasItems.Pieces.GetInstance().getImage(index), 0);
-                Canvas.SetTop(CanvasItems.Pieces.GetInstance().getImage(index), 0);
-                MyTableCanvas.Children.Add(CanvasItems.Pieces.GetInstance().getImage(index));
-                addImgListeners(CanvasItems.Pieces.GetInstance().getImage(index));
+                foreach(string index in pieces){
+                    Canvas.SetLeft(CanvasItems.Pieces.GetInstance().getImage(index), 0);
+                    Canvas.SetTop(CanvasItems.Pieces.GetInstance().getImage(index), 0);
+                    MyTableCanvas.Children.Add(CanvasItems.Pieces.GetInstance().getImage(index));
+                    addImgListeners(CanvasItems.Pieces.GetInstance().getImage(index));
+                }
             } ));
         }
 
@@ -327,6 +330,5 @@ namespace Game {
                 Client.GetInstance().Close();
             }
         }
-
     }
 }

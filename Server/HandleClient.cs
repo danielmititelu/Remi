@@ -40,6 +40,11 @@ namespace Server {
                         case "SWITCH_TO_GAME":
                             Server.clientsInGame.Add(nickname, clientSocket);
                             Server.AllUsersInGame();
+                            String s=null;
+                            foreach(int i in Server.random.Next14()) {
+                                s=s+":"+i;
+                            }
+                            HandleGame.MsgtoGameClient(nickname, "DRAW"+s);
                             break;
                         case "FOR"://piece1:piece2:piece3:nickname:row+1
                             HandleGame.Formatie(msg[1], msg[2], msg[3], msg[4], msg[5]);

@@ -25,5 +25,10 @@ namespace Server {
             _currentList.RemoveAt(i);
             return result;
         }
+        public IEnumerable<int> Next14() {
+            for(int i=0 ; i<13 ;i++ ) {
+                yield return Next();
+            }
+        }
     }
 }
