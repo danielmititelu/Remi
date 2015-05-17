@@ -22,7 +22,7 @@ namespace Server {
             StreamReader read=new StreamReader(networkStream);
             String[] msg=null;
             String message=null;
-            
+            Room room;
             while(networkStream.CanRead) { // TODO : MAKE ANOTHER CLASS TO SUPPORT THIS
                 message=read.ReadLine();
                 if(message!=null) {
@@ -33,6 +33,14 @@ namespace Server {
                             MessageSender.Broadcast("MESSAGE_CHAT:",nickname, message.Substring(message.IndexOf(':')+1, message.Length-message.IndexOf(':')-1),Server.clientsList);
                             break;
                         case "EXIT_FROM_CHAT":
+                            if(!msg[1].Equals("Am iesit din chat server")){
+                                room=Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(msg[1]));
+                                MessageSender.RemoveUser("ALL_USERS_IN_ROOM", nickname, room.GetClientsInRoom());
+                                if(room.GetClientsInRoom().Count==0) {
+                                    Server.roomList.Remove(room);
+                                }
+                                MessageSender.AllRooms(Server.roomList, Server.clientsList);
+                            }
                             MessageSender.RemoveUser("NEW_USER_IN_CHAT", nickname, Server.clientsList);
                             break;
                         case "EXIT_FROM_GAME":
@@ -64,34 +72,38 @@ namespace Server {
                             MessageSender.Broadcast("PUT_PIECE_ON_BORD:", nickname, msg[1],Server.clientsInGame);
                            // Server.BroadcastInGame("TURN:",nickname,);
                             break;
-                        case "CREATE_ROOM":
+                        case "CREATE_ROOM":             
                             MessageSender.RemoveUser("NEW_USER_IN_CHAT", nickname, Server.clientsList);
                             Server.roomList.Add(new Room(msg[1]));
-                            Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(msg[1])).AddClientInRoom(nickname, clientSocket);
-                            MessageSender.AllUsers("ALL_USERS_IN_ROOM", 
-                                Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(msg[1])).GetClientsInRoom());
+                            room=Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(msg[1]));
+                            room.AddClientInRoom(nickname, clientSocket);
+                            MessageSender.AllUsers("ALL_USERS_IN_ROOM",room.GetClientsInRoom());
                             MessageSender.AllRooms(Server.roomList,Server.clientsList);
                             break;
                         case"QUIT_ROOM":
-                            MessageSender.RemoveUser("ALL_USERS_IN_ROOM", nickname, 
-                                Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(msg[1])).GetClientsInRoom());
-                            if(Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(msg[1])).GetClientsInRoom().Count==0) {
-                                Server.roomList.Remove(Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(msg[1])));
+                            room = Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(msg[1]));
+                            MessageSender.RemoveUser("ALL_USERS_IN_ROOM", nickname, room.GetClientsInRoom());
+                            if(room.GetClientsInRoom().Count==0) {
+                                Server.roomList.Remove(room);
                             }
                             Server.clientsList.Add(nickname,clientSocket);
                             MessageSender.AllRooms(Server.roomList, Server.clientsList);
                             MessageSender.AllUsers("NEW_USER_IN_CHAT", Server.clientsList);
                             break;
                         case"JOIN_ROOM":
+                            room = Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(msg[1]));
                             MessageSender.RemoveUser("NEW_USER_IN_CHAT", nickname, Server.clientsList);
-                            Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(msg[1])).AddClientInRoom(nickname, clientSocket);
-                            MessageSender.AllUsers("ALL_USERS_IN_ROOM",
-                                Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(msg[1])).GetClientsInRoom());
+                            room.AddClientInRoom(nickname, clientSocket);
+                            MessageSender.AllUsers("ALL_USERS_IN_ROOM", room.GetClientsInRoom());
                             break;
                         case "MESSAGE_ROOM":
-                            MessageSender.Broadcast("MESSAGE_ROOM:", nickname, msg[2], 
-                                Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(msg[1])).GetClientsInRoom());
+                            room = Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(msg[1]));
+                            MessageSender.Broadcast("MESSAGE_ROOM:", nickname, msg[2], room.GetClientsInRoom());
                             break;
+                        //case"READY":
+                        //    room = Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(msg[1]));
+                        //    MessageSender.Broadcast("READY:", nickname, "", room.GetClientsInRoom());
+                        //    break;
                         default:
                             Console.WriteLine("Error 404: Keyword not found");
                             break;

@@ -32,6 +32,7 @@ namespace UserControls {
             _instance=this;
             _roomName=roomName;
         }
+
         public void AddPlayer(string message) {
             this.Dispatcher.Invoke((Action) ( () => {
                 playerList.Items.Clear();
@@ -43,11 +44,9 @@ namespace UserControls {
         private void QuitRomm(object sender, RoutedEventArgs e) {
             MainWindow.GetInstance().Switch(new MainUC());
             Client.GetInstance().WriteLine("QUIT_ROOM:"+_roomName);
+            _instance=null;
         }
 
-        public static RoomUC GetInstance() {
-            return _instance;
-        }
 
         public void SetText(string message) {
             this.Dispatcher.Invoke((Action) ( () => {
@@ -62,5 +61,25 @@ namespace UserControls {
                 send.Text="";
             }
         }
+
+        public string getRoomName(){
+            return _roomName;
+        }
+
+        public static bool Exists() {
+            if(_instance==null) {
+                return false;
+            } else
+                return true;
+        }
+
+        private void ReadyButton(object sender, RoutedEventArgs e) {
+            //Client.GetInstance().WriteLine("READY:"+_roomName);
+        }
+
+        public static RoomUC GetInstance() {
+            return _instance;
+        }
+
     }
 }

@@ -36,10 +36,15 @@ namespace Game {
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
             if(Client.Exists()) {
-                Client.GetInstance().WriteLine("EXIT_FROM_CHAT:Am iesit din chat server");
-            }
-            if(!GameWindow.Exists()) {
-                Client.GetInstance().Close();
+                if(!RoomUC.Exists()) {
+                    Client.GetInstance().WriteLine("EXIT_FROM_CHAT:Am iesit din chat server");
+                } else {
+                    Client.GetInstance().WriteLine("EXIT_FROM_CHAT:"+RoomUC.GetInstance().getRoomName());
+                }
+
+                if(!GameWindow.Exists()) {
+                    Client.GetInstance().Close();
+                }
             }
         }
     }
