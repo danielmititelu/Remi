@@ -29,17 +29,17 @@ namespace Server {
                     Console.WriteLine("From client- "+nickname+": "+message);
                     switch(msg[0]) {
                         case "MESSAGE_CHAT":
-                            Server.Broadcast(nickname, message.Substring(message.IndexOf(':')+1, message.Length-message.IndexOf(':')-1));
+                            MessageSender.Broadcast("MESSAGE_CHAT:",nickname, message.Substring(message.IndexOf(':')+1, message.Length-message.IndexOf(':')-1),Server.clientsList);
                             break;
                         case "EXIT_FROM_CHAT":
-                            Server.RemoveUserFromChat(nickname);
+                            MessageSender.RemoveUser("NEW_USER_IN_CHAT", nickname, Server.clientsList);
                             break;
                         case "EXIT_FROM_GAME":
-                            Server.RemoveUserFromGame(nickname);
+                            MessageSender.RemoveUser("NEW_USER_IN_GAME", nickname, Server.clientsInGame);
                             break;
                         case "SWITCH_TO_GAME":
                             Server.clientsInGame.Add(nickname, clientSocket);
-                            Server.AllUsersInGame();
+                            MessageSender.AllUsers("NEW_USER_IN_GAME", Server.clientsInGame);
                             String s=null;
                             foreach(int i in Server.random.Next14()) {
                                 s=s+":"+i;
@@ -50,7 +50,7 @@ namespace Server {
                             HandleGame.Formatie(msg[1], msg[2], msg[3], msg[4], msg[5]);
                             break;
                         case "MESSAGE_GAME":
-                            Server.BroadcastInGame("MESSAGE_GAME:", nickname, message.Substring(message.IndexOf(':')+1, message.Length-message.IndexOf(':')-1));
+                            MessageSender.Broadcast("MESSAGE_GAME:", nickname, message.Substring(message.IndexOf(':')+1, message.Length-message.IndexOf(':')-1),Server.clientsInGame);
                             break;
                         case "ADD_PIECE"://row:imageIndex:column:clientToAdd
                             HandleGame.AddPiece(msg[1], msg[2], msg[3], msg[4],nickname);
@@ -60,8 +60,11 @@ namespace Server {
                             break;
                         case "PUT_PIECE_ON_BORD":
                             Server.pieces_on_board.Add(Server.pieces[Int32.Parse(msg[1])]);
-                            Server.BroadcastInGame("PUT_PIECE_ON_BORD:", nickname, msg[1]);
+                            MessageSender.Broadcast("PUT_PIECE_ON_BORD:", nickname, msg[1],Server.clientsInGame);
                            // Server.BroadcastInGame("TURN:",nickname,);
+                            break;
+                        case "CREATE_ROOM":
+                            new Room(msg[1]);
                             break;
                         default:
                             Console.WriteLine("Error 404: Keyword not found");

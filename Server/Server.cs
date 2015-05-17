@@ -44,7 +44,7 @@ namespace Server {
                         Thread chatThread=new Thread(() => ConnectToChat(client, nickname));
                         chatThread.Start();
                         Console.WriteLine("A new client has connected to chat "+nickname);
-                        AllUsers();
+                        MessageSender.AllUsers("NEW_USER_IN_CHAT", clientsList);
                     }
                 }
             }
@@ -52,104 +52,6 @@ namespace Server {
 
         private void ConnectToChat(TcpClient client, string nickname) {
             new HandleClient(client, nickname);
-        }
-
-        public static void Broadcast(String nickname, String msg) {
-            TcpClient broadcastSocket=null;
-            StreamWriter write=null;
-            foreach(DictionaryEntry item in clientsList) { // TODO: Hashtable should use the objects not only tcpconnection
-                try {
-                    if(msg.Trim()==""||(TcpClient) item.Value==null)
-                        continue;
-
-                    broadcastSocket=(TcpClient) item.Value;
-                    write=new StreamWriter(broadcastSocket.GetStream());
-                    write.WriteLine("MESSAGE_CHAT:"+nickname+":"+msg);
-                    write.Flush();
-                    write=null;
-                } catch(Exception ex) {
-                    Console.WriteLine(ex.ToString());
-                }
-            }
-        }
-        public static void BroadcastInGame(String keyword, String nickname, String msg) {
-            TcpClient broadcastSocket=null;
-            StreamWriter write=null;
-            foreach(DictionaryEntry item in clientsInGame) {
-                try {
-                    if(msg.Trim()==""||(TcpClient) item.Value==null)
-                        continue;
-
-                    broadcastSocket=(TcpClient) item.Value;
-                    write=new StreamWriter(broadcastSocket.GetStream());
-                    write.WriteLine(keyword+nickname+":"+msg);
-                    write.Flush();
-                    write=null;
-                    Console.WriteLine(keyword+nickname+":"+msg);
-                } catch(Exception ex) {
-                    Console.WriteLine(ex.ToString());
-                }
-            }
-        }
-        public static void AllUsers() {
-            String allNicknames=null;
-            TcpClient broadcastSocket=null;
-            StreamWriter write=null;
-
-            foreach(DictionaryEntry item1 in clientsList) {
-                allNicknames=allNicknames+":"+item1.Key;
-            }
-            foreach(DictionaryEntry item in clientsList) {
-                try {
-                    broadcastSocket=(TcpClient) item.Value;
-                    write=new StreamWriter(broadcastSocket.GetStream());
-
-                    write.WriteLine("NEW_USER_IN_CHAT"+allNicknames);
-
-                    write.Flush();
-                    write=null;
-                } catch(Exception ex) {
-                    Console.WriteLine(ex.ToString());
-                }
-            }
-            Console.WriteLine("Useri conectati in chat"+allNicknames);
-        }
-        public static void AllUsersInGame() {
-            String allNicknames=null;
-            TcpClient broadcastSocket=null;
-            StreamWriter write=null;
-
-            foreach(DictionaryEntry item1 in clientsInGame) {
-                allNicknames=allNicknames+":"+item1.Key;
-            }
-            foreach(DictionaryEntry item in clientsInGame) {
-                try {
-                    broadcastSocket=(TcpClient) item.Value;
-                    write=new StreamWriter(broadcastSocket.GetStream());
-
-                    write.WriteLine("NEW_USER_IN_GAME"+allNicknames);
-
-                    write.Flush();
-                    write=null;
-                } catch(Exception ex) {
-                    Console.WriteLine(ex.ToString());
-                }
-            }
-            Console.WriteLine("Useri conectati in game"+allNicknames);
-        }
-
-        public static void RemoveUserFromChat(string nickname) {
-            if(clientsList.ContainsKey(nickname)) {
-                clientsList.Remove(nickname);
-                AllUsers();
-            }
-        }
-
-        public static void RemoveUserFromGame(string nickname) {
-            if(clientsInGame.ContainsKey(nickname)) {
-                clientsInGame.Remove(nickname);
-                AllUsersInGame();
-            }
         }
 
         static void Main(string[] args) {

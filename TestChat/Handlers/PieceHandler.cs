@@ -105,6 +105,5 @@ namespace Handlers {
                 GameWindow.GetInstance().StackCanvas.Children.Add(CanvasItems.Pieces.GetInstance().getImage(mes[1]));
             } ));
         }
-
     }
 }

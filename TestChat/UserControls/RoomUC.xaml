@@ -6,8 +6,11 @@
              mc:Ignorable="d" 
              d:DesignHeight="350" d:DesignWidth="530">
     <Grid>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="357,283,0,0" VerticalAlignment="Top" Width="75"/>
-        <ListBox HorizontalAlignment="Left" Height="241" Margin="46,10,0,0" VerticalAlignment="Top" Width="353"/>
+        <Button Content="Quit room" HorizontalAlignment="Left" Margin="361,281,0,0" VerticalAlignment="Top" Width="75" Click="QuitRomm"/>
+        <ListBox HorizontalAlignment="Left" Height="139" Margin="83,10,0,0" VerticalAlignment="Top" Width="353"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="83,242,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="353"/>
+        <TextBox HorizontalAlignment="Left" Height="83" Margin="83,154,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="353"/>
+        <Button Content="Start game" HorizontalAlignment="Left" Margin="83,281,0,0" VerticalAlignment="Top" Width="75"/>
 
     </Grid>
 </UserControl>

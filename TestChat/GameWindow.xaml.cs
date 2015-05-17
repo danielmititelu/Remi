@@ -330,6 +330,7 @@ namespace Game {
             } ));
             return exists;
         }
+
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
             if(Client.GetInstance().ClientConnected()) {
                 Client.GetInstance().WriteLine("EXIT_FROM_GAME:Am iesit din joc");

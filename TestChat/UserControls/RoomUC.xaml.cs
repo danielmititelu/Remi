@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Game;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,6 +22,10 @@ namespace UserControls {
 
         public RoomUC() {
             InitializeComponent();
+        }
+
+        private void QuitRomm(object sender, RoutedEventArgs e) {
+            MainWindow.GetInstance().Switch(new MainUC());
         }
     }
 }

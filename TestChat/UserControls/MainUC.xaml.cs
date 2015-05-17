@@ -92,6 +92,7 @@ namespace UserControls {
 
         private void CreateRoom(object sender, RoutedEventArgs e) {
             MainWindow.GetInstance().Switch(new RoomUC());
+            Client.GetInstance().WriteLine("CREATE_ROOM:"+_nickname);
         }
     }
 }

@@ -44,6 +44,7 @@
     <Compile Include="HandleClient.cs" />
     <Compile Include="HandleFormations.cs" />
     <Compile Include="LoadPieces.cs" />
+    <Compile Include="MessageSender.cs" />
     <Compile Include="Room.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

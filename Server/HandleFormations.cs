@@ -32,7 +32,7 @@ namespace Server {
             if(res.Equals("Nu este o formatie")) {
                 MsgtoGameClient(nickname, "DONT:"+res);
             } else {
-                Server.BroadcastInGame("FORMATION:", nickname, msg1+":"+msg2+":"+msg3);
+                MessageSender.Broadcast("FORMATION:", nickname, msg1+":"+msg2+":"+msg3, Server.clientsInGame);
             }
             Console.WriteLine(res);
         }
@@ -126,14 +126,14 @@ namespace Server {
                 if(testInitialNum(pieceToAdd, firstPiece)//pieceToAdd:firstPiece:pieceAfterFirst
                     &&testIntNum(pieceToAdd, pieceAfterFirst)
                     &&column.Equals("0")) {
-                    Server.BroadcastInGame("ADD_PIECE_ON_FIRST_COL:", clientToAdd, row+":"+imageIndex+":"+column);
+                    MessageSender.Broadcast("ADD_PIECE_ON_FIRST_COL:", clientToAdd, row+":"+imageIndex+":"+column, Server.clientsInGame);
                     int index=Array.IndexOf(Server.formations.ToArray(), formationCod);
                     Server.formations[index]=formationType+":"+pieceToAdd+":"+lastPiece+":"+clientToAdd+":"+row;
                 } else if(testFinalNum(lastPiece, pieceToAdd)//pieceBeforeLast:lastPiece:pieceToAdd
                     &&testIntNum(pieceBeforeLast, pieceToAdd)
                     &&!( pieceBeforeLast==100||pieceBeforeLast==200||pieceBeforeLast==300||pieceBeforeLast==400 )
                     &&!column.Equals("0")) {
-                    Server.BroadcastInGame("ADD_PIECE:", clientToAdd, row+":"+imageIndex+":"+column);
+                    MessageSender.Broadcast("ADD_PIECE:", clientToAdd, row+":"+imageIndex+":"+column, Server.clientsInGame);
                     int index=Array.IndexOf(Server.formations.ToArray(), formationCod);
                     Server.formations[index]=formationType+":"+firstPiece+":"+pieceToAdd+":"+clientToAdd+":"+row;
                 } else {
@@ -141,7 +141,7 @@ namespace Server {
                 }
             } else if(formationType.Equals("2")) {//pereche
                 if(pieceToAdd==firstPiece||pieceToAdd==lastPiece) {
-                    Server.BroadcastInGame("ADD_PIECE:", clientToAdd, row+":"+imageIndex+":"+column);
+                    MessageSender.Broadcast("ADD_PIECE:", clientToAdd, row+":"+imageIndex+":"+column, Server.clientsInGame);
                     int index=Array.IndexOf(Server.formations.ToArray(), formationCod);
                     Server.formations[index]=formationType+":0:0:"+clientToAdd+":"+row;
                 } else {
