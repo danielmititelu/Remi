@@ -1,8 +1,10 @@
 ﻿using Game;
+using MessageControl;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -24,7 +26,22 @@ namespace UserControls {
             ipAddress.Text="127.0.0.1";
         }
         private void Button_Click(object sender, RoutedEventArgs e) {
-            MainWindow.GetInstance().Switch(new MainUC(ipAddress.Text, nickame.Text));
+            MainWindow.GetInstance().Switch(new MainUC());
+            connect(ipAddress.Text, nickame.Text);
+        }
+        private void connect(String ipAddress, String nickname) {
+            String ip=ipAddress.Trim();
+
+            new Client(ip);
+            Client.GetInstance().SetNickname(nickname);
+
+            Thread messageReader=new Thread(() => MessageReader.getMessage());
+            messageReader.SetApartmentState(ApartmentState.STA);
+            messageReader.Name="MessageReader";
+
+            messageReader.Start();
+
+            Client.GetInstance().WriteLine(nickname);
         }
     }
 }

@@ -23,7 +23,6 @@ namespace Game {
         private double canvasLeft;
         private double canvasTop;
         bool formatie=false;
-        String _nickname;
         int[] selectedImages=null;
         int n=0;
         public Image temp_img;
@@ -33,11 +32,6 @@ namespace Game {
 
         public GameWindow() {
             InitializeComponent();
-        }
-
-        public GameWindow(String ipAddress, String nickname) {
-            InitializeComponent();
-            _nickname=nickname;
             _instance=this;
             this.Show();
         }
@@ -49,7 +43,7 @@ namespace Game {
         public static bool Exists() {
             if(_instance==null) {
                 return false;
-            }
+            }else
             return true;
         }
 
@@ -73,7 +67,7 @@ namespace Game {
                 player4.Content="[empty]";
                 int pos=0;
                 for(int i=0 ; i<users.Count() ; i++) {
-                    if(users[i].Equals(_nickname)) {
+                    if(users[i].Equals(Client.GetInstance().GetNickname())) {
                         pos=i;
                     }
                 }
@@ -178,7 +172,7 @@ namespace Game {
             }
             if(etalon1.IsMouseOver) {
                 temp_img=selectedPiece;
-                client_to_add=_nickname;
+                client_to_add=Client.GetInstance().GetNickname();
             } else if(etalon2.IsMouseOver) {
                 temp_img=selectedPiece;
                 client_to_add=(String) player2.Content;
@@ -195,7 +189,7 @@ namespace Game {
                 n++;
                 if(n==3) {
                     formatie=false;
-                    Client.GetInstance().WriteLine("FOR:"+selectedImages[0]+":"+selectedImages[1]+":"+selectedImages[2]+":"+_nickname+":"+( PieceHandler._row1+1 ));
+                    Client.GetInstance().WriteLine("FOR:"+selectedImages[0]+":"+selectedImages[1]+":"+selectedImages[2]+":"+Client.GetInstance().GetNickname()+":"+( PieceHandler._row1+1 ));
                 }
             }
         }
@@ -242,11 +236,6 @@ namespace Game {
             selectedImages=new int[3];
             formatie=true;
             n=0;
-        }
-
-
-        public string GetNickName() {
-            return _nickname;
         }
 
         public string GetPlayerAt(int p) {

@@ -60,11 +60,11 @@ namespace Game {
             return true;
         }
 
-        public void SetNickName(string name) {
+        public void SetNickname(string name) {
             _nickName=name;
         }
 
-        public string GetName() {
+        public string GetNickname() {
             return _nickName;
         }
     }

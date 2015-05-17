@@ -27,7 +27,7 @@ namespace Handlers {
 
                 Image local_image=CanvasItems.Pieces.GetInstance().getImage(msg[2]);
 
-                if(msg[0].Equals(GameWindow.GetInstance().GetNickName())) {
+                if(msg[0].Equals(Client.GetInstance().GetNickname())) {
                     AddPiece(GameWindow.GetInstance().GetGridAt(1), local_image, r, c, firstRow);
                 } else if(msg[0].Equals(GameWindow.GetInstance().GetPlayerAt(2))) {
                     AddPiece(GameWindow.GetInstance().GetGridAt(2), local_image, r, c, firstRow);
@@ -63,7 +63,7 @@ namespace Handlers {
                 Image local_image1=CanvasItems.Pieces.GetInstance().getImage(msg[1]);
                 Image local_image2=CanvasItems.Pieces.GetInstance().getImage(msg[2]);
                 Image local_image3=CanvasItems.Pieces.GetInstance().getImage(msg[3]);
-                if(msg[0].Equals(GameWindow.GetInstance().GetNickName())) {
+                if(msg[0].Equals(Client.GetInstance().GetNickname())) {
                     GameWindow.GetInstance().RemoveImgListeners(local_image1);
                     GameWindow.GetInstance().RemoveImgListeners(local_image2);
                     GameWindow.GetInstance().RemoveImgListeners(local_image3);
@@ -98,7 +98,7 @@ namespace Handlers {
         public static void PutPieceOnBoard(string readData) {
             GameWindow.GetInstance().Dispatcher.Invoke((Action) ( () => {
                 String[] mes=readData.Split(':');
-                if(mes[0].Equals(GameWindow.GetInstance().GetNickName())) {
+                if(mes[0].Equals(Client.GetInstance().GetNickname())) {
                     GameWindow.GetInstance().RemoveImgListeners(CanvasItems.Pieces.GetInstance().getImage(mes[1]));
                     GameWindow.GetInstance().RemoveFromMyTable(CanvasItems.Pieces.GetInstance().getImage(mes[1]));
                 }

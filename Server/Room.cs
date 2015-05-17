@@ -9,14 +9,23 @@ using System.Threading.Tasks;
 
 namespace Server {
     class Room {
-        public static Hashtable clientsInRoom=new Hashtable();
-        private string p;
+        private Hashtable clientsInRoom;
+        private string _roomName;
 
-        public Room(string p) {
-            // TODO: Complete member initialization
-            this.p=p;
+        public Room(string roomName) {
+            _roomName=roomName;
+            clientsInRoom=new Hashtable();
         }
-       
+        public string getRoomName() {
+            return _roomName;
+        }
+
+        public void AddClientInRoom(string nickname, TcpClient clientSocket) {
+            clientsInRoom.Add(nickname, clientSocket);
+        }
+        public Hashtable GetClientsInRoom() {
+            return clientsInRoom;
+        }
 
     }
 }

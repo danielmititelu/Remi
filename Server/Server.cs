@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 namespace Server {
     class Server {
         public static Hashtable clientsList=new Hashtable();
+        public static List<Room> roomList=new List<Room>();
         public static Hashtable clientsInGame=new Hashtable();
         public static List<int> pieces=new List<int>();
         public static Hashtable clientsFormation=new Hashtable();
@@ -45,6 +46,7 @@ namespace Server {
                         chatThread.Start();
                         Console.WriteLine("A new client has connected to chat "+nickname);
                         MessageSender.AllUsers("NEW_USER_IN_CHAT", clientsList);
+                        MessageSender.AllRooms(roomList,clientsList);
                     }
                 }
             }

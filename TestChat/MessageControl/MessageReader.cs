@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Handlers;
 using Game;
+using UserControls;
 
 namespace MessageControl {
     class MessageReader {
@@ -19,8 +20,13 @@ namespace MessageControl {
                 if("".Equals(message.Trim())) {
                     continue;
                 }
-                keyword=message.Substring(0, message.IndexOf(':'));
-                readData=message.Substring(message.IndexOf(':')+1, message.Length-message.IndexOf(':')-1);
+                if(message.Contains(':')){
+                    keyword=message.Substring(0, message.IndexOf(':'));
+                    readData=message.Substring(message.IndexOf(':')+1, message.Length-message.IndexOf(':')-1);
+                } else {
+                    keyword=message;
+                    readData="";
+                }
 
                 switch(keyword) {
                     case "MESSAGE_GAME":
@@ -45,7 +51,7 @@ namespace MessageControl {
                         PieceHandler.PutPieceOnBoard(readData);
                         break;
                     case "MESSAGE_CHAT":
-                        UserControls.MainUC.GetInstance().SetText(readData);
+                        MainUC.GetInstance().SetText(readData);
                         break;
                     case "ALR":
                         //Login login=new Login ();
@@ -53,10 +59,19 @@ namespace MessageControl {
                         //this.Dispatcher.Invoke ((Action) (() => { this.Hide(); }));
                         break;
                     case "NEW_USER_IN_CHAT":
-                        UserControls.MainUC.GetInstance().AddPlayer(readData);
+                        MainUC.GetInstance().AddPlayer(readData);
                         break;
                     case "NEW_USER_IN_GAME":
                         GameWindow.GetInstance().NewUser(readData);
+                        break;
+                    case "ALL_USERS_IN_ROOM":
+                        RoomUC.GetInstance().AddPlayer(readData);
+                        break;
+                    case"NEW_ROOM":
+                        MainUC.GetInstance().AddRoom(readData);
+                        break;
+                    case"MESSAGE_ROOM":
+                        RoomUC.GetInstance().SetText(readData);
                         break;
                     default:
                         GameWindow.GetInstance().ErrorText("Error 404:Keyword not found");

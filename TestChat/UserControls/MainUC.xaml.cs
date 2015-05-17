@@ -6,8 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -24,38 +22,13 @@ namespace UserControls {
     /// </summary>
     public partial class MainUC : UserControl {
 
-        String _ipAddress;
-        String _nickname;
-
-        static MainUC instance;
+        static MainUC _instance;
 
         public MainUC() {
             InitializeComponent();
+            _instance=this;
         }
 
-        public MainUC(String ipAddress, String nickname) {
-            InitializeComponent();
-            _ipAddress=ipAddress;
-            _nickname=nickname;
-            connect(ipAddress, nickname);
-
-            instance=this;
-        }
-
-        private void connect(String ipAddress, String nickname) {
-            String ip=ipAddress.Trim();
-
-            new Client(ip);
-            Client.GetInstance().SetNickName(_nickname);
-
-            Thread messageReader=new Thread(() => MessageReader.getMessage());
-            messageReader.SetApartmentState(ApartmentState.STA);
-            messageReader.Name="MessageReader";
-
-            messageReader.Start();
-
-            Client.GetInstance().WriteLine(nickname);
-        }
 
         private void send_KeyDown(object sender, KeyEventArgs e) {
             if(e.Key==Key.Enter) {
@@ -65,9 +38,9 @@ namespace UserControls {
         }
 
         private void Button_Click(object sender, RoutedEventArgs e) {
-            new GameWindow(_ipAddress, _nickname);
+            new GameWindow();
             MainWindow.GetInstance().Close();
-            Client.GetInstance().WriteLine("SWITCH_TO_GAME:"+_nickname);
+            Client.GetInstance().WriteLine("SWITCH_TO_GAME:"+Client.GetInstance().GetNickname());
         }
 
         public void SetText(string message) {
@@ -78,21 +51,41 @@ namespace UserControls {
         }
 
         public void AddPlayer(string message) {
-            this.Dispatcher.Invoke((Action) ( () => { listBox1.Items.Clear(); } ));
-            foreach(String user in message.Split(':')) {
-                if(user==Client.GetInstance().GetName())
-                    continue;
-                this.Dispatcher.Invoke((Action) ( () => { listBox1.Items.Add(user); } ));
+            this.Dispatcher.Invoke((Action) ( () => {
+                listBox1.Items.Clear();
+                foreach(String user in message.Split(':')) {
+                    listBox1.Items.Add(user);
+                }
+            } ));
+        }
+
+        public void AddRoom(string message) {
+            this.Dispatcher.Invoke((Action) ( () => {
+                rooms.Items.Clear();
+                if(!message.Equals("")) {
+                    foreach(String room in message.Split(':')) {
+                        rooms.Items.Add(room);
+                    }
+                }
+            } ));
+        }
+
+        private void CreateRoom(object sender, RoutedEventArgs e) {
+            MainWindow.GetInstance().Switch(new RoomUC(Client.GetInstance().GetNickname()));
+            Client.GetInstance().WriteLine("CREATE_ROOM:"+Client.GetInstance().GetNickname());
+        }
+
+        private void JoinRoom(object sender, RoutedEventArgs e) {
+            if(!( rooms.SelectedItem==null )) {
+                MainWindow.GetInstance().Switch(new RoomUC(""+rooms.SelectedItem));
+                Client.GetInstance().WriteLine("JOIN_ROOM:"+rooms.SelectedItem);
             }
         }
 
         public static MainUC GetInstance() {
-            return instance;
+            return _instance;
         }
 
-        private void CreateRoom(object sender, RoutedEventArgs e) {
-            MainWindow.GetInstance().Switch(new RoomUC());
-            Client.GetInstance().WriteLine("CREATE_ROOM:"+_nickname);
-        }
+
     }
 }

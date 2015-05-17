@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 namespace Server {
     class MessageSender {
 
-        public static void Broadcast(String keyword, String nickname, String msg, Hashtable UserList) {
+        public static void Broadcast(String keyword, String nickname, String msg, Hashtable userList) {
             TcpClient broadcastSocket=null;
             StreamWriter write=null;
-            foreach(DictionaryEntry item in UserList) {
+            foreach(DictionaryEntry item in userList) {
                 try {
                     if(msg.Trim()==""||(TcpClient) item.Value==null)
                         continue;
@@ -29,15 +29,15 @@ namespace Server {
                 }
             }
         }
-        public static void AllUsers(string keyword,Hashtable UserList) {
+        public static void AllUsers(string keyword, Hashtable userList) {
             String allNicknames=null;
             TcpClient broadcastSocket=null;
             StreamWriter write=null;
 
-            foreach(DictionaryEntry item1 in UserList) {
+            foreach(DictionaryEntry item1 in userList) {
                 allNicknames=allNicknames+":"+item1.Key;
             }
-            foreach(DictionaryEntry item in UserList) {
+            foreach(DictionaryEntry item in userList) {
                 try {
                     broadcastSocket=(TcpClient) item.Value;
                     write=new StreamWriter(broadcastSocket.GetStream());
@@ -50,13 +50,12 @@ namespace Server {
                     Console.WriteLine(ex.ToString());
                 }
             }
-            Console.WriteLine("Useri conectati in chat"+allNicknames);
         }
 
-        public static void RemoveUser(string keyword,string nickname, Hashtable UserList) {
-            if(UserList.ContainsKey(nickname)) {
-                UserList.Remove(nickname);
-                AllUsers(keyword, UserList);
+        public static void RemoveUser(string keyword, string nickname, Hashtable userList) {
+            if(userList.ContainsKey(nickname)) {
+                userList.Remove(nickname);
+                AllUsers(keyword, userList);
             }
         }
         public static void MsgtoClient(String nickname, String msg, Hashtable UserList) {
@@ -68,8 +67,31 @@ namespace Server {
                 write.WriteLine(msg);
                 write.Flush();
                 write=null;
-                Console.WriteLine(nickname+":"+msg);
+                //Console.WriteLine(nickname+":"+msg);
             }
+        }
+        public static void AllRooms(List<Room> roomsList, Hashtable userList) {
+            String allRooms=null;
+            TcpClient broadcastSocket=null;
+            StreamWriter write=null;
+
+            foreach(Room room in roomsList) {
+                allRooms=allRooms+":"+room.getRoomName();
+            }
+            foreach(DictionaryEntry item in userList) {
+                try {
+                    broadcastSocket=(TcpClient) item.Value;
+                    write=new StreamWriter(broadcastSocket.GetStream());
+
+                    write.WriteLine("NEW_ROOM"+allRooms);
+
+                    write.Flush();
+                    write=null;
+                } catch(Exception ex) {
+                    Console.WriteLine(ex.ToString());
+                }
+            }
+            Console.WriteLine("Camere create"+allRooms);
         }
 
     }
