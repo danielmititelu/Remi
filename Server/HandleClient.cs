@@ -44,7 +44,7 @@ namespace Server {
                             foreach(int i in Server.random.Next14()) {
                                 s=s+":"+i;
                             }
-                            HandleGame.MsgtoGameClient(nickname, "DRAW"+s);
+                            MessageSender.MsgtoClient(nickname, "DRAW"+s, Server.clientsInGame);
                             break;
                         case "FOR"://piece1:piece2:piece3:nickname:row+1
                             HandleGame.Formatie(msg[1], msg[2], msg[3], msg[4], msg[5]);
@@ -56,7 +56,7 @@ namespace Server {
                             HandleGame.AddPiece(msg[1], msg[2], msg[3], msg[4],nickname);
                             break;
                         case "DRAW":
-                            HandleGame.MsgtoGameClient(nickname, "DRAW:"+Server.random.Next());
+                            MessageSender.MsgtoClient(nickname, "DRAW:"+Server.random.Next(), Server.clientsInGame);
                             break;
                         case "PUT_PIECE_ON_BORD":
                             Server.pieces_on_board.Add(Server.pieces[Int32.Parse(msg[1])]);

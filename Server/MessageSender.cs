@@ -59,6 +59,18 @@ namespace Server {
                 AllUsers(keyword, UserList);
             }
         }
+        public static void MsgtoClient(String nickname, String msg, Hashtable UserList) {
+            TcpClient clientSocket=null;
+            StreamWriter write=null;
+            if(UserList.ContainsKey(nickname)) { // TODO: Initialize StreamWriter at the begining
+                clientSocket=(TcpClient) UserList[nickname];
+                write=new StreamWriter(clientSocket.GetStream());
+                write.WriteLine(msg);
+                write.Flush();
+                write=null;
+                Console.WriteLine(nickname+":"+msg);
+            }
+        }
 
     }
 }

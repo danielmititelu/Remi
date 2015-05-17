@@ -9,19 +9,6 @@ using System.Threading.Tasks;
 namespace Server {
     class HandleGame {
 
-        public static void MsgtoGameClient(String nickname, String msg) {
-            TcpClient clientSocket=null;
-            StreamWriter write=null;
-            if(Server.clientsInGame.ContainsKey(nickname)) { // TODO: Initialize StreamWriter at the begining
-                clientSocket=(TcpClient) Server.clientsInGame[nickname];
-                write=new StreamWriter(clientSocket.GetStream());
-                write.WriteLine(msg);
-                write.Flush();
-                write=null;
-                Console.WriteLine(nickname+":"+msg);
-            }
-        }
-
         public static void Formatie(String msg1, String msg2, String msg3, String nickname, String row) {
             int a=Server.pieces[Int32.Parse(msg1)];
             int b=Server.pieces[Int32.Parse(msg2)];
@@ -30,7 +17,7 @@ namespace Server {
             String res=testeaza(a, b, c, nickname, row);
 
             if(res.Equals("Nu este o formatie")) {
-                MsgtoGameClient(nickname, "DONT:"+res);
+                MessageSender.MsgtoClient(nickname, "DONT:"+res, Server.clientsInGame);
             } else {
                 MessageSender.Broadcast("FORMATION:", nickname, msg1+":"+msg2+":"+msg3, Server.clientsInGame);
             }
@@ -137,7 +124,7 @@ namespace Server {
                     int index=Array.IndexOf(Server.formations.ToArray(), formationCod);
                     Server.formations[index]=formationType+":"+firstPiece+":"+pieceToAdd+":"+clientToAdd+":"+row;
                 } else {
-                    MsgtoGameClient(nickname, "DONT:Nu se lipeste!");
+                    MessageSender.MsgtoClient(nickname, "DONT:Nu se lipeste!", Server.clientsInGame);
                 }
             } else if(formationType.Equals("2")) {//pereche
                 if(pieceToAdd==firstPiece||pieceToAdd==lastPiece) {
@@ -145,7 +132,7 @@ namespace Server {
                     int index=Array.IndexOf(Server.formations.ToArray(), formationCod);
                     Server.formations[index]=formationType+":0:0:"+clientToAdd+":"+row;
                 } else {
-                    MsgtoGameClient(nickname, "DONT:Nu se lipeste!");
+                    MessageSender.MsgtoClient(nickname, "DONT:Nu se lipeste!", Server.clientsInGame);
                 }
             }
         }
