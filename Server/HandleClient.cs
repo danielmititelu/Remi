@@ -47,7 +47,7 @@ namespace Server {
                             MessageSender.RemoveUser("NEW_USER_IN_GAME", nickname, Server.clientsInGame);
                             break;
                         case "SWITCH_TO_GAME":
-                            Server.clientsInGame.Add(nickname, clientSocket);
+                            Server.clientsInGame.Add(new User(nickname, clientSocket));
                             MessageSender.AllUsers("NEW_USER_IN_GAME", Server.clientsInGame);
                             String s=null;
                             foreach(int i in Server.random.Next14()) {
@@ -86,7 +86,7 @@ namespace Server {
                             if(room.GetClientsInRoom().Count==0) {
                                 Server.roomList.Remove(room);
                             }
-                            Server.clientsList.Add(nickname,clientSocket);
+                            Server.clientsList.Add(new User(nickname,clientSocket));
                             MessageSender.AllRooms(Server.roomList, Server.clientsList);
                             MessageSender.AllUsers("NEW_USER_IN_CHAT", Server.clientsList);
                             break;

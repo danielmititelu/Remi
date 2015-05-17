@@ -11,11 +11,10 @@ using System.Threading.Tasks;
 
 namespace Server {
     class Server {
-        public static Hashtable clientsList=new Hashtable();
+        public static List<User> clientsList=new List<User>();
         public static List<Room> roomList=new List<Room>();
-        public static Hashtable clientsInGame=new Hashtable();
+        public static List<User> clientsInGame=new List<User>();
         public static List<int> pieces=new List<int>();
-        public static Hashtable clientsFormation=new Hashtable();
         public static List<String> formations=new List<String>();
         public static UniqueRandom random=new UniqueRandom(Enumerable.Range(0, 105));
         public static List<int> pieces_on_board=new List<int>();
@@ -33,15 +32,15 @@ namespace Server {
                     client=server.AcceptTcpClient();
                     read=new StreamReader(client.GetStream());
                     nickname=read.ReadLine();
-
-                    if(clientsList.ContainsKey(nickname)) {
+                    //clientsList.ContainsKey(nickname)
+                    if(clientsList.Exists(c=> c.Nickname==nickname)) {
                         StreamWriter write=null;
                         write=new StreamWriter(client.GetStream());
                         write.WriteLine("ALR:"+nickname);
                         write.Flush();
                         Console.WriteLine("Client "+nickname+" already exists");
                     } else {
-                        clientsList.Add(nickname, client);
+                        clientsList.Add(new User(nickname, client));
                         Thread chatThread=new Thread(() => ConnectToChat(client, nickname));
                         chatThread.Start();
                         Console.WriteLine("A new client has connected to chat "+nickname);

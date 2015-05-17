@@ -10,86 +10,45 @@ using System.Threading.Tasks;
 namespace Server {
     class MessageSender {
 
-        public static void Broadcast(String keyword, String nickname, String msg, Hashtable userList) {
-            TcpClient broadcastSocket=null;
-            StreamWriter write=null;
-            foreach(DictionaryEntry item in userList) {
-                try {
-                    if(msg.Trim()==""||(TcpClient) item.Value==null)
+        public static void Broadcast(String keyword, String nickname, String msg, List<User> userList) {
+            foreach(User user in userList) {
+                    if(msg.Trim()==""||(TcpClient) user.Client==null)
                         continue;
 
-                    broadcastSocket=(TcpClient) item.Value;
-                    write=new StreamWriter(broadcastSocket.GetStream());
-                    write.WriteLine(keyword+nickname+":"+msg);
-                    write.Flush();
-                    write=null;
+                    user.WriteLine(keyword+nickname+":"+msg);
                     Console.WriteLine(keyword+nickname+":"+msg);
-                } catch(Exception ex) {
-                    Console.WriteLine(ex.ToString());
-                }
             }
         }
-        public static void AllUsers(string keyword, Hashtable userList) {
+        public static void AllUsers(string keyword, List<User> userList) {
             String allNicknames=null;
-            TcpClient broadcastSocket=null;
-            StreamWriter write=null;
 
-            foreach(DictionaryEntry item1 in userList) {
-                allNicknames=allNicknames+":"+item1.Key;
+            foreach(User item in userList) {
+                allNicknames=allNicknames+":"+item.Nickname;
             }
-            foreach(DictionaryEntry item in userList) {
-                try {
-                    broadcastSocket=(TcpClient) item.Value;
-                    write=new StreamWriter(broadcastSocket.GetStream());
-
-                    write.WriteLine(keyword+allNicknames);
-
-                    write.Flush();
-                    write=null;
-                } catch(Exception ex) {
-                    Console.WriteLine(ex.ToString());
-                }
+            foreach(User user in userList) {
+                    user.WriteLine(keyword+allNicknames);
             }
         }
 
-        public static void RemoveUser(string keyword, string nickname, Hashtable userList) {
-            if(userList.ContainsKey(nickname)) {
-                userList.Remove(nickname);
+        public static void RemoveUser(string keyword, string nickname, List<User> userList) {
+            if(userList.Exists(c => c.Nickname==nickname)) {
+                userList.Remove(userList.Single(c=> c.Nickname==nickname));
                 AllUsers(keyword, userList);
             }
         }
-        public static void MsgtoClient(String nickname, String msg, Hashtable UserList) {
-            TcpClient clientSocket=null;
-            StreamWriter write=null;
-            if(UserList.ContainsKey(nickname)) { // TODO: Initialize StreamWriter at the begining
-                clientSocket=(TcpClient) UserList[nickname];
-                write=new StreamWriter(clientSocket.GetStream());
-                write.WriteLine(msg);
-                write.Flush();
-                write=null;
-                //Console.WriteLine(nickname+":"+msg);
+        public static void MsgtoClient(String nickname, String msg, List<User> userList) {
+            if(userList.Exists(c => c.Nickname==nickname)) {
+                userList.Single(c => c.Nickname==nickname).WriteLine(msg);
             }
         }
-        public static void AllRooms(List<Room> roomsList, Hashtable userList) {
+        public static void AllRooms(List<Room> roomsList, List<User> userList) {
             String allRooms=null;
-            TcpClient broadcastSocket=null;
-            StreamWriter write=null;
 
             foreach(Room room in roomsList) {
                 allRooms=allRooms+":"+room.getRoomName();
             }
-            foreach(DictionaryEntry item in userList) {
-                try {
-                    broadcastSocket=(TcpClient) item.Value;
-                    write=new StreamWriter(broadcastSocket.GetStream());
-
-                    write.WriteLine("NEW_ROOM"+allRooms);
-
-                    write.Flush();
-                    write=null;
-                } catch(Exception ex) {
-                    Console.WriteLine(ex.ToString());
-                }
+            foreach(User user in userList) {
+                    user.WriteLine("NEW_ROOM"+allRooms);
             }
             Console.WriteLine("Camere create"+allRooms);
         }
