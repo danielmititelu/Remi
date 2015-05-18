@@ -19,6 +19,7 @@ namespace Game {
     /// </summary>
     public partial class MainWindow : Window {
 
+        public bool _inGame=false;
         static MainWindow _instance;
 
         public MainWindow() {
@@ -39,7 +40,7 @@ namespace Game {
                 if(!RoomUC.Exists()) {
                     Client.GetInstance().WriteLine("EXIT_FROM_CHAT:Am iesit din chat server");
                 } else {
-                    Client.GetInstance().WriteLine("EXIT_FROM_CHAT:"+RoomUC.GetInstance().getRoomName());
+                    Client.GetInstance().WriteLine("EXIT_FROM_CHAT:"+RoomUC.GetInstance().getRoomName()+":"+_inGame);
                 }
 
                 if(!GameWindow.Exists()) {

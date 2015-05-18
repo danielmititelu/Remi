@@ -34,43 +34,49 @@ namespace Server {
                             break;
                         case "EXIT_FROM_CHAT":
                             if(!msg[1].Equals("Am iesit din chat server")){
+                                if(msg[2].Equals("false")){
                                 room=Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(msg[1]));
                                 MessageSender.RemoveUser("ALL_USERS_IN_ROOM", nickname, room.GetClientsInRoom());
                                 if(room.GetClientsInRoom().Count==0) {
                                     Server.roomList.Remove(room);
                                 }
                                 MessageSender.AllRooms(Server.roomList, Server.clientsList);
+                                }
                             }
                             MessageSender.RemoveUser("NEW_USER_IN_CHAT", nickname, Server.clientsList);
                             break;
-                        case "EXIT_FROM_GAME":
-                            MessageSender.RemoveUser("NEW_USER_IN_GAME", nickname, Server.clientsInGame);
+                        case "EXIT_FROM_GAME"://roomName
+                            room=Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(msg[1]));
+                            MessageSender.RemoveUser("NEW_USER_IN_GAME", nickname, room.GetClientsInRoom());
                             break;
-                        case "SWITCH_TO_GAME":
-                            Server.clientsInGame.Add(new User(nickname, clientSocket));
-                            MessageSender.AllUsers("NEW_USER_IN_GAME", Server.clientsInGame,false);
+                        case "SWITCH_TO_GAME"://roomName
+                            room=Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(msg[1]));
+                            MessageSender.AllUsers("NEW_USER_IN_GAME", room.GetClientsInRoom(),false);
                             String s=null;
-                            foreach(int i in Server.random.Next14()) {
+                            foreach(int i in room.random.Next14()) {
                                 s=s+":"+i;
                             }
-                            MessageSender.MsgtoClient(nickname, "DRAW"+s, Server.clientsInGame);
+                            MessageSender.MsgtoClient(nickname, "DRAW"+s, room.GetClientsInRoom());
                             break;
-                        case "FOR"://piece1:piece2:piece3:nickname:row+1
-                            HandleGame.Formatie(msg[1], msg[2], msg[3], msg[4], msg[5]);
+                        case "FOR"://piece1:piece2:piece3:nickname:row+1:roomName
+                            HandleFormations.Formatie(msg[1], msg[2], msg[3], msg[4], msg[5],msg[6]);
                             break;
-                        case "MESSAGE_GAME":
-                            MessageSender.Broadcast("MESSAGE_GAME:", nickname, message.Substring(message.IndexOf(':')+1, message.Length-message.IndexOf(':')-1),Server.clientsInGame);
+                        case "MESSAGE_GAME"://roomName:message
+                            room=Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(msg[1]));
+                            MessageSender.Broadcast("MESSAGE_GAME:", nickname, msg[2], room.GetClientsInRoom());
                             break;
-                        case "ADD_PIECE"://row:imageIndex:column:clientToAdd
-                            HandleGame.AddPiece(msg[1], msg[2], msg[3], msg[4],nickname);
+                        case "ADD_PIECE"://row:imageIndex:column:clientToAdd:roomName
+                            HandleFormations.AddPiece(msg[1], msg[2], msg[3], msg[4],nickname,msg[5]);
                             break;
-                        case "DRAW":
-                            MessageSender.MsgtoClient(nickname, "DRAW:"+Server.random.Next(), Server.clientsInGame);
+                        case "DRAW"://roomName
+                            room=Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(msg[1]));
+                            MessageSender.MsgtoClient(nickname, "DRAW:"+room.random.Next(), room.GetClientsInRoom());
                             break;
-                        case "PUT_PIECE_ON_BORD":
-                            Server.pieces_on_board.Add(Server.pieces[Int32.Parse(msg[1])]);
-                            MessageSender.Broadcast("PUT_PIECE_ON_BORD:", nickname, msg[1],Server.clientsInGame);
-                           // Server.BroadcastInGame("TURN:",nickname,);
+                        case "PUT_PIECE_ON_BORD"://index:roomName
+                            room=Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(msg[2]));
+                            room.pieces_on_board.Add(room.pieces[Int32.Parse(msg[1])]);
+                            MessageSender.Broadcast("PUT_PIECE_ON_BORD:", nickname, msg[1],room.GetClientsInRoom());
+                           // MessageSender.Broadcast("ENDTURN:",nickname,"end",Server.clientsInGame);
                             break;
                         case "CREATE_ROOM":             
                             MessageSender.RemoveUser("NEW_USER_IN_CHAT", nickname, Server.clientsList);

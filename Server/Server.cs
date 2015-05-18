@@ -13,17 +13,13 @@ namespace Server {
     class Server {
         public static List<User> clientsList=new List<User>();
         public static List<Room> roomList=new List<Room>();
-        public static List<User> clientsInGame=new List<User>();
-        public static List<int> pieces=new List<int>();
-        public static List<String> formations=new List<String>();
-        public static UniqueRandom random=new UniqueRandom(Enumerable.Range(0, 105));
-        public static List<int> pieces_on_board=new List<int>();
+       // public static List<User> clientsInGame=new List<User>();
+
 
         public Server() {
             TcpClient client=null;
             String nickname=null;
             StreamReader read;
-            LoadPieces.GeneratePieces();
             TcpListener server=new TcpListener(IPAddress.Any, 5150);
             Console.WriteLine("Chat server started");
             server.Start();
@@ -32,7 +28,6 @@ namespace Server {
                     client=server.AcceptTcpClient();
                     read=new StreamReader(client.GetStream());
                     nickname=read.ReadLine();
-                    //clientsList.ContainsKey(nickname)
                     if(clientsList.Exists(c=> c.Nickname==nickname)) {
                         StreamWriter write=null;
                         write=new StreamWriter(client.GetStream());

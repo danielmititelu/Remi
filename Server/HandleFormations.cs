@@ -7,29 +7,30 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Server {
-    class HandleGame {
+    class HandleFormations {
 
-        public static void Formatie(String msg1, String msg2, String msg3, String nickname, String row) {
-            int a=Server.pieces[Int32.Parse(msg1)];
-            int b=Server.pieces[Int32.Parse(msg2)];
-            int c=Server.pieces[Int32.Parse(msg3)];
+        public static void Formatie(String msg1, String msg2, String msg3, String nickname, String row, String roomName) {
+            Room room=Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(roomName));
+            int a=room.pieces[Int32.Parse(msg1)];
+            int b=room.pieces[Int32.Parse(msg2)];
+            int c=room.pieces[Int32.Parse(msg3)];
             Console.WriteLine(a+":"+b+":"+c+":"+nickname+":"+row);
-            String res=testeaza(a, b, c, nickname, row);
+            String res=testeaza(a, b, c, nickname, row, room);
 
             if(res.Equals("Nu este o formatie")) {
-                MessageSender.MsgtoClient(nickname, "DONT:"+res, Server.clientsInGame);
+                MessageSender.MsgtoClient(nickname, "DONT:"+res, room.GetClientsInRoom());
             } else {
-                MessageSender.Broadcast("FORMATION:", nickname, msg1+":"+msg2+":"+msg3, Server.clientsInGame);
+                MessageSender.Broadcast("FORMATION:", nickname, msg1+":"+msg2+":"+msg3, room.GetClientsInRoom());
             }
             Console.WriteLine(res);
         }
 
-        private static string testeaza(int a, int b, int c, String nickname, String row) {
+        private static string testeaza(int a, int b, int c, String nickname, String row, Room room) {
             if(testInitialNum(a, b)&&testFinalNum(b, c)&&testIntNum(a, c)) {
-                Server.formations.Add(numCode(a, b, c, nickname, row));
+                room.formations.Add(numCode(a, b, c, nickname, row));
                 return "formatie";
             } else if(testPereche(a, b)&&testPereche(b, c)&&testPereche(a, c)) {
-                Server.formations.Add(missingPiece(a, b, c, nickname, row));
+                room.formations.Add(missingPiece(a, b, c, nickname, row));
                 return "formatie";
             } else {
                 return "Nu este o formatie";
@@ -99,8 +100,9 @@ namespace Server {
             }
         }
 
-        internal static void AddPiece(string row, string imageIndex, string column, string clientToAdd, string nickname) {
-            String formationCod=Server.formations.Cast<String>().First(e => e.Split(':').ElementAt(3).Equals(clientToAdd)&&
+        internal static void AddPiece(string row, string imageIndex, string column, string clientToAdd, string nickname, string roomName) {
+            Room room=Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(roomName));
+            String formationCod=room.formations.Cast<String>().First(e => e.Split(':').ElementAt(3).Equals(clientToAdd)&&
                              e.Split(':').ElementAt(4).Equals(row));
             string[] s=formationCod.Split(':');//1:404:406:nickname:row
             string formationType=s[0];
@@ -108,31 +110,31 @@ namespace Server {
             int pieceAfterFirst=firstPiece+1;
             int lastPiece=Int32.Parse(s[2]);
             int pieceBeforeLast=lastPiece-1;
-            int pieceToAdd=Server.pieces[Int32.Parse(imageIndex)];
+            int pieceToAdd=room.pieces[Int32.Parse(imageIndex)];
             if(formationType.Equals("1")) {//numaratoare
                 if(testInitialNum(pieceToAdd, firstPiece)//pieceToAdd:firstPiece:pieceAfterFirst
                     &&testIntNum(pieceToAdd, pieceAfterFirst)
                     &&column.Equals("0")) {
-                    MessageSender.Broadcast("ADD_PIECE_ON_FIRST_COL:", clientToAdd, row+":"+imageIndex+":"+column, Server.clientsInGame);
-                    int index=Array.IndexOf(Server.formations.ToArray(), formationCod);
-                    Server.formations[index]=formationType+":"+pieceToAdd+":"+lastPiece+":"+clientToAdd+":"+row;
+                    MessageSender.Broadcast("ADD_PIECE_ON_FIRST_COL:", clientToAdd, row+":"+imageIndex+":"+column, room.GetClientsInRoom());
+                    int index=Array.IndexOf(room.formations.ToArray(), formationCod);
+                    room.formations[index]=formationType+":"+pieceToAdd+":"+lastPiece+":"+clientToAdd+":"+row;
                 } else if(testFinalNum(lastPiece, pieceToAdd)//pieceBeforeLast:lastPiece:pieceToAdd
                     &&testIntNum(pieceBeforeLast, pieceToAdd)
                     &&!( pieceBeforeLast==100||pieceBeforeLast==200||pieceBeforeLast==300||pieceBeforeLast==400 )
                     &&!column.Equals("0")) {
-                    MessageSender.Broadcast("ADD_PIECE:", clientToAdd, row+":"+imageIndex+":"+column, Server.clientsInGame);
-                    int index=Array.IndexOf(Server.formations.ToArray(), formationCod);
-                    Server.formations[index]=formationType+":"+firstPiece+":"+pieceToAdd+":"+clientToAdd+":"+row;
+                    MessageSender.Broadcast("ADD_PIECE:", clientToAdd, row+":"+imageIndex+":"+column, room.GetClientsInRoom());
+                    int index=Array.IndexOf(room.formations.ToArray(), formationCod);
+                    room.formations[index]=formationType+":"+firstPiece+":"+pieceToAdd+":"+clientToAdd+":"+row;
                 } else {
-                    MessageSender.MsgtoClient(nickname, "DONT:Nu se lipeste!", Server.clientsInGame);
+                    MessageSender.MsgtoClient(nickname, "DONT:Nu se lipeste!", room.GetClientsInRoom());
                 }
             } else if(formationType.Equals("2")) {//pereche
                 if(pieceToAdd==firstPiece||pieceToAdd==lastPiece) {
-                    MessageSender.Broadcast("ADD_PIECE:", clientToAdd, row+":"+imageIndex+":"+column, Server.clientsInGame);
-                    int index=Array.IndexOf(Server.formations.ToArray(), formationCod);
-                    Server.formations[index]=formationType+":0:0:"+clientToAdd+":"+row;
+                    MessageSender.Broadcast("ADD_PIECE:", clientToAdd, row+":"+imageIndex+":"+column, room.GetClientsInRoom());
+                    int index=Array.IndexOf(room.formations.ToArray(), formationCod);
+                    room.formations[index]=formationType+":0:0:"+clientToAdd+":"+row;
                 } else {
-                    MessageSender.MsgtoClient(nickname, "DONT:Nu se lipeste!", Server.clientsInGame);
+                    MessageSender.MsgtoClient(nickname, "DONT:Nu se lipeste!", room.GetClientsInRoom());
                 }
             }
         }

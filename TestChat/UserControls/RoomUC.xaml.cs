@@ -94,9 +94,10 @@ namespace UserControls {
                 time--;   
             } else {
                 timer.Stop();
-                new GameWindow();
+                new GameWindow(_roomName);
+                MainWindow.GetInstance()._inGame=true;
                 MainWindow.GetInstance().Close();
-                Client.GetInstance().WriteLine("SWITCH_TO_GAME:"+Client.GetInstance().GetNickname());
+                Client.GetInstance().WriteLine("SWITCH_TO_GAME:"+_roomName);
             }
         }
 

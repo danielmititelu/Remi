@@ -1,4 +1,5 @@
-﻿using Handlers;
+﻿using CanvasItems;
+using Handlers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,13 +28,21 @@ namespace Game {
         int n=0;
         public Image temp_img;
         String client_to_add;
+        private string _roomName;
 
         static GameWindow _instance;
-
+        
         public GameWindow() {
             InitializeComponent();
             _instance=this;
             this.Show();
+        }
+
+        public GameWindow(string roomName) {
+            InitializeComponent();
+            _instance=this;
+            this.Show();
+            _roomName=roomName;
         }
 
         public static GameWindow GetInstance() {
@@ -101,7 +110,7 @@ namespace Game {
 
         private void send_KeyDown(object sender, KeyEventArgs e) {
             if(e.Key==Key.Enter) {
-                Client.GetInstance().WriteLine("MESSAGE_GAME:"+send.Text);
+                Client.GetInstance().WriteLine("MESSAGE_GAME:"+_roomName+":"+send.Text);
                 send.Text="";
             }
         }
@@ -133,8 +142,8 @@ namespace Game {
                 Image selectedPiece=(Image) sender;
                 int c=Grid.GetColumn(selectedPiece);
                 int r=Grid.GetRow(selectedPiece);
-                int index=CanvasItems.Pieces.GetInstance().getIndex(temp_img);
-                Client.GetInstance().WriteLine("ADD_PIECE:"+r+":"+index+":"+c+":"+client_to_add);
+                int index=Pieces.GetInstance().getIndex(temp_img);
+                Client.GetInstance().WriteLine("ADD_PIECE:"+r+":"+index+":"+c+":"+client_to_add+":"+_roomName);
             }
         }
 
@@ -167,8 +176,8 @@ namespace Game {
             selectedPiece.ReleaseMouseCapture();
 
             if(StackCanvas.IsMouseOver) {
-                int index=CanvasItems.Pieces.GetInstance().getIndex(selectedPiece);
-                Client.GetInstance().WriteLine("PUT_PIECE_ON_BORD:"+index);
+                int index=Pieces.GetInstance().getIndex(selectedPiece);
+                Client.GetInstance().WriteLine("PUT_PIECE_ON_BORD:"+index+":"+_roomName);
             }
             if(etalon1.IsMouseOver) {
                 temp_img=selectedPiece;
@@ -184,12 +193,12 @@ namespace Game {
                 temp_img=selectedPiece;
             }
             if(formatie) {
-                int index=CanvasItems.Pieces.GetInstance().getIndex(selectedPiece);
+                int index=Pieces.GetInstance().getIndex(selectedPiece);
                 selectedImages[n]=index;
                 n++;
                 if(n==3) {
                     formatie=false;
-                    Client.GetInstance().WriteLine("FOR:"+selectedImages[0]+":"+selectedImages[1]+":"+selectedImages[2]+":"+Client.GetInstance().GetNickname()+":"+( PieceHandler._row1+1 ));
+                    Client.GetInstance().WriteLine("FOR:"+selectedImages[0]+":"+selectedImages[1]+":"+selectedImages[2]+":"+Client.GetInstance().GetNickname()+":"+( PieceHandler._row1+1 )+":"+_roomName);
                 }
             }
         }
@@ -217,17 +226,17 @@ namespace Game {
         }
 
         private void Button_Click(object sender, RoutedEventArgs e) {
-            Client.GetInstance().WriteLine("DRAW:Trage o piesa");
+            Client.GetInstance().WriteLine("DRAW:"+_roomName);
         }
 
         public void DrawCard(string readData) {
             string[] pieces=readData.Split(':');
             this.Dispatcher.Invoke((Action) ( () => {
                 foreach(string index in pieces) {
-                    Canvas.SetLeft(CanvasItems.Pieces.GetInstance().getImage(index), 0);
-                    Canvas.SetTop(CanvasItems.Pieces.GetInstance().getImage(index), 0);
-                    MyTableCanvas.Children.Add(CanvasItems.Pieces.GetInstance().getImage(index));
-                    addImgListeners(CanvasItems.Pieces.GetInstance().getImage(index));
+                    Canvas.SetLeft(Pieces.GetInstance().getImage(index), 0);
+                    Canvas.SetTop(Pieces.GetInstance().getImage(index), 0);
+                    MyTableCanvas.Children.Add(Pieces.GetInstance().getImage(index));
+                    addImgListeners(Pieces.GetInstance().getImage(index));
                 }
             } ));
         }
@@ -322,7 +331,7 @@ namespace Game {
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
             if(Client.GetInstance().ClientConnected()) {
-                Client.GetInstance().WriteLine("EXIT_FROM_GAME:Am iesit din joc");
+                Client.GetInstance().WriteLine("EXIT_FROM_GAME:"+_roomName);
                 Client.GetInstance().Close();
             }
         }
