@@ -11,6 +11,7 @@ namespace Server {
         String _nickname;
         TcpClient _clientSocket;
         StreamWriter write=null;
+        bool _ready=false;
 
         public User(String nickname, TcpClient clientSocket) {
             _nickname=nickname;
@@ -24,6 +25,10 @@ namespace Server {
         public TcpClient Client {
             get { return _clientSocket; }
             set { _clientSocket=value; }
+        }
+        public bool Ready {
+            get { return _ready; }
+            set { _ready=value; }
         }
         public void WriteLine(String message) {
             write.WriteLine(message);

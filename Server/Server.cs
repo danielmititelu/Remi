@@ -44,7 +44,7 @@ namespace Server {
                         Thread chatThread=new Thread(() => ConnectToChat(client, nickname));
                         chatThread.Start();
                         Console.WriteLine("A new client has connected to chat "+nickname);
-                        MessageSender.AllUsers("NEW_USER_IN_CHAT", clientsList);
+                        MessageSender.AllUsers("NEW_USER_IN_CHAT", clientsList,false);
                         MessageSender.AllRooms(roomList,clientsList);
                     }
                 }

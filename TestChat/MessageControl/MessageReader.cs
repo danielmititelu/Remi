@@ -20,7 +20,7 @@ namespace MessageControl {
                 if("".Equals(message.Trim())) {
                     continue;
                 }
-                if(message.Contains(':')){
+                if(message.Contains(':')) {
                     keyword=message.Substring(0, message.IndexOf(':'));
                     readData=message.Substring(message.IndexOf(':')+1, message.Length-message.IndexOf(':')-1);
                 } else {
@@ -67,12 +67,18 @@ namespace MessageControl {
                     case "ALL_USERS_IN_ROOM":
                         RoomUC.GetInstance().AddPlayer(readData);
                         break;
-                    case"NEW_ROOM":
+                    case "NEW_ROOM":
                         MainUC.GetInstance().AddRoom(readData);
                         break;
-                    case"MESSAGE_ROOM":
+                    case "MESSAGE_ROOM":
                         RoomUC.GetInstance().SetText(readData);
                         break;
+                    case "READY":
+                        RoomUC.GetInstance().SetReadyStatus(readData);
+                        break;
+                    case"START_GAME":
+                        RoomUC.GetInstance().StartTimer();
+                            break;
                     default:
                         GameWindow.GetInstance().ErrorText("Error 404:Keyword not found");
                         break;

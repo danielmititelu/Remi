@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace UserControls {
     /// <summary>
@@ -21,7 +22,8 @@ namespace UserControls {
     public partial class RoomUC : UserControl {
         private string _roomName;
         static RoomUC _instance;
-
+        DispatcherTimer timer;
+        int time=5;
         public RoomUC() {
             InitializeComponent();
             _instance=this;
@@ -31,6 +33,9 @@ namespace UserControls {
             InitializeComponent();
             _instance=this;
             _roomName=roomName;
+            timer=new DispatcherTimer();
+            timer.Interval=new TimeSpan(0, 0, 1);
+            timer.Tick+=timerTick;
         }
 
         public void AddPlayer(string message) {
@@ -41,6 +46,7 @@ namespace UserControls {
                 }
             } ));
         }
+
         private void QuitRomm(object sender, RoutedEventArgs e) {
             MainWindow.GetInstance().Switch(new MainUC());
             Client.GetInstance().WriteLine("QUIT_ROOM:"+_roomName);
@@ -62,7 +68,7 @@ namespace UserControls {
             }
         }
 
-        public string getRoomName(){
+        public string getRoomName() {
             return _roomName;
         }
 
@@ -74,12 +80,44 @@ namespace UserControls {
         }
 
         private void ReadyButton(object sender, RoutedEventArgs e) {
-            //Client.GetInstance().WriteLine("READY:"+_roomName);
+            Client.GetInstance().WriteLine("READY:"+_roomName);
+        }
+
+        public void StartTimer(){
+            timer.Start();
+        }
+
+        private void timerTick(object sender,EventArgs e) {
+            if(time>0) {
+                received.Foreground=Brushes.Red;
+                received.AppendText(time+"\n");
+                time--;   
+            } else {
+                timer.Stop();
+                new GameWindow();
+                MainWindow.GetInstance().Close();
+                Client.GetInstance().WriteLine("SWITCH_TO_GAME:"+Client.GetInstance().GetNickname());
+            }
+        }
+
+        public void SetReadyStatus(string readData) {
+            string[] msg=readData.Split(':');//nickname-ready
+
+            int index=0;
+            foreach(String user in playerList.Items) {
+                if(user.Split('-').ElementAt(0)==msg[0]) {
+                    index=playerList.Items.IndexOf(user);
+                    break;
+                }
+            }
+            this.Dispatcher.Invoke((Action) ( () => {
+                playerList.Items.RemoveAt(index);
+                playerList.Items.Insert(index, msg[0]+"-"+msg[1]);
+            } ));
         }
 
         public static RoomUC GetInstance() {
             return _instance;
         }
-
     }
 }

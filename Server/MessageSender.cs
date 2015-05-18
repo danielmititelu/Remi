@@ -12,28 +12,32 @@ namespace Server {
 
         public static void Broadcast(String keyword, String nickname, String msg, List<User> userList) {
             foreach(User user in userList) {
-                    if(msg.Trim()==""||(TcpClient) user.Client==null)
-                        continue;
+                if(msg.Trim()==""||(TcpClient) user.Client==null)
+                    continue;
 
-                    user.WriteLine(keyword+nickname+":"+msg);
-                    Console.WriteLine(keyword+nickname+":"+msg);
+                user.WriteLine(keyword+nickname+":"+msg);
+                Console.WriteLine(keyword+nickname+":"+msg);
             }
         }
-        public static void AllUsers(string keyword, List<User> userList) {
+
+        public static void AllUsers(string keyword, List<User> userList, bool room) {
             String allNicknames=null;
 
             foreach(User item in userList) {
-                allNicknames=allNicknames+":"+item.Nickname;
+                if(room)
+                    allNicknames=allNicknames+":"+item.Nickname+"-"+item.Ready;
+                else
+                    allNicknames=allNicknames+":"+item.Nickname;
             }
             foreach(User user in userList) {
-                    user.WriteLine(keyword+allNicknames);
+                user.WriteLine(keyword+allNicknames);
             }
         }
 
         public static void RemoveUser(string keyword, string nickname, List<User> userList) {
             if(userList.Exists(c => c.Nickname==nickname)) {
-                userList.Remove(userList.Single(c=> c.Nickname==nickname));
-                AllUsers(keyword, userList);
+                userList.Remove(userList.Single(c => c.Nickname==nickname));
+                AllUsers(keyword, userList,false);
             }
         }
         public static void MsgtoClient(String nickname, String msg, List<User> userList) {
@@ -48,7 +52,7 @@ namespace Server {
                 allRooms=allRooms+":"+room.getRoomName();
             }
             foreach(User user in userList) {
-                    user.WriteLine("NEW_ROOM"+allRooms);
+                user.WriteLine("NEW_ROOM"+allRooms);
             }
             Console.WriteLine("Camere create"+allRooms);
         }
