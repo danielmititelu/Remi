@@ -11,6 +11,7 @@ namespace Server {
         String _nickname;
         TcpClient _clientSocket;
         StreamWriter write=null;
+        public List<string> formations=new List<String>();
         bool _ready=false;
         bool _myTurn=false;
         bool _firstDraw=false;

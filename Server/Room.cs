@@ -9,10 +9,9 @@ using System.Threading.Tasks;
 
 namespace Server {
     class Room {
-        private List<User> clientsInRoom;
         private String _roomName;
+        private List<User> clientsInRoom;
         public  List<int> pieces=new List<int>();
-        public  List<string> formations=new List<String>();
         public  UniqueRandom random=new UniqueRandom(Enumerable.Range(0, 105));
         public  List<int> piecesOnBoard=new List<int>();
 
