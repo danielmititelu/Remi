@@ -76,9 +76,12 @@ namespace MessageControl {
                     case "READY":
                         RoomUC.GetInstance().SetReadyStatus(readData);
                         break;
-                    case"START_GAME":
+                    case "START_GAME":
                         RoomUC.GetInstance().StartTimer();
-                            break;
+                        break;
+                    case "YOUR_TURN":
+                        GameWindow.GetInstance().SetTurn(readData);
+                        break;
                     default:
                         GameWindow.GetInstance().ErrorText("Error 404:Keyword not found");
                         break;

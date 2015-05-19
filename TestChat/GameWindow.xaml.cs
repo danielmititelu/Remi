@@ -31,7 +31,7 @@ namespace Game {
         private string _roomName;
 
         static GameWindow _instance;
-        
+
         public GameWindow() {
             InitializeComponent();
             _instance=this;
@@ -52,8 +52,8 @@ namespace Game {
         public static bool Exists() {
             if(_instance==null) {
                 return false;
-            }else
-            return true;
+            } else
+                return true;
         }
 
         public void SetText(string message) {
@@ -174,7 +174,6 @@ namespace Game {
             selectedPiece.SetValue(Canvas.LeftProperty, canvasLeft);
             selectedPiece.SetValue(Canvas.TopProperty, canvasTop);
             selectedPiece.ReleaseMouseCapture();
-
             if(StackCanvas.IsMouseOver) {
                 int index=Pieces.GetInstance().getIndex(selectedPiece);
                 Client.GetInstance().WriteLine("PUT_PIECE_ON_BORD:"+index+":"+_roomName);
@@ -225,7 +224,7 @@ namespace Game {
             selectedPiece.CaptureMouse();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e) {
+        private void DrawButtonClick(object sender, RoutedEventArgs e) {
             Client.GetInstance().WriteLine("DRAW:"+_roomName);
         }
 
@@ -241,7 +240,7 @@ namespace Game {
             } ));
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e) {
+        private void FormationButtonClick(object sender, RoutedEventArgs e) {
             selectedImages=new int[3];
             formatie=true;
             n=0;
@@ -329,11 +328,40 @@ namespace Game {
             return exists;
         }
 
+        public void SetTurn(string readData) {
+            String[] msg=readData.Split(':');
+            this.Dispatcher.Invoke((Action) ( () => {
+                if(msg[0].Equals(Client.GetInstance().GetNickname())) {
+                    player1Turn.Content="X";
+                    player2Turn.Content="";
+                    player3Turn.Content="";
+                    player4Turn.Content="";
+                } else if(msg[0].Equals(player2.Content)) {
+                    player1Turn.Content="";
+                    player2Turn.Content="X";
+                    player3Turn.Content="";
+                    player4Turn.Content="";
+                } else if(msg[0].Equals(player3.Content)) {
+                    player1Turn.Content="";
+                    player2Turn.Content="";
+                    player3Turn.Content="X";
+                    player4Turn.Content="";
+                } else if(msg[0].Equals(player4.Content)) {
+                    player1Turn.Content="";
+                    player2Turn.Content="";
+                    player3Turn.Content="";
+                    player4Turn.Content="X";
+                }
+            } ));
+        }
+
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
             if(Client.GetInstance().ClientConnected()) {
                 Client.GetInstance().WriteLine("EXIT_FROM_GAME:"+_roomName);
                 Client.GetInstance().Close();
             }
         }
+
+
     }
 }

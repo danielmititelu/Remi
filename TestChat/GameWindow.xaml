@@ -7,31 +7,31 @@
         WindowState="Maximized" d:DesignWidth="1535.2" d:DesignHeight="859" Closing="Window_Closing">
     <Grid >
         <Canvas x:Name="MyTableCanvas" Background="Aquamarine" HorizontalAlignment="Left" Height="177" Margin="338,0,0,38.2" VerticalAlignment="Bottom" Width="606"/>
-        <Button Content="Trage o piesa" Click="Button_Click" Margin="338,0,0,229.2" Height="41" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="90" RenderTransformOrigin="0.5,0.505"  />
+        <Button Content="Trage o piesa" Click="DrawButtonClick" Margin="338,0,0,229.2" Height="41" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="90" RenderTransformOrigin="0.5,0.505"  />
         <ScrollViewer Margin="388,392,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="778" HorizontalScrollBarVisibility="Auto" CanContentScroll="True" PanningMode="HorizontalOnly" VerticalScrollBarVisibility="Disabled" >
             <StackPanel x:Name="StackCanvas" Background="Aquamarine" Orientation="Horizontal" Height="58" Width="778"/>
         </ScrollViewer>
-            <Grid x:Name="etalon1" Background="Aquamarine" Height="321" Width="221" Margin="944,500,370.2,38.2" >
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-            </Grid>
+        <Grid x:Name="etalon1" Background="Aquamarine" Height="321" Width="221" Margin="944,500,370.2,38.2" >
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+        </Grid>
 
         <Canvas Background="Aquamarine" HorizontalAlignment="Left" Height="520" Margin="0,78,0,0" VerticalAlignment="Top" Width="85"/>
         <Canvas Background="Aquamarine" HorizontalAlignment="Left" Height="134" Margin="570,31,0,0" VerticalAlignment="Top" Width="596"/>
@@ -39,7 +39,7 @@
         <Label Name="player3" Content="Player 3" Margin="0,5,737.2,0" HorizontalAlignment="Right" Width="60" Height="26" VerticalAlignment="Top"/>
         <Label Name="player4" Content="Player 4" HorizontalAlignment="Left" Margin="10,604,0,0" VerticalAlignment="Top" Width="60" Height="26"/>
         <Label Name="player1" Content="Player 1" HorizontalAlignment="Left" Margin="738,0,0,7.6" VerticalAlignment="Bottom" Width="60"/>
-        <Button Content="Formatie" HorizontalAlignment="Left" Margin="480,0,0,229.2" VerticalAlignment="Bottom" Width="90" Height="41" Click="Button_Click_1"/>
+        <Button Content="Formatie" HorizontalAlignment="Left" Margin="480,0,0,229.2" VerticalAlignment="Bottom" Width="90" Height="41" Click="FormationButtonClick"/>
         <TextBox HorizontalAlignment="Left" Margin="1220,770,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="286" x:Name="send" KeyDown="send_KeyDown" Height="22"/>
         <Label Content="" HorizontalAlignment="Left" Margin="1272,824,0,0" VerticalAlignment="Top" Width="194" x:Name="error"/>
         <TextBox HorizontalAlignment="Left" Height="107" Margin="1220,644,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="286" x:Name="received" IsReadOnly="True" AcceptsReturn="True"/>
@@ -107,5 +107,9 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
         </Grid>
+        <Label  HorizontalAlignment="Left" Margin="798,826,0,0" VerticalAlignment="Top" Height="26" Width="24" Name="player1Turn"/>
+        <Label  HorizontalAlignment="Left" Margin="70,603,0,0" VerticalAlignment="Top" Height="26" Width="24" x:Name="player4Turn"/>
+        <Label  HorizontalAlignment="Left" Margin="1436,604,0,0" VerticalAlignment="Top" Height="26" Width="24" x:Name="player2Turn"/>
+        <Label  HorizontalAlignment="Left" Margin="798,5,0,0" VerticalAlignment="Top" Height="26" Width="24" x:Name="player3Turn"/>
     </Grid>
 </Window>

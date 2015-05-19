@@ -13,8 +13,6 @@ namespace Server {
     class Server {
         public static List<User> clientsList=new List<User>();
         public static List<Room> roomList=new List<Room>();
-       // public static List<User> clientsInGame=new List<User>();
-
 
         public Server() {
             TcpClient client=null;

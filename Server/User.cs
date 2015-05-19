@@ -13,6 +13,7 @@ namespace Server {
         StreamWriter write=null;
         bool _ready=false;
         bool _myTurn=false;
+        bool _firstDraw=false;
 
         public User(String nickname, TcpClient clientSocket) {
             _nickname=nickname;
@@ -34,6 +35,10 @@ namespace Server {
         public bool MyTurn {
             get { return _myTurn; }
             set { _myTurn=value; }
+        }
+        public bool FirstDraw {
+            get { return _firstDraw; }
+            set { _firstDraw=value; }
         }
         public void WriteLine(String message) {
             write.WriteLine(message);

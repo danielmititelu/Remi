@@ -10,26 +10,40 @@ using System.Threading.Tasks;
 namespace Server {
     class Room {
         private List<User> clientsInRoom;
-        private string _roomName;
+        private String _roomName;
         public  List<int> pieces=new List<int>();
-        public  List<String> formations=new List<String>();
+        public  List<string> formations=new List<String>();
         public  UniqueRandom random=new UniqueRandom(Enumerable.Range(0, 105));
-        public  List<int> pieces_on_board=new List<int>();
+        public  List<int> piecesOnBoard=new List<int>();
 
         public Room(string roomName) {
             _roomName=roomName;
             clientsInRoom=new List<User>();
             GeneratePieces();
         }
+
         public string getRoomName() {
             return _roomName;
         }
 
-        public void AddClientInRoom(string nickname, TcpClient clientSocket) {
+        public void AddClientInRoom(String nickname, TcpClient clientSocket) {
             clientsInRoom.Add(new User(nickname, clientSocket));
         }
+
         public List<User> GetClientsInRoom() {
             return clientsInRoom;
+        }
+
+        public void EndTurnFor(string nickname) {  
+            int index=clientsInRoom.FindIndex(c => c.Nickname==nickname);
+            clientsInRoom.ElementAt(index).MyTurn=false;
+            if(index+1==clientsInRoom.Count())
+                clientsInRoom.ElementAt(0).MyTurn=true;
+            else
+            clientsInRoom.ElementAt(index+1).MyTurn=true;
+        }
+        public string GetClientTurn() {
+            return clientsInRoom.Single(c=> c.MyTurn==true).Nickname;
         }
 
         public void GeneratePieces() {
