@@ -36,7 +36,7 @@ namespace MessageControl {
                         PieceHandler.AddFormationToCanvas(readData);
                         break;
                     case "DRAW":
-                        GameWindow.GetInstance().DrawCard(readData);
+                        GameWindow.GetInstance().DrawPiece(readData);
                         break;
                     case "ADD_PIECE":
                         PieceHandler.AddPieceToFormation(readData, false);
@@ -81,6 +81,12 @@ namespace MessageControl {
                         break;
                     case "YOUR_TURN":
                         GameWindow.GetInstance().SetTurn(readData);
+                        break;
+                    case"REMOVE_PIECES":
+                        PieceHandler.RemovePieces(readData);
+                        break;
+                    case"DRAW_FROM_BOARD":
+                        PieceHandler.DrawFromBoard(readData);
                         break;
                     default:
                         GameWindow.GetInstance().ErrorText("Error 404:Keyword not found");

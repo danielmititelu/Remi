@@ -1,4 +1,5 @@
-﻿using Game;
+﻿using CanvasItems;
+using Game;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,6 +58,26 @@ namespace Handlers {
             GameWindow.GetInstance().AddChildToGrid(etalon, local_image, r, c);
         }
 
+        public static void RemovePieces(string readData) {
+            GameWindow.GetInstance().Dispatcher.Invoke((Action) ( () => {
+                String[] msg=readData.Split(':');
+
+                if(msg[0].Equals(Client.GetInstance().GetNickname())) {
+                    GameWindow.GetInstance().RemovePieces(1, true);
+                    _row1=-1;
+                } else if(msg[0].Equals(GameWindow.GetInstance().GetPlayerAt(2))) {
+                    _row2=-1;
+                    GameWindow.GetInstance().RemovePieces(2, false);
+                } else if(msg[0].Equals(GameWindow.GetInstance().GetPlayerAt(3))) {
+                    _row3=-1;
+                    GameWindow.GetInstance().RemovePieces(3, false);
+                } else if(msg[0].Equals(GameWindow.GetInstance().GetPlayerAt(4))) {
+                    _row4=-1;
+                    GameWindow.GetInstance().RemovePieces(4, false);
+                }
+            } ));
+        }
+
         public static void AddFormationToCanvas(String readData) {
             GameWindow.GetInstance().Dispatcher.Invoke((Action) ( () => {
                 String[] msg=readData.Split(':');
@@ -98,12 +119,32 @@ namespace Handlers {
         public static void PutPieceOnBoard(string readData) {
             GameWindow.GetInstance().Dispatcher.Invoke((Action) ( () => {
                 String[] mes=readData.Split(':');
+                Image piece=CanvasItems.Pieces.GetInstance().getImage(mes[1]);
                 if(mes[0].Equals(Client.GetInstance().GetNickname())) {
-                    GameWindow.GetInstance().RemoveImgListeners(CanvasItems.Pieces.GetInstance().getImage(mes[1]));
-                    GameWindow.GetInstance().RemoveFromMyTable(CanvasItems.Pieces.GetInstance().getImage(mes[1]));
+                    GameWindow.GetInstance().RemoveImgListeners(piece);
+                    GameWindow.GetInstance().RemoveFromMyTable(piece);
                 }
-                GameWindow.GetInstance().StackCanvas.Children.Add(CanvasItems.Pieces.GetInstance().getImage(mes[1]));
+                GameWindow.GetInstance().StackCanvas.Children.Add(piece);
+                GameWindow.GetInstance().AddBoardListener(piece);
             } ));
         }
+        public static void DrawFromBoard(string readData) {
+            GameWindow.GetInstance().Dispatcher.Invoke((Action) ( () => {
+                String[] mes=readData.Split(':');
+                String allpieces=null;
+                foreach(String i in mes) {
+                    if(i.Equals(mes[0]))
+                        continue;
+                    allpieces=allpieces+":"+i;
+                    Image piece=CanvasItems.Pieces.GetInstance().getImage(i);
+                    GameWindow.GetInstance().StackCanvas.Children.Remove(piece);
+                    GameWindow.GetInstance().RemoveBoardListener(piece);
+                }
+                if(mes[0].Equals(Client.GetInstance().GetNickname())) {
+                    GameWindow.GetInstance().DrawPiece(allpieces.Substring(1));
+                }
+            } ));
+        }
+
     }
 }

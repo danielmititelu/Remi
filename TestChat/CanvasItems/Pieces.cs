@@ -55,7 +55,7 @@ namespace CanvasItems {
             return image[i];
         }
         public int getIndex(Image piece) {
-            return Array.IndexOf(image.ToArray(), piece);
+            return image.IndexOf(piece);
         }
         public static Pieces GetInstance() {
             if(_instance==null) {

@@ -25,6 +25,7 @@ namespace Game {
         private double canvasTop;
         bool formatie=false;
         int[] selectedImages=null;
+        bool drawFromBoard=false;
         int n=0;
         public Image temp_img;
         String client_to_add;
@@ -116,16 +117,33 @@ namespace Game {
         }
 
         private void addImgListeners(Image img) {
-            img.PreviewMouseDown+=new MouseButtonEventHandler(myimg_MouseDown);
-            img.PreviewMouseMove+=new MouseEventHandler(myimg_MouseMove);
-            img.PreviewMouseUp+=new MouseButtonEventHandler(myimg_MouseUp);
-            img.LostMouseCapture+=new MouseEventHandler(myimg_LostMouseCapture);
+            img.PreviewMouseDown+=myimg_MouseDown;
+            img.PreviewMouseMove+=myimg_MouseMove;
+            img.PreviewMouseUp+=myimg_MouseUp;
+            img.PreviewMouseUp+=img_PreviewMouseUp;
+            img.LostMouseCapture+=myimg_LostMouseCapture;
 
         }
+
+        private void img_PreviewMouseUp(object sender, MouseButtonEventArgs e) {
+            Image selectedPiece=(Image) sender;
+            if(formatie) {
+                int index=Pieces.GetInstance().getIndex(selectedPiece);
+                selectedImages[n]=index;
+                n++;
+                if(n==3) {
+                    formatie=false;
+                    Client.GetInstance().WriteLine("FORMATION:"+selectedImages[0]+":"+selectedImages[1]+":"+selectedImages[2]+":"+Client.GetInstance().GetNickname()+":"+( PieceHandler._row1+1 )+":"+_roomName+":"+drawFromBoard);
+                    drawFromBoard=false;
+                }
+            }
+        }
+
         public void RemoveImgListeners(Image img) {
             img.PreviewMouseDown-=myimg_MouseDown;
             img.PreviewMouseMove-=myimg_MouseMove;
             img.PreviewMouseUp-=myimg_MouseUp;
+            img.PreviewMouseUp-=img_PreviewMouseUp;
             img.LostMouseCapture-=myimg_LostMouseCapture;
         }
 
@@ -135,6 +153,18 @@ namespace Game {
 
         public void RemoveEtalonListener(Image img) {
             img.MouseUp-=etalon_MouseUp;
+        }
+        public void AddBoardListener(Image img) {
+            img.MouseDown+=boardMouseDown;
+        }
+        public void RemoveBoardListener(Image img) {
+            img.MouseDown-=boardMouseDown;
+        }
+
+        private void boardMouseDown(object sender, MouseButtonEventArgs e) {
+            Image selectedPiece=(Image) sender;
+            int index=Pieces.GetInstance().getIndex(selectedPiece);
+            Client.GetInstance().WriteLine("DRAW_FROM_BOARD:"+_roomName+":"+index);
         }
 
         public void etalon_MouseUp(object sender, MouseButtonEventArgs e) {
@@ -191,15 +221,7 @@ namespace Game {
                 client_to_add=(String) player4.Content;
                 temp_img=selectedPiece;
             }
-            if(formatie) {
-                int index=Pieces.GetInstance().getIndex(selectedPiece);
-                selectedImages[n]=index;
-                n++;
-                if(n==3) {
-                    formatie=false;
-                    Client.GetInstance().WriteLine("FOR:"+selectedImages[0]+":"+selectedImages[1]+":"+selectedImages[2]+":"+Client.GetInstance().GetNickname()+":"+( PieceHandler._row1+1 )+":"+_roomName);
-                }
-            }
+
         }
 
         private void myimg_MouseMove(object sender, MouseEventArgs e) {
@@ -228,7 +250,7 @@ namespace Game {
             Client.GetInstance().WriteLine("DRAW:"+_roomName);
         }
 
-        public void DrawCard(string readData) {
+        public void DrawPiece(string readData) {
             string[] pieces=readData.Split(':');
             this.Dispatcher.Invoke((Action) ( () => {
                 foreach(string index in pieces) {
@@ -238,6 +260,24 @@ namespace Game {
                     addImgListeners(Pieces.GetInstance().getImage(index));
                 }
             } ));
+        }
+        public void RemovePieces(int grid, bool myTable) {
+            String allPieces=null;
+            foreach(Image piece in GetGridAt(grid).Children) {
+                int index=Pieces.GetInstance().getIndex(piece);
+                allPieces=allPieces+":"+index;
+            }
+            if(!( allPieces==null )) {
+                this.Dispatcher.Invoke((Action) ( () => {
+                    foreach(string index in allPieces.Substring(1).Split(':')) {
+                        RemoveImgListeners(Pieces.GetInstance().getImage(index));
+                        RemoveFromMyTable(Pieces.GetInstance().getImage(index));
+                        RemoveChildFromGrid(GetGridAt(grid), Pieces.GetInstance().getImage(index));
+                    }
+                } ));
+                if(myTable)
+                    DrawPiece(allPieces.Substring(1));
+            }
         }
 
         private void FormationButtonClick(object sender, RoutedEventArgs e) {
@@ -297,6 +337,9 @@ namespace Game {
             Grid.SetRow(local_image, r);
             Grid.SetColumn(local_image, c);
         }
+        public void RemoveChildFromGrid(Grid etalon, Image local_image) {
+            etalon.Children.Remove(local_image);
+        }
 
         public void SetImageValue(Image local_image, DependencyProperty dependencyProperty, int p) {
             this.Dispatcher.Invoke((Action) ( () => {
@@ -355,7 +398,20 @@ namespace Game {
             } ));
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
+        private void EtalareButtonClick(object sender, RoutedEventArgs e) {
+            String pieces=null;
+            foreach(Image item in etalon1.Children) {
+                int index=Pieces.GetInstance().getIndex(item);
+                pieces=pieces+":"+index;
+            }
+            Client.GetInstance().WriteLine("ETALARE:"+_roomName+pieces);
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e) {
+            Client.GetInstance().WriteLine("REMOVE_PIECES:"+_roomName);
+        }
+
+        private void WindowClosing(object sender, System.ComponentModel.CancelEventArgs e) {
             if(Client.GetInstance().ClientConnected()) {
                 Client.GetInstance().WriteLine("EXIT_FROM_GAME:"+_roomName);
                 Client.GetInstance().Close();

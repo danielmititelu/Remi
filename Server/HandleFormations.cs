@@ -9,9 +9,26 @@ using System.Threading.Tasks;
 namespace Server {
     class HandleFormations {
 
+        public static int CalculatePoints(String readData) {
+            int points=0;
+            Room room=Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(readData.Split(':').ElementAt(0)));
+            String msg=readData.Substring(readData.IndexOf(':')+1, readData.Length-readData.IndexOf(':')-1);
+            foreach(String index in msg.Split(':')) {
+                int piece=room.pieces[Int32.Parse(index)];
+                int number=Int32.Parse(piece.ToString().Substring(1, 2));
+                if(number == 1)
+                    points=points+25;
+                else if(number<10)
+                    points=points+5;
+                else if(number>=10)
+                    points=points+10;
+            }
+            return points;
+        }
+
         public static void Formatie(String msg1, String msg2, String msg3, String nickname, String row, String roomName) {
             Room room=Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(roomName));
-            User user=room.GetClientsInRoom().Single(u=> u.Nickname==nickname);
+            User user=room.GetClientsInRoom().Single(u => u.Nickname==nickname);
             int a=room.pieces[Int32.Parse(msg1)];
             int b=room.pieces[Int32.Parse(msg2)];
             int c=room.pieces[Int32.Parse(msg3)];
@@ -101,7 +118,7 @@ namespace Server {
             }
         }
 
-        internal static void AddPiece(string row, string imageIndex, string column, string clientToAdd, string nickname, string roomName) {
+        public static void AddPiece(string row, string imageIndex, string column, string clientToAdd, string nickname, string roomName) {
             Room room=Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(roomName));
             User user=room.GetClientsInRoom().Single(u => u.Nickname==clientToAdd);
             String formationCod=user.formations.Cast<String>().First(e => e.Split(':').ElementAt(3).Equals(row));

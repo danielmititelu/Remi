@@ -4,14 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="Game.GameWindow"
         Title="Game"
         WindowStyle="None" ResizeMode="NoResize" 
-        WindowState="Maximized" d:DesignWidth="1535.2" d:DesignHeight="859" Closing="Window_Closing">
+        WindowState="Maximized" d:DesignWidth="1535.2" d:DesignHeight="859" Closing="WindowClosing">
     <Grid >
         <Canvas x:Name="MyTableCanvas" Background="Aquamarine" HorizontalAlignment="Left" Height="177" Margin="338,0,0,38.2" VerticalAlignment="Bottom" Width="606"/>
         <Button Content="Trage o piesa" Click="DrawButtonClick" Margin="338,0,0,229.2" Height="41" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="90" RenderTransformOrigin="0.5,0.505"  />
         <ScrollViewer Margin="388,392,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="778" HorizontalScrollBarVisibility="Auto" CanContentScroll="True" PanningMode="HorizontalOnly" VerticalScrollBarVisibility="Disabled" >
             <StackPanel x:Name="StackCanvas" Background="Aquamarine" Orientation="Horizontal" Height="58" Width="778"/>
         </ScrollViewer>
-        <Grid x:Name="etalon1" Background="Aquamarine" Height="321" Width="221" Margin="944,500,370.2,38.2" >
+        <Grid x:Name="etalon1" Background="Aquamarine" Height="321" Width="221" Margin="944,500,370.2,38.2" VerticalAlignment="Top">
             <Grid.RowDefinitions>
                 <RowDefinition/>
             </Grid.RowDefinitions>
@@ -43,8 +43,8 @@
         <TextBox HorizontalAlignment="Left" Margin="1220,770,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="286" x:Name="send" KeyDown="send_KeyDown" Height="22"/>
         <Label Content="" HorizontalAlignment="Left" Margin="1272,824,0,0" VerticalAlignment="Top" Width="194" x:Name="error"/>
         <TextBox HorizontalAlignment="Left" Height="107" Margin="1220,644,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="286" x:Name="received" IsReadOnly="True" AcceptsReturn="True"/>
-        <Canvas Background="Aquamarine" Height="520" Margin="0,78,5.2,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="85"/>
-        <Grid x:Name="etalon2" Background="Aquamarine" Height="321" Width="221" Margin="1224,177,90.2,361.2" >
+        <Canvas Background="Aquamarine" Height="520" Margin="0,78,5.2,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="85" />
+        <Grid x:Name="etalon2" Background="Aquamarine" Height="321" Width="221" Margin="1224,177,90.2,361.2" VerticalAlignment="Top" >
             <Grid.RowDefinitions>
                 <RowDefinition/>
             </Grid.RowDefinitions>
@@ -65,7 +65,7 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
         </Grid>
-        <Grid x:Name="etalon3" Background="Aquamarine" Height="321" Width="221" Margin="349,31,965.2,507.2" >
+        <Grid x:Name="etalon3" Background="Aquamarine" Height="321" Width="221" Margin="349,31,965.2,507.2" VerticalAlignment="Top">
             <Grid.RowDefinitions>
                 <RowDefinition/>
             </Grid.RowDefinitions>
@@ -86,7 +86,7 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
         </Grid>
-        <Grid x:Name="etalon4" Background="Aquamarine" Height="321" Width="221" Margin="85,177,1229.2,361.2" >
+        <Grid x:Name="etalon4" Background="Aquamarine" Height="321" Width="221" Margin="85,177,1229.2,361.2" VerticalAlignment="Top">
             <Grid.RowDefinitions>
                 <RowDefinition/>
             </Grid.RowDefinitions>
@@ -111,5 +111,7 @@
         <Label  HorizontalAlignment="Left" Margin="70,603,0,0" VerticalAlignment="Top" Height="26" Width="24" x:Name="player4Turn"/>
         <Label  HorizontalAlignment="Left" Margin="1436,604,0,0" VerticalAlignment="Top" Height="26" Width="24" x:Name="player2Turn"/>
         <Label  HorizontalAlignment="Left" Margin="798,5,0,0" VerticalAlignment="Top" Height="26" Width="24" x:Name="player3Turn"/>
+        <Button Content="Etalare" HorizontalAlignment="Left" Margin="1090,830,0,0" VerticalAlignment="Top" Width="75" Click="EtalareButtonClick"/>
+        <Button Content="Scoate piesele" HorizontalAlignment="Left" Margin="944,828,0,0" VerticalAlignment="Top" Width="83" Click="Button_Click"/>
     </Grid>
 </Window>
