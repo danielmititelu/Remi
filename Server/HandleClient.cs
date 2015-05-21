@@ -25,10 +25,10 @@ namespace Server {
             String readData=null;
             Room room;
             User user;
-            while(networkStream.CanRead) { // TODO : MAKE ANOTHER CLASS TO SUPPORT THIS
+            while(networkStream.CanRead) {
                 message=read.ReadLine();
                 if(message!=null) {
-                    readData=message.Substring(message.IndexOf(':')+1, message.Length-message.IndexOf(':')-1);
+                    readData=message.Substring(message.IndexOf(':')+1);
                     msg=message.Split(':');
                     Console.WriteLine("From client- "+nickname+": "+message);
                     switch(msg[0]) {
@@ -81,8 +81,11 @@ namespace Server {
                         case "ADD_PIECE"://row:imageIndex:column:clientToAdd:roomName
                             room=Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(msg[5]));
                             user=room.GetClientsInRoom().Single(c => c.Nickname==nickname);
-                            if(user.MyTurn) {
-                                HandleFormations.AddPiece(msg[1], msg[2], msg[3], msg[4], nickname, msg[5]);
+                            bool takePiece=true;
+                            if(user.MyTurn&&user.Etalat) {
+                                if(msg[4]==nickname)
+                                    takePiece=false;
+                                HandleFormations.AddPiece(msg[1], msg[2], msg[3], msg[4], nickname, msg[5], takePiece);
                             } else
                                 MessageSender.MsgtoClient(nickname, "DONT:Nu e tura ta!", room.GetClientsInRoom());
                             break;
@@ -92,12 +95,10 @@ namespace Server {
                             if(user.FirstDraw&&user.MyTurn) {
                                 MessageSender.MsgtoClient(nickname, "DRAW:"+room.random.Next(), room.GetClientsInRoom());
                                 user.FirstDraw=false;
-                            } else {
-                                if(!user.MyTurn)
+                            } else  if(!user.MyTurn)
                                     MessageSender.MsgtoClient(nickname, "DONT:Nu e tura ta!", room.GetClientsInRoom());
                                 else if(!user.FirstDraw)
                                     MessageSender.MsgtoClient(nickname, "DONT:Ai tras deja!", room.GetClientsInRoom());
-                            }
                             break;
                         case "PUT_PIECE_ON_BORD"://index:roomName
                             room=Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(msg[2]));
@@ -109,12 +110,10 @@ namespace Server {
                                 MessageSender.Broadcast("YOUR_TURN:", room.GetClientTurn(), "end", room.GetClientsInRoom());
                                 room.GetClientsInRoom().Single(c => c.Nickname==room.GetClientTurn()).FirstDraw=true;
                                 room.GetClientsInRoom().Single(c => c.Nickname==room.GetClientTurn()).MyTurn=true;
-                            } else {
-                                if(!user.MyTurn)
-                                    MessageSender.MsgtoClient(nickname, "DONT:Nu e tura ta!", room.GetClientsInRoom());
-                                else if(user.FirstDraw)
-                                    MessageSender.MsgtoClient(nickname, "DONT:Trage o piesa mai intai!", room.GetClientsInRoom());
-                            }
+                            } else if(!user.MyTurn)
+                                MessageSender.MsgtoClient(nickname, "DONT:Nu e tura ta!", room.GetClientsInRoom());
+                            else if(user.FirstDraw)
+                                MessageSender.MsgtoClient(nickname, "DONT:Trage o piesa mai intai!", room.GetClientsInRoom());
                             break;
                         case "CREATE_ROOM":
                             MessageSender.RemoveUser("NEW_USER_IN_CHAT", nickname, Server.clientsList);
@@ -157,8 +156,10 @@ namespace Server {
                             user=room.GetClientsInRoom().Single(u => u.Nickname==nickname);
                             if(user.formations.Exists(u => u.Split(':').ElementAt(0).Equals("1"))&&
                                user.formations.Exists(u => u.Split(':').ElementAt(0).Equals("2"))&&
-                               HandleFormations.CalculatePoints(readData)>45)
-                                Console.WriteLine("ETALARE:"+HandleFormations.CalculatePoints(readData));
+                               HandleFormations.CalculatePoints(readData)>45) {
+                                MessageSender.MsgtoClient(nickname, "ETALARE:you may", room.GetClientsInRoom());
+                                user.Etalat=true;
+                            }
                             break;
                         case "REMOVE_PIECES":
                             room=Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(msg[1]));
@@ -169,21 +170,21 @@ namespace Server {
                         case "DRAW_FROM_BOARD"://roomName:index
                             room=Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(msg[1]));
                             user=room.GetClientsInRoom().Single(u => u.Nickname==nickname);
-                            if(user.FirstDraw&&user.MyTurn) {
-                                List<int> allPieces = room.piecesOnBoard.FindAll(i=> room.piecesOnBoard.IndexOf(i)>= room.piecesOnBoard.IndexOf(room.pieces.ElementAt(Int32.Parse(msg[2])))).ToList();
+                            if(user.FirstDraw&&user.MyTurn&&user.Etalat) {
+                                List<int> allPieces=room.piecesOnBoard.FindAll(i => room.piecesOnBoard.IndexOf(i)>=room.piecesOnBoard.IndexOf(room.pieces.ElementAt(Int32.Parse(msg[2])))).ToList();
                                 String all=null;
-                                foreach(int i in allPieces){
+                                foreach(int i in allPieces) {
                                     all=all+":"+room.pieces.IndexOf(i);
                                     room.piecesOnBoard.Remove(i);
                                 }
                                 MessageSender.Broadcast("DRAW_FROM_BOARD:", nickname, all.Substring(1), room.GetClientsInRoom());
                                 user.FirstDraw=false;
-                            } else {
-                                if(!user.MyTurn)
-                                    MessageSender.MsgtoClient(nickname, "DONT:Nu e tura ta!", room.GetClientsInRoom());
-                                else if(!user.FirstDraw)
-                                    MessageSender.MsgtoClient(nickname, "DONT:Ai tras deja!", room.GetClientsInRoom());
-                            }
+                            } else if(!user.MyTurn)
+                                MessageSender.MsgtoClient(nickname, "DONT:Nu e tura ta!", room.GetClientsInRoom());
+                            else if(!user.FirstDraw)
+                                MessageSender.MsgtoClient(nickname, "DONT:Ai tras deja!", room.GetClientsInRoom());
+                            else if(!user.Etalat)
+                                MessageSender.MsgtoClient(nickname, "DONT:Nu te-ai etalat inca!", room.GetClientsInRoom());
                             break;
                         default:
                             Console.WriteLine("Error 404: Keyword not found");

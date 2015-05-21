@@ -23,7 +23,7 @@ namespace UserControls {
         private string _roomName;
         static RoomUC _instance;
         DispatcherTimer timer;
-        int time=5;
+        int time=3;
         public RoomUC() {
             InitializeComponent();
             _instance=this;

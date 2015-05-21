@@ -15,6 +15,7 @@ namespace Server {
         bool _ready=false;
         bool _myTurn=false;
         bool _firstDraw=false;
+        bool _etalat=false;
 
         public User(String nickname, TcpClient clientSocket) {
             _nickname=nickname;
@@ -40,6 +41,10 @@ namespace Server {
         public bool FirstDraw {
             get { return _firstDraw; }
             set { _firstDraw=value; }
+        }
+        public bool Etalat {
+            get { return _etalat; }
+            set { _etalat=value; }
         }
         public void WriteLine(String message) {
             write.WriteLine(message);

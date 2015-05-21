@@ -117,10 +117,10 @@ namespace Game {
         }
 
         private void addImgListeners(Image img) {
-            img.PreviewMouseDown+=myimg_MouseDown;
-            img.PreviewMouseMove+=myimg_MouseMove;
-            img.PreviewMouseUp+=myimg_MouseUp;
-            img.PreviewMouseUp+=img_PreviewMouseUp;
+            img.MouseDown+=myimg_MouseDown;
+            img.MouseMove+=myimg_MouseMove;
+            img.MouseUp+=myimg_MouseUp;
+            img.MouseUp+=img_PreviewMouseUp;
             img.LostMouseCapture+=myimg_LostMouseCapture;
 
         }
@@ -140,10 +140,10 @@ namespace Game {
         }
 
         public void RemoveImgListeners(Image img) {
-            img.PreviewMouseDown-=myimg_MouseDown;
-            img.PreviewMouseMove-=myimg_MouseMove;
-            img.PreviewMouseUp-=myimg_MouseUp;
-            img.PreviewMouseUp-=img_PreviewMouseUp;
+            img.MouseDown-=myimg_MouseDown;
+            img.MouseMove-=myimg_MouseMove;
+            img.MouseUp-=myimg_MouseUp;
+            img.MouseUp-=img_PreviewMouseUp;
             img.LostMouseCapture-=myimg_LostMouseCapture;
         }
 
@@ -328,7 +328,9 @@ namespace Game {
 
         public void AddRowToGrid(Grid etalon) {
             this.Dispatcher.Invoke((Action) ( () => {
-                etalon.RowDefinitions.Add(new RowDefinition());
+                RowDefinition row=new RowDefinition();
+                row.Height=GridLength.Auto;
+                etalon.RowDefinitions.Add(row);
             } ));
         }
 
@@ -355,10 +357,10 @@ namespace Game {
             return img;
         }
 
-        public void MoveRow(Grid etalon, int r) {
+        public void MoveRow(Grid etalon, int r,int numberOfColumns) {
             this.Dispatcher.Invoke((Action) ( () => {
                 foreach(Image i in etalon.Children.Cast<Image>().Where(e => Grid.GetRow(e)==r)) {
-                    Grid.SetColumn(i, Grid.GetColumn(i)+1);
+                    Grid.SetColumn(i, Grid.GetColumn(i)+numberOfColumns);
                 }
             } ));
         }
@@ -407,16 +409,35 @@ namespace Game {
             Client.GetInstance().WriteLine("ETALARE:"+_roomName+pieces);
         }
 
+        public void Etalat(string readData) {
+            this.Dispatcher.Invoke((Action) ( () => {
+                etalare.IsEnabled=false;
+                removePieces.IsEnabled=false;
+            } ));
+        }
+
         private void Button_Click(object sender, RoutedEventArgs e) {
             Client.GetInstance().WriteLine("REMOVE_PIECES:"+_roomName);
         }
 
+        public void MovePieceToBonus(Image local_image, Grid etalon,string nickname) {
+            etalon.Children.Remove(local_image);
+            if(nickname==player1.Content.ToString())
+            stack1.Children.Add(local_image);
+            else if(nickname==player2.Content.ToString())
+                stack2.Children.Add(local_image);
+            else if(nickname==player3.Content.ToString())
+                stack3.Children.Add(local_image);
+            else if(nickname==player4.Content.ToString())
+                stack4.Children.Add(local_image);
+        }
         private void WindowClosing(object sender, System.ComponentModel.CancelEventArgs e) {
             if(Client.GetInstance().ClientConnected()) {
                 Client.GetInstance().WriteLine("EXIT_FROM_GAME:"+_roomName);
                 Client.GetInstance().Close();
             }
         }
+
 
     }
 }

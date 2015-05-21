@@ -22,7 +22,7 @@ namespace MessageControl {
                 }
                 if(message.Contains(':')) {
                     keyword=message.Substring(0, message.IndexOf(':'));
-                    readData=message.Substring(message.IndexOf(':')+1, message.Length-message.IndexOf(':')-1);
+                    readData=message.Substring(message.IndexOf(':')+1);
                 } else {
                     keyword=message;
                     readData="";
@@ -87,6 +87,9 @@ namespace MessageControl {
                         break;
                     case"DRAW_FROM_BOARD":
                         PieceHandler.DrawFromBoard(readData);
+                        break;
+                    case "ETALARE":
+                        GameWindow.GetInstance().Etalat(readData);
                         break;
                     default:
                         GameWindow.GetInstance().ErrorText("Error 404:Keyword not found");

@@ -17,8 +17,9 @@ namespace Handlers {
 
         public static void AddPieceToFormation(String readData, bool firstRow) {
             GameWindow.GetInstance().Dispatcher.Invoke((Action) ( () => {
-                String[] msg=readData.Split(':');//nickname:row:image.getImage:column
+                String[] msg=readData.Split(':');//clientToAdd:row:imageIndex:column:piecesToTake:nickname
                 int r=Int32.Parse(msg[1]);
+                string piecesToTake=msg[4];
                 int c;
                 if(firstRow) {
                     c=Int32.Parse(msg[3]);
@@ -29,33 +30,67 @@ namespace Handlers {
                 Image local_image=CanvasItems.Pieces.GetInstance().getImage(msg[2]);
 
                 if(msg[0].Equals(Client.GetInstance().GetNickname())) {
-                    AddPiece(GameWindow.GetInstance().GetGridAt(1), local_image, r, c, firstRow);
+                    AddPiece(GameWindow.GetInstance().GetGridAt(1), local_image, r, c, firstRow, piecesToTake, GameWindow.GetInstance().GetPlayerAt(1), msg[5]);
                 } else if(msg[0].Equals(GameWindow.GetInstance().GetPlayerAt(2))) {
-                    AddPiece(GameWindow.GetInstance().GetGridAt(2), local_image, r, c, firstRow);
+                    AddPiece(GameWindow.GetInstance().GetGridAt(2), local_image, r, c, firstRow, piecesToTake, GameWindow.GetInstance().GetPlayerAt(2), msg[5]);
                 } else if(msg[0].Equals(GameWindow.GetInstance().GetPlayerAt(3))) {
-                    AddPiece(GameWindow.GetInstance().GetGridAt(3), local_image, r, c, firstRow);
+                    AddPiece(GameWindow.GetInstance().GetGridAt(3), local_image, r, c, firstRow, piecesToTake, GameWindow.GetInstance().GetPlayerAt(3), msg[5]);
                 } else if(msg[0].Equals(GameWindow.GetInstance().GetPlayerAt(4))) {
-                    AddPiece(GameWindow.GetInstance().GetGridAt(4), local_image, r, c, firstRow);
+                    AddPiece(GameWindow.GetInstance().GetGridAt(4), local_image, r, c, firstRow, piecesToTake, GameWindow.GetInstance().GetPlayerAt(4), msg[5]);
                 }
                 GameWindow.GetInstance().AddEtalonListener(local_image);
                 GameWindow.GetInstance().temp_img=null;
             } ));
         }
 
-        private static void AddPiece(Grid etalon, Image local_image, int r, int c, bool first_row) {
-            if(first_row) {
-                Image local_image2=GameWindow.GetInstance().GetToAdd(etalon, c, r);
-                GameWindow.GetInstance().RemoveEtalonListener(local_image2);
-                GameWindow.GetInstance().MoveRow(etalon, r);
-            } else {
-                Image local_image2=GameWindow.GetInstance().GetToAdd(etalon, c-1, r);
-                GameWindow.GetInstance().RemoveEtalonListener(local_image2);
+        private static void AddPiece(Grid etalon, Image pieceToAdd, int r, int c, bool first_row, string piecesToTake, string playerToAdd, string nickname) {
+            bool exceptionalCase=false;
+            switch(piecesToTake) {
+                case "0":
+                    if(first_row) {
+                        Image pieceOnBoard=GameWindow.GetInstance().GetToAdd(etalon, c, r);
+                        GameWindow.GetInstance().RemoveEtalonListener(pieceOnBoard);
+                        GameWindow.GetInstance().MoveRow(etalon, r, 1);
+                    } else {
+                        Image pieceOnBoard=GameWindow.GetInstance().GetToAdd(etalon, c-1, r);
+                        GameWindow.GetInstance().RemoveEtalonListener(pieceOnBoard);
+                    }
+                    break;
+                case "1":
+                    if(first_row) {
+                        Image pieceOnBoard=GameWindow.GetInstance().GetToAdd(etalon, c, r);
+                        GameWindow.GetInstance().RemoveEtalonListener(pieceOnBoard);
+                        GameWindow.GetInstance().MovePieceToBonus(pieceOnBoard, etalon, nickname);
+                    } else {
+                        Image pieceOnBoard=GameWindow.GetInstance().GetToAdd(etalon, c-1, r);
+                        GameWindow.GetInstance().RemoveEtalonListener(pieceOnBoard);
+                        GameWindow.GetInstance().MovePieceToBonus(pieceOnBoard, etalon, nickname);
+                    }
+                    break;
+                case "2":
+                    Image pieceOnBoard1=GameWindow.GetInstance().GetToAdd(etalon, c-1, r);
+                    Image pieceOnBoard2=GameWindow.GetInstance().GetToAdd(etalon, c-2, r);
+                    GameWindow.GetInstance().RemoveEtalonListener(pieceOnBoard1);
+                    GameWindow.GetInstance().RemoveEtalonListener(pieceOnBoard2);
+                    GameWindow.GetInstance().MovePieceToBonus(pieceOnBoard1, etalon, nickname);
+                    GameWindow.GetInstance().MovePieceToBonus(pieceOnBoard2, etalon, nickname);
+                    c=c-2;
+                    break;
+                case "3":
+                    if(GameWindow.GetInstance().MyTableContains(pieceToAdd)) {
+                        GameWindow.GetInstance().RemoveImgListeners(pieceToAdd);
+                        GameWindow.GetInstance().RemoveFromMyTable(pieceToAdd);
+                    }
+                    GameWindow.GetInstance().MovePieceToBonus(pieceToAdd, etalon, nickname);
+                    exceptionalCase=true;
+                    break;
             }
-            if(GameWindow.GetInstance().MyTableContains(local_image)) {
-                GameWindow.GetInstance().RemoveImgListeners(local_image);
-                GameWindow.GetInstance().RemoveFromMyTable(local_image);
+            if(GameWindow.GetInstance().MyTableContains(pieceToAdd)) {
+                GameWindow.GetInstance().RemoveImgListeners(pieceToAdd);
+                GameWindow.GetInstance().RemoveFromMyTable(pieceToAdd);
             }
-            GameWindow.GetInstance().AddChildToGrid(etalon, local_image, r, c);
+            if(!exceptionalCase)
+            GameWindow.GetInstance().AddChildToGrid(etalon, pieceToAdd, r, c);
         }
 
         public static void RemovePieces(string readData) {

@@ -16,7 +16,7 @@ namespace Server {
             foreach(String index in msg.Split(':')) {
                 int piece=room.pieces[Int32.Parse(index)];
                 int number=Int32.Parse(piece.ToString().Substring(1, 2));
-                if(number == 1)
+                if(number==1)
                     points=points+25;
                 else if(number<10)
                     points=points+5;
@@ -118,7 +118,7 @@ namespace Server {
             }
         }
 
-        public static void AddPiece(string row, string imageIndex, string column, string clientToAdd, string nickname, string roomName) {
+        public static void AddPiece(string row, string imageIndex, string column, string clientToAdd, string nickname, string roomName, bool takePiece) {
             Room room=Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(roomName));
             User user=room.GetClientsInRoom().Single(u => u.Nickname==clientToAdd);
             String formationCod=user.formations.Cast<String>().First(e => e.Split(':').ElementAt(3).Equals(row));
@@ -133,14 +133,14 @@ namespace Server {
                 if(testInitialNum(pieceToAdd, firstPiece)//pieceToAdd:firstPiece:pieceAfterFirst
                     &&testIntNum(pieceToAdd, pieceAfterFirst)
                     &&column.Equals("0")) {
-                    MessageSender.Broadcast("ADD_PIECE_ON_FIRST_COL:", clientToAdd, row+":"+imageIndex+":"+column, room.GetClientsInRoom());
+                    MessageSender.Broadcast("ADD_PIECE_ON_FIRST_COL:", clientToAdd, row+":"+imageIndex+":"+column+":"+GetPieceNumberFirst(pieceToAdd, firstPiece, takePiece)+":"+nickname, room.GetClientsInRoom());
                     int index=user.formations.IndexOf(formationCod);
                     user.formations[index]=formationType+":"+pieceToAdd+":"+lastPiece+":"+row;
                 } else if(testFinalNum(lastPiece, pieceToAdd)//pieceBeforeLast:lastPiece:pieceToAdd
                     &&testIntNum(pieceBeforeLast, pieceToAdd)
                     &&!( pieceBeforeLast==100||pieceBeforeLast==200||pieceBeforeLast==300||pieceBeforeLast==400 )
                     &&!column.Equals("0")) {
-                    MessageSender.Broadcast("ADD_PIECE:", clientToAdd, row+":"+imageIndex+":"+column, room.GetClientsInRoom());
+                    MessageSender.Broadcast("ADD_PIECE:", clientToAdd, row+":"+imageIndex+":"+column+":"+GetPieceNumber(lastPiece, pieceToAdd, takePiece)+":"+nickname, room.GetClientsInRoom());
                     int index=user.formations.IndexOf(formationCod);
                     user.formations[index]=formationType+":"+firstPiece+":"+pieceToAdd+":"+row;
                 } else {
@@ -155,6 +155,33 @@ namespace Server {
                     MessageSender.MsgtoClient(nickname, "DONT:Nu se lipeste!", room.GetClientsInRoom());
                 }
             }
+        }
+
+        private static string GetPieceNumberFirst(int pieceToAdd, int firstPiece,bool takePiece) {
+            int firstPieceNumber=Int32.Parse(firstPiece.ToString().Substring(1));
+            int pieceToAddNumber=Int32.Parse(pieceToAdd.ToString().Substring(1));//1 2 3 4 5 6 7 8 9 10 11 12 13 1
+            if(!takePiece)
+                return "0";
+            if(firstPieceNumber+pieceToAddNumber==19)
+                return "1";
+            else if(firstPieceNumber+pieceToAddNumber==3)
+                return "3";
+            else
+                return "1";
+        }
+
+        private static string GetPieceNumber(int lastPiece, int pieceToAdd, bool takePiece) {
+            int lastPieceNumber=Int32.Parse(lastPiece.ToString().Substring(1));
+            int pieceToAddNumber=Int32.Parse(pieceToAdd.ToString().Substring(1));
+            if(!takePiece)
+                return "0";
+            else if(lastPieceNumber+pieceToAddNumber==19)
+                return "2";
+            else if(lastPieceNumber+pieceToAddNumber==14)
+                return "3";
+            else
+                return "1";
+
         }
     }
 }
