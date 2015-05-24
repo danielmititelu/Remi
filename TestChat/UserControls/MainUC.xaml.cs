@@ -72,9 +72,8 @@ namespace UserControls {
 
         private void NewRoom(object sender, RoutedEventArgs e) {
             CreateRoom newRoom=new CreateRoom();
+            newRoom.Owner=MainWindow.GetInstance();
             newRoom.ShowDialog();
-            //MainWindow.GetInstance().Switch(new RoomUC(Client.GetInstance().GetNickname()));
-            //Client.GetInstance().WriteLine("CREATE_ROOM:"+Client.GetInstance().GetNickname());
         }
 
         private void JoinRoom(object sender, RoutedEventArgs e) {

@@ -9,29 +9,14 @@ using System.Threading.Tasks;
 namespace Server {
     class HandleFormations {
 
-        public static int CalculatePoints(String readData) {
-            int points=0;
-            Room room=Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(readData.Split(':').ElementAt(0)));
-            String msg=readData.Substring(readData.IndexOf(':')+1, readData.Length-readData.IndexOf(':')-1);
-            foreach(String index in msg.Split(':')) {
-                int piece=room.pieces[Int32.Parse(index)];
-                int number=Int32.Parse(piece.ToString().Substring(1, 2));
-                if(number==1)
-                    points=points+25;
-                else if(number<10)
-                    points=points+5;
-                else if(number>=10)
-                    points=points+10;
-            }
-            return points;
-        }
+  
 
         public static void Formatie(String msg1, String msg2, String msg3, String nickname, String row, String roomName) {
             Room room=Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(roomName));
             User user=room.GetClientsInRoom().Single(u => u.Nickname==nickname);
-            int a=room.pieces[Int32.Parse(msg1)];
-            int b=room.pieces[Int32.Parse(msg2)];
-            int c=room.pieces[Int32.Parse(msg3)];
+            int a=Pieces.GetInstance().pieces[Int32.Parse(msg1)];
+            int b=Pieces.GetInstance().pieces[Int32.Parse(msg2)];
+            int c=Pieces.GetInstance().pieces[Int32.Parse(msg3)];
             Console.WriteLine(a+":"+b+":"+c+":"+nickname+":"+row);
             String res=testeaza(a, b, c, user, row);
 
@@ -39,6 +24,12 @@ namespace Server {
                 MessageSender.MsgtoClient(nickname, "DONT:"+res, room.GetClientsInRoom());
             } else {
                 MessageSender.Broadcast("FORMATION:", nickname, msg1+":"+msg2+":"+msg3, room.GetClientsInRoom());
+                user.piecesOnFormations.Add(msg1);
+                user.piecesOnFormations.Add(msg2);
+                user.piecesOnFormations.Add(msg3);
+                user.piecesOnTable.Remove(msg1);
+                user.piecesOnTable.Remove(msg2);
+                user.piecesOnTable.Remove(msg3);
             }
             Console.WriteLine(res);
         }
@@ -128,7 +119,7 @@ namespace Server {
             int pieceAfterFirst=firstPiece+1;
             int lastPiece=Int32.Parse(s[2]);
             int pieceBeforeLast=lastPiece-1;
-            int pieceToAdd=room.pieces[Int32.Parse(imageIndex)];
+            int pieceToAdd=Pieces.GetInstance().pieces[Int32.Parse(imageIndex)];
             if(formationType.Equals("1")) {//numaratoare
                 if(testInitialNum(pieceToAdd, firstPiece)//pieceToAdd:firstPiece:pieceAfterFirst
                     &&testIntNum(pieceToAdd, pieceAfterFirst)
@@ -136,6 +127,8 @@ namespace Server {
                     MessageSender.Broadcast("ADD_PIECE_ON_FIRST_COL:", clientToAdd, row+":"+imageIndex+":"+column+":"+GetPieceNumberFirst(pieceToAdd, firstPiece, takePiece)+":"+nickname, room.GetClientsInRoom());
                     int index=user.formations.IndexOf(formationCod);
                     user.formations[index]=formationType+":"+pieceToAdd+":"+lastPiece+":"+row;
+                    user.bonusPieces.Add(imageIndex);
+                    user.piecesOnTable.Remove(imageIndex);
                 } else if(testFinalNum(lastPiece, pieceToAdd)//pieceBeforeLast:lastPiece:pieceToAdd
                     &&testIntNum(pieceBeforeLast, pieceToAdd)
                     &&!( pieceBeforeLast==100||pieceBeforeLast==200||pieceBeforeLast==300||pieceBeforeLast==400 )
@@ -143,6 +136,8 @@ namespace Server {
                     MessageSender.Broadcast("ADD_PIECE:", clientToAdd, row+":"+imageIndex+":"+column+":"+GetPieceNumber(lastPiece, pieceToAdd, takePiece)+":"+nickname, room.GetClientsInRoom());
                     int index=user.formations.IndexOf(formationCod);
                     user.formations[index]=formationType+":"+firstPiece+":"+pieceToAdd+":"+row;
+                    user.bonusPieces.Add(imageIndex);
+                    user.piecesOnTable.Remove(imageIndex);
                 } else {
                     MessageSender.MsgtoClient(nickname, "DONT:Nu se lipeste!", room.GetClientsInRoom());
                 }
@@ -151,6 +146,7 @@ namespace Server {
                     MessageSender.Broadcast("ADD_PIECE:", clientToAdd, row+":"+imageIndex+":"+column, room.GetClientsInRoom());
                     int index=user.formations.IndexOf(formationCod);
                     user.formations[index]=formationType+":0:0:"+row;
+                    user.bonusPieces.Add(imageIndex);
                 } else {
                     MessageSender.MsgtoClient(nickname, "DONT:Nu se lipeste!", room.GetClientsInRoom());
                 }

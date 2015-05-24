@@ -91,6 +91,9 @@ namespace MessageControl {
                     case "ETALARE":
                         GameWindow.GetInstance().Etalat(readData);
                         break;
+                    case"WINNER":
+                        GameWindow.GetInstance().EndGame(readData);
+                        break;
                     default:
                         GameWindow.GetInstance().ErrorText("Error 404:Keyword not found");
                         break;

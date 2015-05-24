@@ -50,7 +50,7 @@ namespace Handlers {
                     if(first_row) {
                         Image pieceOnBoard=GameWindow.GetInstance().GetToAdd(etalon, c, r);
                         GameWindow.GetInstance().RemoveEtalonListener(pieceOnBoard);
-                        GameWindow.GetInstance().MoveRow(etalon, r, 1);
+                        GameWindow.GetInstance().MoveRow(etalon, r);
                     } else {
                         Image pieceOnBoard=GameWindow.GetInstance().GetToAdd(etalon, c-1, r);
                         GameWindow.GetInstance().RemoveEtalonListener(pieceOnBoard);

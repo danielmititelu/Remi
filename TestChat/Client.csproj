@@ -79,6 +79,9 @@
     <Compile Include="UserControls\LoginUC.xaml.cs">
       <DependentUpon>LoginUC.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\EndGameWindow.xaml.cs">
+      <DependentUpon>EndGameWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\RoomUC.xaml.cs">
       <DependentUpon>RoomUC.xaml</DependentUpon>
     </Compile>
@@ -119,6 +122,10 @@
       <DependentUpon>MainUC.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="UserControls\EndGameWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControls\RoomUC.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

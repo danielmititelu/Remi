@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Pieces.cs" />
     <Compile Include="User.cs" />
     <Compile Include="HandleClient.cs" />
     <Compile Include="HandleFormations.cs" />
