@@ -121,30 +121,14 @@ namespace Game {
             img.PreviewMouseDown+=myimg_MouseDown;
             img.PreviewMouseMove+=myimg_MouseMove;
             img.PreviewMouseUp+=myimg_MouseUp;
-            img.PreviewMouseUp+=img_PreviewMouseUp;
             img.LostMouseCapture+=myimg_LostMouseCapture;
 
-        }
-
-        private void img_PreviewMouseUp(object sender, MouseButtonEventArgs e) {
-            Image selectedPiece=(Image) sender;
-            if(formatie) {
-                int index=Pieces.GetInstance().getIndex(selectedPiece);
-                selectedImages[n]=index;
-                n++;
-                if(n==3) {
-                    formatie=false;
-                    Client.GetInstance().WriteLine("FORMATION:"+selectedImages[0]+":"+selectedImages[1]+":"+selectedImages[2]+":"+Client.GetInstance().GetNickname()+":"+( PieceHandler._row1+1 )+":"+_roomName+":"+drawFromBoard);
-                    drawFromBoard=false;
-                }
-            }
         }
 
         public void RemoveImgListeners(Image img) {
             img.PreviewMouseDown-=myimg_MouseDown;
             img.PreviewMouseMove-=myimg_MouseMove;
             img.PreviewMouseUp-=myimg_MouseUp;
-            img.MouseUp-=img_PreviewMouseUp;
             img.LostMouseCapture-=myimg_LostMouseCapture;
         }
 
@@ -206,6 +190,9 @@ namespace Game {
             selectedPiece.SetValue(Canvas.TopProperty, canvasTop);
             selectedPiece.ReleaseMouseCapture();
             if(StackCanvas.IsMouseOver) {
+                if(!( etalon1.Children.Count==0 ))
+                    Client.GetInstance().WriteLine("ETALARE:"+_roomName);
+
                 int index=Pieces.GetInstance().getIndex(selectedPiece);
                 if(!( MyTableCanvas.Children.Count==1 ))
                     Client.GetInstance().WriteLine("PUT_PIECE_ON_BORD:"+index+":"+_roomName+":"+"NotAWinner");
@@ -224,6 +211,17 @@ namespace Game {
             } else if(etalon4.IsMouseOver) {
                 client_to_add=(String) player4.Content;
                 temp_img=selectedPiece;
+            }
+
+            if(formatie) {
+                int index=Pieces.GetInstance().getIndex(selectedPiece);
+                selectedImages[n]=index;
+                n++;
+                if(n==3) {
+                    formatie=false;
+                    Client.GetInstance().WriteLine("FORMATION:"+selectedImages[0]+":"+selectedImages[1]+":"+selectedImages[2]+":"+Client.GetInstance().GetNickname()+":"+( PieceHandler._row1+1 )+":"+_roomName+":"+drawFromBoard);
+                    drawFromBoard=false;
+                }
             }
 
         }
@@ -404,28 +402,15 @@ namespace Game {
             } ));
         }
 
-        private void EtalareButtonClick(object sender, RoutedEventArgs e) {
-            String pieces=null;
-            foreach(Image item in etalon1.Children) {
-                int index=Pieces.GetInstance().getIndex(item);
-                pieces=pieces+":"+index;
-            }
-            Client.GetInstance().WriteLine("ETALARE:"+_roomName+pieces);
-        }
 
         public void Etalat(string readData) {
             this.Dispatcher.Invoke((Action) ( () => {
-                etalare.IsEnabled=false;
                 removePieces.IsEnabled=false;
             } ));
         }
 
         private void Button_Click(object sender, RoutedEventArgs e) {
-            //Client.GetInstance().WriteLine("REMOVE_PIECES:"+_roomName);
-            EndGameWindow endGame=new EndGameWindow();
-            endGame.Owner=this;
-            endGame.ShowDialog();
-
+            Client.GetInstance().WriteLine("REMOVE_PIECES:"+_roomName);
         }
 
         public void MovePieceToBonus(Image local_image, Grid etalon, string nickname) {

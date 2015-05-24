@@ -181,6 +181,9 @@ namespace Server {
                                user.Score>45) {
                                 MessageSender.MsgtoClient(nickname, "ETALARE:you may", room.GetClientsInRoom());
                                 user.Etalat=true;
+                            } else {
+                                user.formations.Clear();
+                                MessageSender.Broadcast("REMOVE_PIECES:", nickname, "all", room.GetClientsInRoom());
                             }
                             break;
                         case "REMOVE_PIECES":
