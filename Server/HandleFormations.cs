@@ -9,8 +9,6 @@ using System.Threading.Tasks;
 namespace Server {
     class HandleFormations {
 
-  
-
         public static void Formatie(String msg1, String msg2, String msg3, String nickname, String row, String roomName) {
             Room room=Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(roomName));
             User user=room.GetClientsInRoom().Single(u => u.Nickname==nickname);

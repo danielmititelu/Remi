@@ -37,12 +37,6 @@ namespace UserControls {
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e) {
-            new GameWindow();
-            MainWindow.GetInstance().Close();
-            Client.GetInstance().WriteLine("SWITCH_TO_GAME:"+Client.GetInstance().GetNickname());
-        }
-
         public void SetText(string message) {
             this.Dispatcher.Invoke((Action) ( () => {
                 received.AppendText(message+"\n");

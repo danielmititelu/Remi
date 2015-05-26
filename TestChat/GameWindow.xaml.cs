@@ -34,6 +34,7 @@ namespace Game {
         private string _roomName;
         DispatcherTimer timer=new DispatcherTimer();
         int time=3;
+        bool etalat=false;
 
         static GameWindow _instance;
 
@@ -212,7 +213,7 @@ namespace Game {
             selectedPiece.SetValue(Canvas.TopProperty, canvasTop);
             selectedPiece.ReleaseMouseCapture();
             if(StackCanvas.IsMouseOver) {
-                if(!( etalon1.Children.Count==0 ))
+                if(!( etalon1.Children.Count==0 )&&!etalat)
                     Client.GetInstance().WriteLine("ETALARE:"+_roomName);
 
                 int index=Pieces.GetInstance().getIndex(selectedPiece);
@@ -291,7 +292,7 @@ namespace Game {
                 int index=Pieces.GetInstance().getIndex(piece);
                 allPieces=allPieces+":"+index;
             }
-            if(!( allPieces==null )) {
+            if(allPieces!=null ) {
                 this.Dispatcher.Invoke((Action) ( () => {
                     foreach(string index in allPieces.Substring(1).Split(':')) {
                         RemoveImgListeners(Pieces.GetInstance().getImage(index));
@@ -428,13 +429,14 @@ namespace Game {
 
         public void Etalat(string readData) {
             this.Dispatcher.Invoke((Action) ( () => {
+                etalat=true;
                 removePieces.IsEnabled=false;
             } ));
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e) {
-            Client.GetInstance().WriteLine("REMOVE_PIECES:"+_roomName);
-        }
+        //private void Button_Click(object sender, RoutedEventArgs e) {
+        //    Client.GetInstance().WriteLine("REMOVE_PIECES:"+_roomName);
+        //}
 
         public void MovePieceToBonus(Image local_image, Grid etalon, string nickname) {
             etalon.Children.Remove(local_image);

@@ -61,7 +61,7 @@ namespace Server {
                                 s=s+":"+i;
                                 user.piecesOnTable.Add(i.ToString());
                             }
-                            //MessageSender.MsgtoClient(nickname, "DRAW"+s, room.GetClientsInRoom());
+                            MessageSender.MsgtoClient(nickname, "DRAW"+s, room.GetClientsInRoom());
                             MessageSender.Broadcast("YOUR_TURN:", room.GetClientsInRoom().ElementAt(0).Nickname, "end", room.GetClientsInRoom());
                             if(room.GetClientsInRoom().ElementAt(0).Nickname==nickname) {
                                 int index=room.random.Next();
@@ -186,7 +186,7 @@ namespace Server {
                             user=room.GetClientsInRoom().Single(u => u.Nickname==nickname);
                             if(user.formations.Exists(u => u.Split(':').ElementAt(0).Equals("1"))&&
                                user.formations.Exists(u => u.Split(':').ElementAt(0).Equals("2"))&&
-                               user.Score>45) {
+                               user.Score>=45) {
                                 MessageSender.MsgtoClient(nickname, "ETALARE:you may", room.GetClientsInRoom());
                                 user.Etalat=true;
                             } else {
@@ -205,7 +205,7 @@ namespace Server {
                         case "DRAW_FROM_BOARD"://roomName:index
                             room=Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(msg[1]));
                             user=room.GetClientsInRoom().Single(u => u.Nickname==nickname);
-                            if(user.FirstDraw&&user.MyTurn&&user.Etalat) {
+                            if(user.FirstDraw&&user.MyTurn) {//&&user.Etalat
                                 List<int> allPieces=room.piecesOnBoard.FindAll(i => room.piecesOnBoard.IndexOf(i)>=room.piecesOnBoard.IndexOf(Pieces.GetInstance().pieces.ElementAt(Int32.Parse(msg[2])))).ToList();
                                 String all=null;
                                 foreach(int i in allPieces) {

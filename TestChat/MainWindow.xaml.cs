@@ -40,6 +40,11 @@ namespace Game {
         public void Switch(UserControl content) {
             this.Content=content;
         }
+        public void Login() {
+            this.Dispatcher.Invoke((Action) ( () => {
+                this.Content=new MainUC();
+            } ));
+        }
 
         public static MainWindow GetInstance() {
             return _instance;
@@ -66,5 +71,7 @@ namespace Game {
             }
         }
 
+
+ 
     }
 }

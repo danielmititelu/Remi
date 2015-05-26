@@ -29,13 +29,14 @@ namespace Server {
                     if(clientsList.Exists(c=> c.Nickname==nickname)) {
                         StreamWriter write=null;
                         write=new StreamWriter(client.GetStream());
-                        write.WriteLine("ALR:"+nickname);
+                        write.WriteLine("NICKNAME_TAKEN:"+nickname);
                         write.Flush();
                         Console.WriteLine("Client "+nickname+" already exists");
                     } else {
                         clientsList.Add(new User(nickname, client));
                         Thread chatThread=new Thread(() => ConnectToChat(client, nickname));
                         chatThread.Start();
+                        MessageSender.MsgtoClient(nickname, "WELCOME:"+nickname, clientsList);
                         Console.WriteLine("A new client has connected to chat "+nickname);
                         MessageSender.AllUsers("NEW_USER_IN_CHAT", clientsList,false);
                         MessageSender.AllRooms(roomList,clientsList);

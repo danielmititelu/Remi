@@ -21,14 +21,17 @@ namespace UserControls {
     /// Interaction logic for LoginUC.xaml
     /// </summary>
     public partial class LoginUC : UserControl{
+        static LoginUC _instance;
+
         public LoginUC() {
             InitializeComponent();
+            _instance=this;
             ipAddress.Text="127.0.0.1";
         }
         private void Button_Click(object sender, RoutedEventArgs e) {
-            MainWindow.GetInstance().Switch(new MainUC());
             connect(ipAddress.Text, nickame.Text);
         }
+
         private void connect(String ipAddress, String nickname) {
             String ip=ipAddress.Trim();
 
@@ -43,5 +46,14 @@ namespace UserControls {
 
             Client.GetInstance().WriteLine(nickname);
         }
+        internal void NicknameTaken() {
+            this.Dispatcher.Invoke((Action) ( () => {
+                error.Content="Alege alt nickname";
+            } ));
+        }
+        public static LoginUC GetInstance() {
+            return _instance;
+        }
+
     }
 }

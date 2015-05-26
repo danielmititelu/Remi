@@ -117,7 +117,7 @@
         <Label  HorizontalAlignment="Left" Margin="164,597,0,0" VerticalAlignment="Top" Height="26" Width="24" x:Name="player4Turn"/>
         <Label  HorizontalAlignment="Left" Margin="1442,598,0,0" VerticalAlignment="Top" Height="26" Width="24" x:Name="player2Turn"/>
         <Label  HorizontalAlignment="Left" Margin="798,5,0,0" VerticalAlignment="Top" Height="26" Width="24" x:Name="player3Turn"/>
-        <Button Content="Scoate piesele" x:Name="removePieces" Margin="1013,0,0,4.8" VerticalAlignment="Bottom" Click="Button_Click" HorizontalAlignment="Left" Width="83"/>
+        <Button Content="Scoate piesele" x:Name="removePieces" Margin="1013,0,0,4.8" VerticalAlignment="Bottom"  HorizontalAlignment="Left" Width="83"/>
         <ScrollViewer Height="58" Margin="752,0,0,223.8" HorizontalScrollBarVisibility="Auto" CanContentScroll="True" PanningMode="HorizontalOnly" VerticalScrollBarVisibility="Disabled" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="173">
             <StackPanel x:Name="stack1" Background="DarkCyan" Height="58" Width="173" Orientation="Horizontal"/>
         </ScrollViewer>

@@ -53,10 +53,11 @@ namespace MessageControl {
                     case "MESSAGE_CHAT":
                         MainUC.GetInstance().SetText(readData);
                         break;
-                    case "ALR":
-                        //Login login=new Login ();
-                        //login.Show ();
-                        //this.Dispatcher.Invoke ((Action) (() => { this.Hide(); }));
+                    case "NICKNAME_TAKEN":
+                        LoginUC.GetInstance().NicknameTaken();
+                        break;
+                    case"WELCOME":
+                        MainWindow.GetInstance().Login();
                         break;
                     case "NEW_USER_IN_CHAT":
                         MainUC.GetInstance().AddPlayer(readData);
