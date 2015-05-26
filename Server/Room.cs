@@ -12,7 +12,7 @@ namespace Server {
         private String _roomName;
         private List<User> clientsInRoom=new List<User>();
         public  UniqueRandom random;
-        public  List<int> piecesOnBoard;
+        public  List<string> piecesOnBoard;
 
         public Room(string roomName) {
             _roomName=roomName;
@@ -43,7 +43,7 @@ namespace Server {
         }
         public void NextGame() {
             random=new UniqueRandom(Enumerable.Range(0, 105));
-            piecesOnBoard=new List<int>();
+            piecesOnBoard=new List<string>();
             foreach(User user in clientsInRoom){
                 user.piecesOnFormations.Clear();
                 user.piecesOnTable.Clear();
