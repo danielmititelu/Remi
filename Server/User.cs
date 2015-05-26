@@ -13,7 +13,6 @@ namespace Server {
         StreamWriter write=null;
         public List<string> formations=new List<String>();
         public List<string> piecesOnFormations=new List<string>();
-        public List<string> bonusPieces=new List<string>();
         public List<string> piecesOnTable=new List<string>();
         int _score=0;
         bool _ready=false;
@@ -62,18 +61,6 @@ namespace Server {
         public int CalculatePoints() {
             int points=0;
             foreach(String index in piecesOnFormations) {
-                int piece=Pieces.GetInstance().pieces[Int32.Parse(index)];
-                int number=Int32.Parse(piece.ToString().Substring(1, 2));
-                if(number==1)
-                    points=points+25;
-                else if(number==0)
-                    points=points+50;
-                else if(number<10)
-                    points=points+5;
-                else if(number>=10)
-                    points=points+10;
-            }
-            foreach(String index in bonusPieces) {
                 int piece=Pieces.GetInstance().pieces[Int32.Parse(index)];
                 int number=Int32.Parse(piece.ToString().Substring(1, 2));
                 if(number==1)

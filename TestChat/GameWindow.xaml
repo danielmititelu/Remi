@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="Game.GameWindow"
         Title="Game"
-        WindowStyle="None" ResizeMode="NoResize" 
+        WindowStyle="None" 
         WindowState="Maximized" d:DesignWidth="1535.2" d:DesignHeight="859" Closing="WindowClosing">
     <Grid >
         <Canvas x:Name="MyTableCanvas" Background="Aquamarine" HorizontalAlignment="Left" Height="177" Margin="338,0,0,38.2" VerticalAlignment="Bottom" Width="606"/>
@@ -12,7 +12,7 @@
         <ScrollViewer Margin="388,392,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="778" HorizontalScrollBarVisibility="Auto" CanContentScroll="True" PanningMode="HorizontalOnly" VerticalScrollBarVisibility="Disabled" >
             <StackPanel x:Name="StackCanvas" Background="Aquamarine" Orientation="Horizontal" Height="58" Width="778"/>
         </ScrollViewer>
-        <ScrollViewer Height="321" Width="221" Margin="944,500,370.2,38.2" VerticalAlignment="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+        <ScrollViewer Height="321" Width="221" Margin="944,0,0,31.8" VerticalAlignment="Bottom" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Left">
             <Grid x:Name="etalon1" Background="Aquamarine" Height="Auto" Width="Auto">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -36,19 +36,15 @@
             </Grid>
 
         </ScrollViewer>
-
-        <Canvas Background="Aquamarine" HorizontalAlignment="Left" Height="520" Margin="0,78,0,0" VerticalAlignment="Top" Width="85"/>
-        <Canvas Background="Aquamarine" HorizontalAlignment="Left" Height="134" Margin="570,31,0,0" VerticalAlignment="Top" Width="596"/>
-        <Label x:Name="player2" Content="Player 2" HorizontalAlignment="Left" Margin="1465,604,0,0" VerticalAlignment="Top" Width="60"/>
-        <Label x:Name="player3" Content="Player 3" Margin="0,5,737.2,0" HorizontalAlignment="Right" Width="60" Height="26" VerticalAlignment="Top"/>
-        <Label x:Name="player4" Content="Player 4" HorizontalAlignment="Left" Margin="10,604,0,0" VerticalAlignment="Top" Width="60" Height="26"/>
+        <Label x:Name="player2" Content="Player 2" HorizontalAlignment="Left" Margin="1376,596,0,0" VerticalAlignment="Top" Width="60"/>
+        <Label x:Name="player3" Content="Player 3" Margin="0,13,653.2,0" HorizontalAlignment="Right" Width="60" Height="26" VerticalAlignment="Top"/>
+        <Label x:Name="player4" Content="Player 4" HorizontalAlignment="Left" Margin="99,596,0,0" VerticalAlignment="Top" Width="60" Height="26"/>
         <Label x:Name="player1" Content="Player 1" HorizontalAlignment="Left" Margin="738,0,0,7.6" VerticalAlignment="Bottom" Width="60"/>
         <Button Content="Formatie" HorizontalAlignment="Left" Margin="480,0,0,230.2" VerticalAlignment="Bottom" Width="90" Height="41" Click="FormationButtonClick"/>
-        <TextBox HorizontalAlignment="Left" Margin="1220,770,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="286" x:Name="send" KeyDown="send_KeyDown" Height="22"/>
+        <TextBox HorizontalAlignment="Right" Margin="0,0,22.8,60.8" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="286" x:Name="send" KeyDown="send_KeyDown" Height="22"/>
         <Label Content="" HorizontalAlignment="Left" Margin="1272,824,0,0" VerticalAlignment="Top" Width="194" x:Name="error"/>
-        <TextBox HorizontalAlignment="Left" Height="107" Margin="1220,644,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="286" x:Name="received" IsReadOnly="True" AcceptsReturn="True"/>
-        <Canvas Background="Aquamarine" Height="520" Margin="0,78,5.2,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="85" />
-        <ScrollViewer Height="321" Width="221" Margin="1224,177,90.2,361.2" VerticalAlignment="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+        <TextBox HorizontalAlignment="Right" Height="107" Margin="0,0,22.8,101.8" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="286" x:Name="received" IsReadOnly="True" AcceptsReturn="True"/>
+        <ScrollViewer Width="221" Margin="0,177,22.8,0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Right" Height="321" VerticalAlignment="Top">
             <Grid x:Name="etalon2" Background="Aquamarine" Height="Auto" Width="Auto" >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -71,7 +67,7 @@
                 </Grid.ColumnDefinitions>
             </Grid>
         </ScrollViewer>
-        <ScrollViewer Height="321" Width="221" Margin="349,31,965.2,507.2" VerticalAlignment="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+        <ScrollViewer Height="321" Width="221" Margin="526,10,0,0" VerticalAlignment="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Left">
             <Grid x:Name="etalon3" Background="Aquamarine" Height="Auto" Width="Auto">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -94,7 +90,7 @@
                 </Grid.ColumnDefinitions>
             </Grid>
         </ScrollViewer>
-        <ScrollViewer Height="321" Width="221" Margin="85,177,1229.2,361.2" VerticalAlignment="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+        <ScrollViewer Width="221" Margin="32,177,0,0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Left" Height="321" VerticalAlignment="Top">
             <Grid x:Name="etalon4" Background="Aquamarine" Height="Auto" Width="Auto">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -117,21 +113,21 @@
                 </Grid.ColumnDefinitions>
             </Grid>
         </ScrollViewer>
-        <Label  HorizontalAlignment="Left" Margin="798,826,0,0" VerticalAlignment="Top" Height="26" Width="24" x:Name="player1Turn"/>
-        <Label  HorizontalAlignment="Left" Margin="70,603,0,0" VerticalAlignment="Top" Height="26" Width="24" x:Name="player4Turn"/>
-        <Label  HorizontalAlignment="Left" Margin="1436,604,0,0" VerticalAlignment="Top" Height="26" Width="24" x:Name="player2Turn"/>
+        <Label  HorizontalAlignment="Left" Margin="798,0,0,0.8" VerticalAlignment="Bottom" Height="26" Width="24" x:Name="player1Turn"/>
+        <Label  HorizontalAlignment="Left" Margin="164,597,0,0" VerticalAlignment="Top" Height="26" Width="24" x:Name="player4Turn"/>
+        <Label  HorizontalAlignment="Left" Margin="1442,598,0,0" VerticalAlignment="Top" Height="26" Width="24" x:Name="player2Turn"/>
         <Label  HorizontalAlignment="Left" Margin="798,5,0,0" VerticalAlignment="Top" Height="26" Width="24" x:Name="player3Turn"/>
-        <Button Content="Scoate piesele" x:Name="removePieces" HorizontalAlignment="Left" Margin="1013,826,0,0" VerticalAlignment="Top" Width="83" Click="Button_Click"/>
-        <ScrollViewer Height="58" Width="173" Margin="752,571,610.2,230.2" HorizontalScrollBarVisibility="Auto" CanContentScroll="True" PanningMode="HorizontalOnly" VerticalScrollBarVisibility="Disabled">
+        <Button Content="Scoate piesele" x:Name="removePieces" Margin="1013,0,0,4.8" VerticalAlignment="Bottom" Click="Button_Click" HorizontalAlignment="Left" Width="83"/>
+        <ScrollViewer Height="58" Margin="752,0,0,223.8" HorizontalScrollBarVisibility="Auto" CanContentScroll="True" PanningMode="HorizontalOnly" VerticalScrollBarVisibility="Disabled" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="173">
             <StackPanel x:Name="stack1" Background="DarkCyan" Height="58" Width="173" Orientation="Horizontal"/>
         </ScrollViewer>
-        <ScrollViewer Height="58" Width="173" Margin="1208,516,154.2,285.2" HorizontalScrollBarVisibility="Auto" CanContentScroll="True" PanningMode="HorizontalOnly" VerticalScrollBarVisibility="Disabled">
+        <ScrollViewer Height="58" Width="173" Margin="0,516,41.8,0" HorizontalScrollBarVisibility="Auto" CanContentScroll="True" PanningMode="HorizontalOnly" VerticalScrollBarVisibility="Disabled" VerticalAlignment="Top" HorizontalAlignment="Right">
             <StackPanel x:Name="stack2" Background="DarkCyan" Height="58" Width="173" Orientation="Horizontal"/>
         </ScrollViewer>
-        <ScrollViewer Height="58" Width="173" Margin="771,177,591.2,624.2" HorizontalScrollBarVisibility="Auto" CanContentScroll="True" PanningMode="HorizontalOnly" VerticalScrollBarVisibility="Disabled">
+        <ScrollViewer Height="58" Margin="752,59,0,0" HorizontalScrollBarVisibility="Auto" CanContentScroll="True" PanningMode="HorizontalOnly" VerticalScrollBarVisibility="Disabled" VerticalAlignment="Top" HorizontalAlignment="Left" Width="173">
             <StackPanel x:Name="stack3" Background="DarkCyan" Height="58" Width="173" Orientation="Horizontal"/>
         </ScrollViewer>
-        <ScrollViewer Height="58" Width="173" Margin="101,516,1261.2,285.2" HorizontalScrollBarVisibility="Auto" CanContentScroll="True" PanningMode="HorizontalOnly" VerticalScrollBarVisibility="Disabled">
+        <ScrollViewer Height="58" Width="173" Margin="53,516,0,0" HorizontalScrollBarVisibility="Auto" CanContentScroll="True" PanningMode="HorizontalOnly" VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Left" VerticalAlignment="Top">
             <StackPanel x:Name="stack4" Background="DarkCyan" Height="58" Width="173" Orientation="Horizontal"/>
         </ScrollViewer>
 

@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
           Height="300" Width="300"  ResizeMode="NoResize" WindowStyle="None" WindowStartupLocation="CenterOwner">
     <Grid>
-        <Button Content="Play again" HorizontalAlignment="Left" Margin="115,253,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Content="Play again" HorizontalAlignment="Left" Margin="115,253,0,0" VerticalAlignment="Top" Width="75" Click="PlayAgainButtonClick"/>
         <Grid Name="scoreBoard" HorizontalAlignment="Left" Height="186" Margin="59,44,0,0" VerticalAlignment="Top" Width="187" RenderTransformOrigin="0.477,0.503">
             <Grid.ColumnDefinitions>
 

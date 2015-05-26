@@ -62,6 +62,7 @@ namespace MessageControl {
                         MainUC.GetInstance().AddPlayer(readData);
                         break;
                     case "NEW_USER_IN_GAME":
+                        if(GameWindow.Exists())
                         GameWindow.GetInstance().NewUser(readData);
                         break;
                     case "ALL_USERS_IN_ROOM":
@@ -80,6 +81,7 @@ namespace MessageControl {
                         RoomUC.GetInstance().StartTimer();
                         break;
                     case "YOUR_TURN":
+                        if(GameWindow.Exists())
                         GameWindow.GetInstance().SetTurn(readData);
                         break;
                     case"REMOVE_PIECES":

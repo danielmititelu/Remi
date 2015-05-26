@@ -28,6 +28,15 @@ namespace Game {
             _instance=this;
         }
 
+        public MainWindow(string roomName) {
+            InitializeComponent();
+            Switch(new RoomUC(roomName));
+            _instance=this;
+            this.Show();
+            Client.GetInstance().WriteLine("REJOIN_ROOM:"+roomName);
+        }
+
+
         public void Switch(UserControl content) {
             this.Content=content;
         }
@@ -35,7 +44,16 @@ namespace Game {
         public static MainWindow GetInstance() {
             return _instance;
         }
+
+        public static bool Exists() {
+            if(_instance==null) {
+                return false;
+            } else
+                return true;
+        }
+
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
+
             if(Client.Exists()) {
                 if(!RoomUC.Exists()) {
                     Client.GetInstance().WriteLine("EXIT_FROM_CHAT:Am iesit din chat server");
@@ -43,10 +61,10 @@ namespace Game {
                     Client.GetInstance().WriteLine("EXIT_FROM_CHAT:"+RoomUC.GetInstance().getRoomName()+":"+_inGame);
                 }
 
-                if(!GameWindow.Exists()) {
+                if(!GameWindow.Exists())
                     Client.GetInstance().Close();
-                }
             }
         }
+
     }
 }

@@ -127,7 +127,7 @@ namespace Server {
                     MessageSender.Broadcast("ADD_PIECE_ON_FIRST_COL:", clientToAdd, row+":"+imageIndex+":"+column+":"+GetPieceNumberFirst(pieceToAdd, firstPiece, takePiece)+":"+nickname, room.GetClientsInRoom());
                     int index=user.formations.IndexOf(formationCod);
                     user.formations[index]=formationType+":"+pieceToAdd+":"+lastPiece+":"+row;
-                    user.bonusPieces.Add(imageIndex);
+                    user.piecesOnFormations.Add(imageIndex);
                     user.piecesOnTable.Remove(imageIndex);
                 } else if(testFinalNum(lastPiece, pieceToAdd)//pieceBeforeLast:lastPiece:pieceToAdd
                     &&testIntNum(pieceBeforeLast, pieceToAdd)
@@ -136,7 +136,7 @@ namespace Server {
                     MessageSender.Broadcast("ADD_PIECE:", clientToAdd, row+":"+imageIndex+":"+column+":"+GetPieceNumber(lastPiece, pieceToAdd, takePiece)+":"+nickname, room.GetClientsInRoom());
                     int index=user.formations.IndexOf(formationCod);
                     user.formations[index]=formationType+":"+firstPiece+":"+pieceToAdd+":"+row;
-                    user.bonusPieces.Add(imageIndex);
+                    user.piecesOnFormations.Add(imageIndex);
                     user.piecesOnTable.Remove(imageIndex);
                 } else {
                     MessageSender.MsgtoClient(nickname, "DONT:Nu se lipeste!", room.GetClientsInRoom());
@@ -146,7 +146,7 @@ namespace Server {
                     MessageSender.Broadcast("ADD_PIECE:", clientToAdd, row+":"+imageIndex+":"+column, room.GetClientsInRoom());
                     int index=user.formations.IndexOf(formationCod);
                     user.formations[index]=formationType+":0:0:"+row;
-                    user.bonusPieces.Add(imageIndex);
+                    user.piecesOnFormations.Add(imageIndex);
                 } else {
                     MessageSender.MsgtoClient(nickname, "DONT:Nu se lipeste!", room.GetClientsInRoom());
                 }

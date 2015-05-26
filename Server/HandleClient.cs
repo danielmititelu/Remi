@@ -61,7 +61,7 @@ namespace Server {
                                 s=s+":"+i;
                                 user.piecesOnTable.Add(i.ToString());
                             }
-                            MessageSender.MsgtoClient(nickname, "DRAW"+s, room.GetClientsInRoom());
+                            //MessageSender.MsgtoClient(nickname, "DRAW"+s, room.GetClientsInRoom());
                             MessageSender.Broadcast("YOUR_TURN:", room.GetClientsInRoom().ElementAt(0).Nickname, "end", room.GetClientsInRoom());
                             if(room.GetClientsInRoom().ElementAt(0).Nickname==nickname) {
                                 int index=room.random.Next();
@@ -161,6 +161,12 @@ namespace Server {
                             room.AddClientInRoom(nickname, clientSocket);
                             MessageSender.AllUsers("ALL_USERS_IN_ROOM", room.GetClientsInRoom(), true);
                             break;
+                        case "REJOIN_ROOM":
+                            room=Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(msg[1]));
+                            foreach(User u in room.GetClientsInRoom())
+                                u.Ready=false;
+                            MessageSender.AllUsers("ALL_USERS_IN_ROOM", room.GetClientsInRoom(), true);
+                            break;
                         case "MESSAGE_ROOM":
                             room=Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(msg[1]));
                             MessageSender.Broadcast("MESSAGE_ROOM:", nickname, msg[2], room.GetClientsInRoom());
@@ -170,8 +176,10 @@ namespace Server {
                             user=room.GetClientsInRoom().Single(u => u.Nickname==nickname);
                             user.Ready=!user.Ready;
                             MessageSender.Broadcast("READY:", nickname, ""+user.Ready, room.GetClientsInRoom());
-                            if(room.GetClientsInRoom().All(u => u.Ready==true))
+                            if(room.GetClientsInRoom().All(u => u.Ready==true)) { 
                                 MessageSender.Broadcast("START_GAME:", nickname, "start", room.GetClientsInRoom());
+                                room.NextGame();
+                            }
                             break;
                         case "ETALARE":
                             room=Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(msg[1]));
@@ -183,6 +191,7 @@ namespace Server {
                                 user.Etalat=true;
                             } else {
                                 user.formations.Clear();
+                                user.piecesOnFormations.Clear();
                                 MessageSender.Broadcast("REMOVE_PIECES:", nickname, "all", room.GetClientsInRoom());
                             }
                             break;
@@ -190,6 +199,7 @@ namespace Server {
                             room=Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(msg[1]));
                             user=room.GetClientsInRoom().Single(u => u.Nickname==nickname);
                             user.formations.Clear();
+                            user.piecesOnFormations.Clear();
                             MessageSender.Broadcast("REMOVE_PIECES:", nickname, "all", room.GetClientsInRoom());
                             break;
                         case "DRAW_FROM_BOARD"://roomName:index

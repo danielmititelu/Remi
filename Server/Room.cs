@@ -10,13 +10,12 @@ using System.Threading.Tasks;
 namespace Server {
     class Room {
         private String _roomName;
-        private List<User> clientsInRoom;
-        public  UniqueRandom random=new UniqueRandom(Enumerable.Range(0, 105));
-        public  List<int> piecesOnBoard=new List<int>();
+        private List<User> clientsInRoom=new List<User>();
+        public  UniqueRandom random;
+        public  List<int> piecesOnBoard;
 
         public Room(string roomName) {
             _roomName=roomName;
-            clientsInRoom=new List<User>();
         }
 
         public string getRoomName() {
@@ -41,6 +40,15 @@ namespace Server {
         }
         public string GetClientTurn() {
             return clientsInRoom.Single(c=> c.MyTurn==true).Nickname;
+        }
+        public void NextGame() {
+            random=new UniqueRandom(Enumerable.Range(0, 105));
+            piecesOnBoard=new List<int>();
+            foreach(User user in clientsInRoom){
+                user.piecesOnFormations.Clear();
+                user.piecesOnTable.Clear();
+                user.formations.Clear();
+            }
         }
     }
 }

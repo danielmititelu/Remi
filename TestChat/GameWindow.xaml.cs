@@ -14,6 +14,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using UserControls;
 
 namespace Game {
@@ -31,6 +32,8 @@ namespace Game {
         public Image temp_img;
         String client_to_add;
         private string _roomName;
+        DispatcherTimer timer=new DispatcherTimer();
+        int time=3;
 
         static GameWindow _instance;
 
@@ -38,6 +41,9 @@ namespace Game {
             InitializeComponent();
             _instance=this;
             this.Show();
+            timer.Interval=new TimeSpan(0, 0, 1);
+            timer.Tick+=timerTick;
+
         }
 
         public GameWindow(string roomName) {
@@ -45,6 +51,18 @@ namespace Game {
             _instance=this;
             this.Show();
             _roomName=roomName;
+            timer.Interval=new TimeSpan(0, 0, 1);
+            timer.Tick+=timerTick;
+
+        }
+
+        private void timerTick(object sender, EventArgs e) {
+            time--;
+            if(time==0) {
+                timer.Stop();
+                this.Dispatcher.Invoke((Action) ( () => { error.Content=""; } ));
+            }
+
         }
 
         public static GameWindow GetInstance() {
@@ -66,7 +84,11 @@ namespace Game {
         }
 
         public void ErrorText(string message) {
-            this.Dispatcher.Invoke((Action) ( () => { error.Content=message; } ));
+            this.Dispatcher.Invoke((Action) ( () => {
+                error.Content=message;
+                time=3;
+                timer.Start();
+            } ));
         }
 
         public void NewUser(string readData) {
@@ -338,6 +360,7 @@ namespace Game {
 
         public void AddChildToGrid(Grid etalon, Image local_image, int r, int c) {
             etalon.Children.Add(local_image);
+
             Grid.SetRow(local_image, r);
             Grid.SetColumn(local_image, c);
         }
@@ -426,21 +449,25 @@ namespace Game {
         }
 
         public void EndGame(string readData) {
-            string[]  msg=readData.Split(',');
+            string[] msg=readData.Split(',');
             string winner=msg[0].Split(':').ElementAt(0);
             string scores=msg[0].Substring(msg[0].IndexOf(':')+1);
-            string users=msg[1]; 
+            string users=msg[1];
             this.Dispatcher.Invoke((Action) ( () => {
-                EndGameWindow endGame=new EndGameWindow(winner,scores,users);
+                EndGameWindow endGame=new EndGameWindow(winner, scores, users, _roomName);
                 endGame.Owner=this;
                 endGame.ShowDialog();
             } ));
         }
 
         private void WindowClosing(object sender, System.ComponentModel.CancelEventArgs e) {
-            if(Client.GetInstance().ClientConnected()) {
-                Client.GetInstance().WriteLine("EXIT_FROM_GAME:"+_roomName);
-                Client.GetInstance().Close();
+            //base.OnClosed(e);
+            //this.RemoveLogicalChild(this.Content);
+            if(Client.Exists()) {
+                if(!MainWindow.Exists()) {
+                    Client.GetInstance().WriteLine("EXIT_FROM_GAME:"+_roomName);
+                    Client.GetInstance().Close();
+                }
             }
         }
     }

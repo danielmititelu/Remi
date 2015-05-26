@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Game;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,16 +18,14 @@ namespace UserControls {
     /// Interaction logic for MenuWindow.xaml
     /// </summary>
     public partial class EndGameWindow : Window {
-        private string winner;
-        private string scores;
-        private string users;
-
+        private string _roomName;
         public EndGameWindow() {
             InitializeComponent();
         }
 
-        public EndGameWindow(string winner, string scores, string users) {
+        public EndGameWindow(string winner, string scores, string users,string roomName) {
             InitializeComponent();
+            _roomName=roomName;
             string[] user = users.Split(':'); 
             string[] scor = scores.Split(':');
             int i=0;
@@ -48,6 +47,12 @@ namespace UserControls {
                 Grid.SetColumn(scoreLabel, 1);
                 i++;
             }    
+        }
+
+        private void PlayAgainButtonClick(object sender, RoutedEventArgs e) {
+            new MainWindow(_roomName);
+            this.Close();
+            GameWindow.GetInstance().Close();
         }
     }
 }
