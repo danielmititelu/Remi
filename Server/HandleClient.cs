@@ -86,8 +86,7 @@ namespace Server {
                             room=Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(msg[5]));
                             user=room.GetClientsInRoom().Single(c => c.Nickname==nickname);
                             bool takePiece=true;
-                            //if(user.MyTurn&&user.Etalat) {
-                            if(user.MyTurn) {
+                            if(user.MyTurn&&user.Etalat)  {
                                 if(msg[4]==nickname)
                                     takePiece=false;
                                 HandleFormations.AddPiece(msg[1], msg[2], msg[3], msg[4], nickname, msg[5], takePiece);
@@ -114,7 +113,7 @@ namespace Server {
                             user=room.GetClientsInRoom().Single(c => c.Nickname==nickname);
                             if(!user.FirstDraw&&user.MyTurn) {
                                 if(msg[3]=="NotAWinner") {
-                                    room.piecesOnBoard.Add(Pieces.GetInstance().pieces[Int32.Parse(msg[1])]);
+                                    room.piecesOnBoard.Add(msg[1]);
                                     user.piecesOnTable.Remove(msg[1]);
                                     MessageSender.Broadcast("PUT_PIECE_ON_BORD:", nickname, msg[1], room.GetClientsInRoom());
                                     room.EndTurnFor(nickname);
@@ -205,11 +204,11 @@ namespace Server {
                         case "DRAW_FROM_BOARD"://roomName:index
                             room=Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(msg[1]));
                             user=room.GetClientsInRoom().Single(u => u.Nickname==nickname);
-                            if(user.FirstDraw&&user.MyTurn) {//&&user.Etalat
-                                List<int> allPieces=room.piecesOnBoard.FindAll(i => room.piecesOnBoard.IndexOf(i)>=room.piecesOnBoard.IndexOf(Pieces.GetInstance().pieces.ElementAt(Int32.Parse(msg[2])))).ToList();
+                            if(user.FirstDraw&&user.MyTurn&&user.Etalat) {
+                                List<string> allPieces=room.piecesOnBoard.FindAll(i => room.piecesOnBoard.IndexOf(i)>=room.piecesOnBoard.IndexOf(msg[2])).ToList();
                                 String all=null;
-                                foreach(int i in allPieces) {
-                                    all=all+":"+Pieces.GetInstance().pieces.IndexOf(i);
+                                foreach(string i in allPieces) {
+                                    all=all+":"+i;
                                     room.piecesOnBoard.Remove(i);
                                 }
                                 MessageSender.Broadcast("DRAW_FROM_BOARD:", nickname, all.Substring(1), room.GetClientsInRoom());
