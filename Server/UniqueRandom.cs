@@ -17,6 +17,7 @@ namespace Server {
                 throw new ApplicationException("No more numbers");
             }
             int i=_random.Next (_currentList.Count);
+            //int i=0;
             int result=_currentList[i];
             _currentList.RemoveAt(i);
             return result;

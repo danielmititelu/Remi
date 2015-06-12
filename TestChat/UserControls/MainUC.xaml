@@ -13,7 +13,6 @@
         <Button Content="Create room" HorizontalAlignment="Left" Margin="95,25,0,0" VerticalAlignment="Top" Width="75" Click="NewRoom"/>
         <ListBox HorizontalAlignment="Left" Height="100" Margin="180,15,0,0" VerticalAlignment="Top" Width="296" Name="rooms"/>
         <Button Content="Join room" HorizontalAlignment="Left" Margin="95,52,0,0" VerticalAlignment="Top" Width="75" Click="JoinRoom"/>
-        <Button Content="Spectate" HorizontalAlignment="Left" Margin="95,79,0,0" VerticalAlignment="Top" Width="75"/>
 
     </Grid>
 </UserControl>

@@ -81,6 +81,9 @@ namespace MessageControl {
                     case "START_GAME":
                         RoomUC.GetInstance().StartTimer();
                         break;
+                    case"START_SPECTATING_GAME":
+                        RoomUC.GetInstance().StartTimer();
+                        break;
                     case "YOUR_TURN":
                         if(GameWindow.Exists())
                         GameWindow.GetInstance().SetTurn(readData);

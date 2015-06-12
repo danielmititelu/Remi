@@ -54,7 +54,7 @@ namespace Server {
                 else
                     c=a+2;
             } else if(a==500) {
-                a=c-2;
+                a=b-1;
             }
             return "1:"+a+":"+c+":"+row;
         }
@@ -109,8 +109,9 @@ namespace Server {
 
         public static void AddPiece(string row, string imageIndex, string column, string clientToAdd, string nickname, string roomName, bool takePiece) {
             Room room=Server.roomList.Cast<Room>().Single(r => r.getRoomName().Equals(roomName));
-            User user=room.GetClientsInRoom().Single(u => u.Nickname==clientToAdd);
-            String formationCod=user.formations.Cast<String>().First(e => e.Split(':').ElementAt(3).Equals(row));
+            User userToAdd=room.GetClientsInRoom().Single(u => u.Nickname==clientToAdd);
+            User user=room.GetClientsInRoom().Single(u => u.Nickname==nickname);
+            String formationCod=userToAdd.formations.Cast<String>().First(e => e.Split(':').ElementAt(3).Equals(row));
             string[] s=formationCod.Split(':');//1:404:406:row
             string formationType=s[0];
             int firstPiece=Int32.Parse(s[1]);
@@ -123,8 +124,8 @@ namespace Server {
                     &&testIntNum(pieceToAdd, pieceAfterFirst)
                     &&column.Equals("0")) {
                     MessageSender.Broadcast("ADD_PIECE_ON_FIRST_COL:", clientToAdd, row+":"+imageIndex+":"+column+":"+GetPieceNumberFirst(pieceToAdd, firstPiece, takePiece)+":"+nickname, room.GetClientsInRoom());
-                    int index=user.formations.IndexOf(formationCod);
-                    user.formations[index]=formationType+":"+pieceToAdd+":"+lastPiece+":"+row;
+                    int index=userToAdd.formations.IndexOf(formationCod);
+                    userToAdd.formations[index]=formationType+":"+pieceToAdd+":"+lastPiece+":"+row;
                     user.piecesOnFormations.Add(imageIndex);
                     user.piecesOnTable.Remove(imageIndex);
                 } else if(testFinalNum(lastPiece, pieceToAdd)//pieceBeforeLast:lastPiece:pieceToAdd
@@ -132,8 +133,8 @@ namespace Server {
                     &&!( pieceBeforeLast==100||pieceBeforeLast==200||pieceBeforeLast==300||pieceBeforeLast==400 )
                     &&!column.Equals("0")) {
                     MessageSender.Broadcast("ADD_PIECE:", clientToAdd, row+":"+imageIndex+":"+column+":"+GetPieceNumber(lastPiece, pieceToAdd, takePiece)+":"+nickname, room.GetClientsInRoom());
-                    int index=user.formations.IndexOf(formationCod);
-                    user.formations[index]=formationType+":"+firstPiece+":"+pieceToAdd+":"+row;
+                    int index=userToAdd.formations.IndexOf(formationCod);
+                    userToAdd.formations[index]=formationType+":"+firstPiece+":"+pieceToAdd+":"+row;
                     user.piecesOnFormations.Add(imageIndex);
                     user.piecesOnTable.Remove(imageIndex);
                 } else {
@@ -141,17 +142,18 @@ namespace Server {
                 }
             } else if(formationType.Equals("2")) {//pereche
                 if(pieceToAdd==firstPiece||pieceToAdd==lastPiece) {
-                    MessageSender.Broadcast("ADD_PIECE:", clientToAdd, row+":"+imageIndex+":"+column, room.GetClientsInRoom());
-                    int index=user.formations.IndexOf(formationCod);
-                    user.formations[index]=formationType+":0:0:"+row;
+                    MessageSender.Broadcast("ADD_PIECE:", clientToAdd, row+":"+imageIndex+":"+column+":"+0+":"+nickname, room.GetClientsInRoom());
+                    int index=userToAdd.formations.IndexOf(formationCod);
+                    userToAdd.formations[index]=formationType+":0:0:"+row;
                     user.piecesOnFormations.Add(imageIndex);
+                    user.piecesOnTable.Remove(imageIndex);
                 } else {
                     MessageSender.MsgtoClient(nickname, "DONT:Nu se lipeste!", room.GetClientsInRoom());
                 }
             }
         }
 
-        private static string GetPieceNumberFirst(int pieceToAdd, int firstPiece,bool takePiece) {
+        private static string GetPieceNumberFirst(int pieceToAdd, int firstPiece, bool takePiece) {
             int firstPieceNumber=Int32.Parse(firstPiece.ToString().Substring(1));
             int pieceToAddNumber=Int32.Parse(pieceToAdd.ToString().Substring(1));//1 2 3 4 5 6 7 8 9 10 11 12 13 1
             if(!takePiece)

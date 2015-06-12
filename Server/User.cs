@@ -72,7 +72,7 @@ namespace Server {
                 else if(number>=10)
                     points=points+10;
             }
-            if(_etalat) {
+            if(_etalat||_winner) {
                 if(_winner) {
                     points=points+100;
                 } else {
@@ -89,6 +89,25 @@ namespace Server {
                             points=points-10;
                     }
                 }
+            } else
+                points=-100;
+
+            _score=points;
+            return _score;
+        }
+        public int ScoreOnFormation() {
+            int points=0;
+            foreach(String index in piecesOnFormations) {
+                int piece=Pieces.GetInstance().pieces[Int32.Parse(index)];
+                int number=Int32.Parse(piece.ToString().Substring(1, 2));
+                if(number==1)
+                    points=points+25;
+                else if(number==0)
+                    points=points+50;
+                else if(number<10)
+                    points=points+5;
+                else if(number>=10)
+                    points=points+10;
             }
             return points;
         }

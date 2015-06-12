@@ -37,6 +37,16 @@ namespace UserControls {
             timer.Interval=new TimeSpan(0, 0, 1);
             timer.Tick+=timerTick;
         }
+        public RoomUC(string roomName,bool spectator) {
+            InitializeComponent();
+            _instance=this;
+            _roomName=roomName;
+            timer=new DispatcherTimer();
+            timer.Interval=new TimeSpan(0, 0, 1);
+            timer.Tick+=timerTick;
+            ready.IsEnabled=false;
+        }
+
 
         public void AddPlayer(string message) {
             this.Dispatcher.Invoke((Action) ( () => {
@@ -120,5 +130,6 @@ namespace UserControls {
         public static RoomUC GetInstance() {
             return _instance;
         }
+
     }
 }

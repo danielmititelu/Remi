@@ -8,9 +8,10 @@
     <Grid>
         <Button Content="Quit room" HorizontalAlignment="Left" Margin="83,276,0,0" VerticalAlignment="Top" Width="75" Click="QuitRomm"/>
         <ListBox HorizontalAlignment="Left" Height="139" Margin="83,10,0,0" VerticalAlignment="Top" Width="353" Name="playerList"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="83,242,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="353" Name="send" KeyDown="send_KeyDown"/>
-        <TextBox HorizontalAlignment="Left" Height="83" Margin="83,154,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="353" Name="received" VerticalScrollBarVisibility="Auto"  IsReadOnly="True" AcceptsReturn="True"/>
-        <Button Content="Ready" HorizontalAlignment="Left" Margin="361,275,0,0" VerticalAlignment="Top" Width="75" Click="ReadyButton"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="83,242,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="243" Name="send" KeyDown="send_KeyDown"/>
+        <TextBox HorizontalAlignment="Left" Height="83" Margin="83,154,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="243" Name="received" VerticalScrollBarVisibility="Auto"  IsReadOnly="True" AcceptsReturn="True"/>
+        <Button Name="ready" Content="Ready" HorizontalAlignment="Left" Margin="361,275,0,0" VerticalAlignment="Top" Width="75" Click="ReadyButton"/>
+        <ListBox HorizontalAlignment="Left" Height="111" Margin="331,154,0,0" VerticalAlignment="Top" Width="105" x:Name="spectatorList"/>
 
     </Grid>
 </UserControl>

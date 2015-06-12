@@ -12,7 +12,7 @@
         <ScrollViewer Margin="388,392,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="778" HorizontalScrollBarVisibility="Auto" CanContentScroll="True" PanningMode="HorizontalOnly" VerticalScrollBarVisibility="Disabled" >
             <StackPanel x:Name="StackCanvas" Background="Aquamarine" Orientation="Horizontal" Height="58" Width="778"/>
         </ScrollViewer>
-        <ScrollViewer Height="321" Width="221" Margin="944,0,0,31.8" VerticalAlignment="Bottom" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Left">
+        <ScrollViewer Height="321" Width="221" Margin="944,0,0,37.8" VerticalAlignment="Bottom" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left">
             <Grid x:Name="etalon1" Background="Aquamarine" Height="Auto" Width="Auto">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -36,15 +36,15 @@
             </Grid>
 
         </ScrollViewer>
-        <Label x:Name="player2" Content="Player 2" HorizontalAlignment="Left" Margin="1376,596,0,0" VerticalAlignment="Top" Width="60"/>
-        <Label x:Name="player3" Content="Player 3" Margin="0,13,653.2,0" HorizontalAlignment="Right" Width="60" Height="26" VerticalAlignment="Top"/>
-        <Label x:Name="player4" Content="Player 4" HorizontalAlignment="Left" Margin="99,596,0,0" VerticalAlignment="Top" Width="60" Height="26"/>
-        <Label x:Name="player1" Content="Player 1" HorizontalAlignment="Left" Margin="738,0,0,7.6" VerticalAlignment="Bottom" Width="60"/>
+        <Label x:Name="player2" Content="Player 2" HorizontalAlignment="Left" Margin="1343,596,0,0" VerticalAlignment="Top" Width="144"/>
+        <Label x:Name="player3" Content="Player 3" Margin="0,13,584.8,0" HorizontalAlignment="Right" Width="123" Height="26" VerticalAlignment="Top"/>
+        <Label x:Name="player4" Content="Player 4" HorizontalAlignment="Left" Margin="99,596,0,0" VerticalAlignment="Top" Width="127" Height="26"/>
+        <Label x:Name="player1" Content="Player 1" HorizontalAlignment="Left" Margin="738,0,0,7.8" VerticalAlignment="Bottom" Width="154"/>
         <Button Content="Formatie" HorizontalAlignment="Left" Margin="480,0,0,230.2" VerticalAlignment="Bottom" Width="90" Height="41" Click="FormationButtonClick"/>
         <TextBox HorizontalAlignment="Right" Margin="0,0,22.8,60.8" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="286" x:Name="send" KeyDown="send_KeyDown" Height="22"/>
         <Label Content="" HorizontalAlignment="Left" Margin="1272,824,0,0" VerticalAlignment="Top" Width="194" x:Name="error"/>
         <TextBox HorizontalAlignment="Right" Height="107" Margin="0,0,22.8,101.8" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="286" x:Name="received" IsReadOnly="True" AcceptsReturn="True"/>
-        <ScrollViewer Width="221" Margin="0,177,22.8,0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Right" Height="321" VerticalAlignment="Top">
+        <ScrollViewer Width="221" Margin="0,177,22.8,0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Right" Height="321" VerticalAlignment="Top">
             <Grid x:Name="etalon2" Background="Aquamarine" Height="Auto" Width="Auto" >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -67,7 +67,7 @@
                 </Grid.ColumnDefinitions>
             </Grid>
         </ScrollViewer>
-        <ScrollViewer Height="321" Width="221" Margin="526,10,0,0" VerticalAlignment="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Left">
+        <ScrollViewer Height="321" Width="221" Margin="526,10,0,0" VerticalAlignment="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left">
             <Grid x:Name="etalon3" Background="Aquamarine" Height="Auto" Width="Auto">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -90,7 +90,7 @@
                 </Grid.ColumnDefinitions>
             </Grid>
         </ScrollViewer>
-        <ScrollViewer Width="221" Margin="32,177,0,0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Left" Height="321" VerticalAlignment="Top">
+        <ScrollViewer Width="221" Margin="32,177,0,0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" Height="321" VerticalAlignment="Top">
             <Grid x:Name="etalon4" Background="Aquamarine" Height="Auto" Width="Auto">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -113,11 +113,10 @@
                 </Grid.ColumnDefinitions>
             </Grid>
         </ScrollViewer>
-        <Label  HorizontalAlignment="Left" Margin="798,0,0,0.8" VerticalAlignment="Bottom" Height="26" Width="24" x:Name="player1Turn"/>
-        <Label  HorizontalAlignment="Left" Margin="164,597,0,0" VerticalAlignment="Top" Height="26" Width="24" x:Name="player4Turn"/>
-        <Label  HorizontalAlignment="Left" Margin="1442,598,0,0" VerticalAlignment="Top" Height="26" Width="24" x:Name="player2Turn"/>
-        <Label  HorizontalAlignment="Left" Margin="798,5,0,0" VerticalAlignment="Top" Height="26" Width="24" x:Name="player3Turn"/>
-        <Button Content="Scoate piesele" x:Name="removePieces" Margin="1013,0,0,4.8" VerticalAlignment="Bottom"  HorizontalAlignment="Left" Width="83"/>
+        <Label  HorizontalAlignment="Left" Margin="714,0,0,6.8" VerticalAlignment="Bottom" Height="26" Width="24" x:Name="player1Turn"/>
+        <Label  HorizontalAlignment="Left" Margin="70,596,0,0" VerticalAlignment="Top" Height="26" Width="24" x:Name="player4Turn"/>
+        <Label  HorizontalAlignment="Left" Margin="1314,596,0,0" VerticalAlignment="Top" Height="26" Width="24" x:Name="player2Turn"/>
+        <Label  HorizontalAlignment="Left" Margin="792,13,0,0" VerticalAlignment="Top" Height="26" Width="24" x:Name="player3Turn"/>
         <ScrollViewer Height="58" Margin="752,0,0,223.8" HorizontalScrollBarVisibility="Auto" CanContentScroll="True" PanningMode="HorizontalOnly" VerticalScrollBarVisibility="Disabled" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="173">
             <StackPanel x:Name="stack1" Background="DarkCyan" Height="58" Width="173" Orientation="Horizontal"/>
         </ScrollViewer>

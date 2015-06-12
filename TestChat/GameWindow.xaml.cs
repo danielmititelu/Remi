@@ -430,13 +430,8 @@ namespace Game {
         public void Etalat(string readData) {
             this.Dispatcher.Invoke((Action) ( () => {
                 etalat=true;
-                removePieces.IsEnabled=false;
             } ));
         }
-
-        //private void Button_Click(object sender, RoutedEventArgs e) {
-        //    Client.GetInstance().WriteLine("REMOVE_PIECES:"+_roomName);
-        //}
 
         public void MovePieceToBonus(Image local_image, Grid etalon, string nickname) {
             etalon.Children.Remove(local_image);
