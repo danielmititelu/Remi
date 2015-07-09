@@ -115,6 +115,5 @@ namespace Server {
             write.WriteLine(message);
             write.Flush();
         }
-
     }
 }

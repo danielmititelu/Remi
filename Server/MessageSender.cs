@@ -56,6 +56,5 @@ namespace Server {
             }
             Console.WriteLine("Camere create"+allRooms);
         }
-
     }
 }

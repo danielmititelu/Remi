@@ -11,7 +11,6 @@ namespace CanvasItems {
     class Pieces {
 
         private static Pieces _instance;
-
         List<Image> image=new List<Image>();
         List<CroppedBitmap> objImg=new List<CroppedBitmap>();
         double scale=2;
@@ -54,13 +53,15 @@ namespace CanvasItems {
             int i=Int32.Parse(s);
             return image[i];
         }
+
         public int getIndex(Image piece) {
             return image.IndexOf(piece);
         }
+
         public static Pieces GetInstance() {
-            if(_instance==null) {
+            if(_instance==null) 
                 _instance=new Pieces();
-            }
+            
             return _instance;
         }
     }

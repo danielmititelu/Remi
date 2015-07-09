@@ -36,7 +36,6 @@ namespace Game {
             Client.GetInstance().WriteLine("REJOIN_ROOM:"+roomName);
         }
 
-
         public void Switch(UserControl content) {
             this.Content=content;
         }
@@ -70,8 +69,5 @@ namespace Game {
                     Client.GetInstance().Close();
             }
         }
-
-
- 
     }
 }

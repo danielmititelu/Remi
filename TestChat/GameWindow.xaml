@@ -6,14 +6,30 @@
         WindowStyle="None" 
         WindowState="Maximized" d:DesignWidth="1535.2" d:DesignHeight="859" Closing="WindowClosing">
     <Grid >
-        <Canvas x:Name="MyTableCanvas" Background="Aquamarine" HorizontalAlignment="Left" Height="177" Margin="338,0,0,38.2" VerticalAlignment="Bottom" Width="606"/>
+        <Grid.Background>
+            <ImageBrush ImageSource="Image/tabla joc.png" />
+        </Grid.Background>
+        <Canvas x:Name="MyTableCanvas"  HorizontalAlignment="Left" Height="177" Margin="338,0,0,37.8" VerticalAlignment="Bottom" Width="606" >
+            <Canvas.Background>
+                <ImageBrush ImageSource="Image/lemn.png" />
+            </Canvas.Background>
+        </Canvas>
+
 
         <Button Content="Trage o piesa" Click="DrawButtonClick" Margin="338,0,0,229.2" Height="41" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="90" RenderTransformOrigin="0.5,0.505"  />
         <ScrollViewer Margin="388,392,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="778" HorizontalScrollBarVisibility="Auto" CanContentScroll="True" PanningMode="HorizontalOnly" VerticalScrollBarVisibility="Disabled" >
-            <StackPanel x:Name="StackCanvas" Background="Aquamarine" Orientation="Horizontal" Height="58" Width="778"/>
+            <StackPanel x:Name="StackCanvas" Orientation="Horizontal" Height="58" Width="778">
+                <StackPanel.Background>
+                    <ImageBrush ImageSource="Image/blue background.png" />
+                </StackPanel.Background>
+            </StackPanel>
+
         </ScrollViewer>
         <ScrollViewer Height="321" Width="221" Margin="944,0,0,37.8" VerticalAlignment="Bottom" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left">
-            <Grid x:Name="etalon1" Background="Aquamarine" Height="Auto" Width="Auto">
+            <Grid x:Name="etalon1"  Height="Auto" Width="Auto">
+                <Grid.Background>
+                    <ImageBrush ImageSource="Image/lemn2.png" />
+                </Grid.Background>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
@@ -36,16 +52,19 @@
             </Grid>
 
         </ScrollViewer>
-        <Label x:Name="player2" Content="Player 2" HorizontalAlignment="Left" Margin="1343,596,0,0" VerticalAlignment="Top" Width="144"/>
-        <Label x:Name="player3" Content="Player 3" Margin="0,13,584.8,0" HorizontalAlignment="Right" Width="123" Height="26" VerticalAlignment="Top"/>
-        <Label x:Name="player4" Content="Player 4" HorizontalAlignment="Left" Margin="99,596,0,0" VerticalAlignment="Top" Width="127" Height="26"/>
-        <Label x:Name="player1" Content="Player 1" HorizontalAlignment="Left" Margin="738,0,0,7.8" VerticalAlignment="Bottom" Width="154"/>
+        <Label x:Name="player2" Content="Player 2" HorizontalAlignment="Left" Margin="1343,590,0,0" VerticalAlignment="Top" Width="144"/>
+        <Label x:Name="player3" Content="Player 3" Margin="0,28,582.8,0" HorizontalAlignment="Right" Width="123" Height="26" VerticalAlignment="Top"/>
+        <Label x:Name="player4" Content="Player 4" HorizontalAlignment="Left" Margin="99,590,0,0" VerticalAlignment="Top" Width="127" Height="26"/>
+        <Label x:Name="player1" Content="Player 1" HorizontalAlignment="Left" Margin="738,0,0,11.8" VerticalAlignment="Bottom" Width="154"/>
         <Button Content="Formatie" HorizontalAlignment="Left" Margin="480,0,0,230.2" VerticalAlignment="Bottom" Width="90" Height="41" Click="FormationButtonClick"/>
-        <TextBox HorizontalAlignment="Right" Margin="0,0,22.8,60.8" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="286" x:Name="send" KeyDown="send_KeyDown" Height="22"/>
-        <Label Content="" HorizontalAlignment="Left" Margin="1272,824,0,0" VerticalAlignment="Top" Width="194" x:Name="error"/>
-        <TextBox HorizontalAlignment="Right" Height="107" Margin="0,0,22.8,101.8" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="286" x:Name="received" IsReadOnly="True" AcceptsReturn="True"/>
-        <ScrollViewer Width="221" Margin="0,177,22.8,0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Right" Height="321" VerticalAlignment="Top">
-            <Grid x:Name="etalon2" Background="Aquamarine" Height="Auto" Width="Auto" >
+        <TextBox HorizontalAlignment="Right" Margin="0,0,35.8,51.8" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="286" x:Name="send" KeyDown="send_KeyDown" Height="22" RenderTransformOrigin="0.326,0.845"/>
+        <Label Content="" HorizontalAlignment="Left" Margin="1253,806,0,0" VerticalAlignment="Top" Width="194" x:Name="error"/>
+        <TextBox HorizontalAlignment="Right" Height="107" Margin="0,0,35.8,88.8" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="286" x:Name="received" IsReadOnly="True" AcceptsReturn="True"/>
+        <ScrollViewer Width="221" Margin="0,177,35.8,0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Right" Height="321" VerticalAlignment="Top">
+            <Grid x:Name="etalon2" Height="Auto" Width="Auto" >
+                <Grid.Background>
+                    <ImageBrush ImageSource="Image/lemn2.png" />
+                </Grid.Background>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
@@ -67,8 +86,11 @@
                 </Grid.ColumnDefinitions>
             </Grid>
         </ScrollViewer>
-        <ScrollViewer Height="321" Width="221" Margin="526,10,0,0" VerticalAlignment="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left">
-            <Grid x:Name="etalon3" Background="Aquamarine" Height="Auto" Width="Auto">
+        <ScrollViewer Height="321" Width="221" Margin="526,31,0,0" VerticalAlignment="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left">
+            <Grid x:Name="etalon3"  Height="Auto" Width="Auto">
+                <Grid.Background>
+                    <ImageBrush ImageSource="Image/lemn2.png" />
+                </Grid.Background>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
@@ -90,8 +112,11 @@
                 </Grid.ColumnDefinitions>
             </Grid>
         </ScrollViewer>
-        <ScrollViewer Width="221" Margin="32,177,0,0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" Height="321" VerticalAlignment="Top">
-            <Grid x:Name="etalon4" Background="Aquamarine" Height="Auto" Width="Auto">
+        <ScrollViewer Width="221" Margin="38,177,0,0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" Height="321" VerticalAlignment="Top">
+            <Grid x:Name="etalon4"  Height="Auto" Width="Auto">
+                <Grid.Background>
+                    <ImageBrush ImageSource="Image/lemn2.png" />
+                </Grid.Background>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
@@ -113,22 +138,39 @@
                 </Grid.ColumnDefinitions>
             </Grid>
         </ScrollViewer>
-        <Label  HorizontalAlignment="Left" Margin="714,0,0,6.8" VerticalAlignment="Bottom" Height="26" Width="24" x:Name="player1Turn"/>
-        <Label  HorizontalAlignment="Left" Margin="70,596,0,0" VerticalAlignment="Top" Height="26" Width="24" x:Name="player4Turn"/>
-        <Label  HorizontalAlignment="Left" Margin="1314,596,0,0" VerticalAlignment="Top" Height="26" Width="24" x:Name="player2Turn"/>
-        <Label  HorizontalAlignment="Left" Margin="792,13,0,0" VerticalAlignment="Top" Height="26" Width="24" x:Name="player3Turn"/>
+        <Label  HorizontalAlignment="Left" Margin="714,0,0,11.8" VerticalAlignment="Bottom" Height="26" Width="24" x:Name="player1Turn"/>
+        <Label  HorizontalAlignment="Left" Margin="70,590,0,0" VerticalAlignment="Top" Height="26" Width="24" x:Name="player4Turn"/>
+        <Label  HorizontalAlignment="Left" Margin="1314,590,0,0" VerticalAlignment="Top" Height="26" Width="24" x:Name="player2Turn"/>
+        <Label  HorizontalAlignment="Left" Margin="794,28,0,0" VerticalAlignment="Top" Height="26" Width="24" x:Name="player3Turn"/>
         <ScrollViewer Height="58" Margin="752,0,0,223.8" HorizontalScrollBarVisibility="Auto" CanContentScroll="True" PanningMode="HorizontalOnly" VerticalScrollBarVisibility="Disabled" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="173">
-            <StackPanel x:Name="stack1" Background="DarkCyan" Height="58" Width="173" Orientation="Horizontal"/>
+            <StackPanel x:Name="stack1" Height="58" Width="173" Orientation="Horizontal">
+                <StackPanel.Background>
+                    <ImageBrush ImageSource="Image/blue background.png" />
+                </StackPanel.Background>
+            </StackPanel>
         </ScrollViewer>
-        <ScrollViewer Height="58" Width="173" Margin="0,516,41.8,0" HorizontalScrollBarVisibility="Auto" CanContentScroll="True" PanningMode="HorizontalOnly" VerticalScrollBarVisibility="Disabled" VerticalAlignment="Top" HorizontalAlignment="Right">
-            <StackPanel x:Name="stack2" Background="DarkCyan" Height="58" Width="173" Orientation="Horizontal"/>
+        <ScrollViewer Height="58" Width="173" Margin="0,516,52.8,0" HorizontalScrollBarVisibility="Auto" CanContentScroll="True" PanningMode="HorizontalOnly" VerticalScrollBarVisibility="Disabled" VerticalAlignment="Top" HorizontalAlignment="Right">
+            <StackPanel x:Name="stack2" Height="58" Width="173" Orientation="Horizontal">
+            <StackPanel.Background>
+                <ImageBrush ImageSource="Image/blue background.png" />
+            </StackPanel.Background>
+            </StackPanel>
         </ScrollViewer>
-        <ScrollViewer Height="58" Margin="752,59,0,0" HorizontalScrollBarVisibility="Auto" CanContentScroll="True" PanningMode="HorizontalOnly" VerticalScrollBarVisibility="Disabled" VerticalAlignment="Top" HorizontalAlignment="Left" Width="173">
-            <StackPanel x:Name="stack3" Background="DarkCyan" Height="58" Width="173" Orientation="Horizontal"/>
+        <ScrollViewer Height="58" Margin="771,59,0,0" HorizontalScrollBarVisibility="Auto" CanContentScroll="True" PanningMode="HorizontalOnly" VerticalScrollBarVisibility="Disabled" VerticalAlignment="Top" HorizontalAlignment="Left" Width="173">
+            <StackPanel x:Name="stack3" Height="58" Width="173" Orientation="Horizontal">
+            <StackPanel.Background>
+                <ImageBrush ImageSource="Image/blue background.png" />
+            </StackPanel.Background>
+            </StackPanel>
         </ScrollViewer>
         <ScrollViewer Height="58" Width="173" Margin="53,516,0,0" HorizontalScrollBarVisibility="Auto" CanContentScroll="True" PanningMode="HorizontalOnly" VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Left" VerticalAlignment="Top">
-            <StackPanel x:Name="stack4" Background="DarkCyan" Height="58" Width="173" Orientation="Horizontal"/>
+            <StackPanel x:Name="stack4"  Height="58" Width="173" Orientation="Horizontal">
+                <StackPanel.Background>
+                    <ImageBrush ImageSource="Image/blue background.png" />
+                </StackPanel.Background>
+            </StackPanel>
         </ScrollViewer>
+        <Button Content="Quit Game" HorizontalAlignment="Left" Margin="22,0,0,21.8" VerticalAlignment="Bottom" Width="90" Height="41" Click="ButtonQuitGameClick"/>
 
     </Grid>
 </Window>

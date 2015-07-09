@@ -17,9 +17,9 @@ namespace MessageControl {
 
             while(Client.GetInstance().ClientConnected()) {
                 message=Client.GetInstance().ReadLine();
-                if("".Equals(message.Trim())) {
+                if("".Equals(message.Trim()))
                     continue;
-                }
+
                 if(message.Contains(':')) {
                     keyword=message.Substring(0, message.IndexOf(':'));
                     readData=message.Substring(message.IndexOf(':')+1);
@@ -56,7 +56,7 @@ namespace MessageControl {
                     case "NICKNAME_TAKEN":
                         LoginUC.GetInstance().NicknameTaken();
                         break;
-                    case"WELCOME":
+                    case "WELCOME":
                         MainWindow.GetInstance().Login();
                         break;
                     case "NEW_USER_IN_CHAT":
@@ -64,7 +64,7 @@ namespace MessageControl {
                         break;
                     case "NEW_USER_IN_GAME":
                         if(GameWindow.Exists())
-                        GameWindow.GetInstance().NewUser(readData);
+                            GameWindow.GetInstance().NewUser(readData);
                         break;
                     case "ALL_USERS_IN_ROOM":
                         RoomUC.GetInstance().AddPlayer(readData);
@@ -81,23 +81,23 @@ namespace MessageControl {
                     case "START_GAME":
                         RoomUC.GetInstance().StartTimer();
                         break;
-                    case"START_SPECTATING_GAME":
+                    case "START_SPECTATING_GAME":
                         RoomUC.GetInstance().StartTimer();
                         break;
                     case "YOUR_TURN":
                         if(GameWindow.Exists())
-                        GameWindow.GetInstance().SetTurn(readData);
+                            GameWindow.GetInstance().SetTurn(readData);
                         break;
-                    case"REMOVE_PIECES":
+                    case "REMOVE_PIECES":
                         PieceHandler.RemovePieces(readData);
                         break;
-                    case"DRAW_FROM_BOARD":
+                    case "DRAW_FROM_BOARD":
                         PieceHandler.DrawFromBoard(readData);
                         break;
                     case "ETALARE":
                         GameWindow.GetInstance().Etalat(readData);
                         break;
-                    case"WINNER":
+                    case "WINNER":
                         GameWindow.GetInstance().EndGame(readData);
                         break;
                     default:

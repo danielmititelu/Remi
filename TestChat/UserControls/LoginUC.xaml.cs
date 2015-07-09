@@ -28,6 +28,7 @@ namespace UserControls {
             _instance=this;
             ipAddress.Text="127.0.0.1";
         }
+
         private void Button_Click(object sender, RoutedEventArgs e) {
             connect(ipAddress.Text, nickame.Text);
         }
@@ -46,14 +47,15 @@ namespace UserControls {
 
             Client.GetInstance().WriteLine(nickname);
         }
-        internal void NicknameTaken() {
+
+        public void NicknameTaken() {
             this.Dispatcher.Invoke((Action) ( () => {
                 error.Content="Alege alt nickname";
             } ));
         }
+
         public static LoginUC GetInstance() {
             return _instance;
         }
-
     }
 }

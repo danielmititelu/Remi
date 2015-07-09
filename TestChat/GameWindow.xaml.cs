@@ -35,7 +35,6 @@ namespace Game {
         DispatcherTimer timer=new DispatcherTimer();
         int time=3;
         bool etalat=false;
-
         static GameWindow _instance;
 
         public GameWindow() {
@@ -44,7 +43,6 @@ namespace Game {
             this.Show();
             timer.Interval=new TimeSpan(0, 0, 1);
             timer.Tick+=timerTick;
-
         }
 
         public GameWindow(string roomName) {
@@ -54,7 +52,6 @@ namespace Game {
             _roomName=roomName;
             timer.Interval=new TimeSpan(0, 0, 1);
             timer.Tick+=timerTick;
-
         }
 
         private void timerTick(object sender, EventArgs e) {
@@ -63,7 +60,6 @@ namespace Game {
                 timer.Stop();
                 this.Dispatcher.Invoke((Action) ( () => { error.Content=""; } ));
             }
-
         }
 
         public static GameWindow GetInstance() {
@@ -71,9 +67,9 @@ namespace Game {
         }
 
         public static bool Exists() {
-            if(_instance==null) {
+            if(_instance==null) 
                 return false;
-            } else
+             else
                 return true;
         }
 
@@ -128,7 +124,6 @@ namespace Game {
                     } else if(i==pos-3) {
                         player2.Content=users[i];
                     }
-
                 }
             } ));
         }
@@ -145,7 +140,6 @@ namespace Game {
             img.PreviewMouseMove+=myimg_MouseMove;
             img.PreviewMouseUp+=myimg_MouseUp;
             img.LostMouseCapture+=myimg_LostMouseCapture;
-
         }
 
         public void RemoveImgListeners(Image img) {
@@ -246,7 +240,6 @@ namespace Game {
                     drawFromBoard=false;
                 }
             }
-
         }
 
         private void myimg_MouseMove(object sender, MouseEventArgs e) {
@@ -286,6 +279,7 @@ namespace Game {
                 }
             } ));
         }
+
         public void RemovePieces(int grid, bool myTable) {
             String allPieces=null;
             foreach(Image piece in GetGridAt(grid).Children) {
@@ -361,7 +355,6 @@ namespace Game {
 
         public void AddChildToGrid(Grid etalon, Image local_image, int r, int c) {
             etalon.Children.Add(local_image);
-
             Grid.SetRow(local_image, r);
             Grid.SetColumn(local_image, c);
         }
@@ -426,7 +419,6 @@ namespace Game {
             } ));
         }
 
-
         public void Etalat(string readData) {
             this.Dispatcher.Invoke((Action) ( () => {
                 etalat=true;
@@ -458,14 +450,16 @@ namespace Game {
         }
 
         private void WindowClosing(object sender, System.ComponentModel.CancelEventArgs e) {
-            //base.OnClosed(e);
-            //this.RemoveLogicalChild(this.Content);
             if(Client.Exists()) {
                 if(!MainWindow.Exists()) {
                     Client.GetInstance().WriteLine("EXIT_FROM_GAME:"+_roomName);
                     Client.GetInstance().Close();
                 }
             }
+        }
+
+        private void ButtonQuitGameClick(object sender, RoutedEventArgs e) {
+            this.Close();
         }
     }
 }

@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 namespace Game {
     public class Client {
         static Client _instance;
-
         TcpClient _tcpClient=new TcpClient();
         NetworkStream _serverStream=default(NetworkStream);
         StreamWriter _writer=null;
@@ -54,10 +53,10 @@ namespace Game {
         }
 
         public static bool Exists() {
-            if(_instance==null) {
+            if(_instance==null)
                 return false;
-            }
-            return true;
+            else
+                return true;
         }
 
         public void SetNickname(string name) {

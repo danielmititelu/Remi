@@ -10,7 +10,7 @@ using System.Windows.Controls;
 namespace Handlers {
     class PieceHandler {
 
-        public static int _row1=-1; // TODO: Grid.child.count
+        public static int _row1=-1;
         public static int _row2=-1;
         public static int _row3=-1;
         public static int _row4=-1;
@@ -21,11 +21,10 @@ namespace Handlers {
                 int r=Int32.Parse(msg[1]);
                 string piecesToTake=msg[4];
                 int c;
-                if(firstRow) {
+                if(firstRow)
                     c=Int32.Parse(msg[3]);
-                } else {
+                else
                     c=Int32.Parse(msg[3])+1;
-                }
 
                 Image local_image=CanvasItems.Pieces.GetInstance().getImage(msg[2]);
 
@@ -65,6 +64,7 @@ namespace Handlers {
                         Image pieceOnBoard=GameWindow.GetInstance().GetToAdd(etalon, c-1, r);
                         GameWindow.GetInstance().RemoveEtalonListener(pieceOnBoard);
                         GameWindow.GetInstance().MovePieceToBonus(pieceOnBoard, etalon, nickname);
+                        c=c-1;
                     }
                     break;
                 case "2":
@@ -90,7 +90,7 @@ namespace Handlers {
                 GameWindow.GetInstance().RemoveFromMyTable(pieceToAdd);
             }
             if(!exceptionalCase)
-            GameWindow.GetInstance().AddChildToGrid(etalon, pieceToAdd, r, c);
+                GameWindow.GetInstance().AddChildToGrid(etalon, pieceToAdd, r, c);
         }
 
         public static void RemovePieces(string readData) {
@@ -163,6 +163,7 @@ namespace Handlers {
                 GameWindow.GetInstance().AddBoardListener(piece);
             } ));
         }
+
         public static void DrawFromBoard(string readData) {
             GameWindow.GetInstance().Dispatcher.Invoke((Action) ( () => {
                 String[] mes=readData.Split(':');
@@ -180,6 +181,5 @@ namespace Handlers {
                 }
             } ));
         }
-
     }
 }

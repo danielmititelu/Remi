@@ -29,7 +29,6 @@ namespace UserControls {
             _instance=this;
         }
 
-
         private void send_KeyDown(object sender, KeyEventArgs e) {
             if(e.Key==Key.Enter) {
                 Client.GetInstance().WriteLine("MESSAGE_CHAT:"+send.Text);
@@ -80,7 +79,5 @@ namespace UserControls {
         public static MainUC GetInstance() {
             return _instance;
         }
-
-
     }
 }

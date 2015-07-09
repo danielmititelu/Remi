@@ -37,7 +37,8 @@ namespace UserControls {
             timer.Interval=new TimeSpan(0, 0, 1);
             timer.Tick+=timerTick;
         }
-        public RoomUC(string roomName,bool spectator) {
+
+        public RoomUC(string roomName, bool spectator) {
             InitializeComponent();
             _instance=this;
             _roomName=roomName;
@@ -46,7 +47,6 @@ namespace UserControls {
             timer.Tick+=timerTick;
             ready.IsEnabled=false;
         }
-
 
         public void AddPlayer(string message) {
             this.Dispatcher.Invoke((Action) ( () => {
@@ -83,9 +83,9 @@ namespace UserControls {
         }
 
         public static bool Exists() {
-            if(_instance==null) {
+            if(_instance==null)
                 return false;
-            } else
+            else
                 return true;
         }
 
@@ -93,15 +93,15 @@ namespace UserControls {
             Client.GetInstance().WriteLine("READY:"+_roomName);
         }
 
-        public void StartTimer(){
+        public void StartTimer() {
             timer.Start();
         }
 
-        private void timerTick(object sender,EventArgs e) {
+        private void timerTick(object sender, EventArgs e) {
             if(time>0) {
                 received.Foreground=Brushes.Red;
                 received.AppendText(time+"\n");
-                time--;   
+                time--;
             } else {
                 timer.Stop();
                 new GameWindow(_roomName);
@@ -130,6 +130,5 @@ namespace UserControls {
         public static RoomUC GetInstance() {
             return _instance;
         }
-
     }
 }

@@ -160,9 +160,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Image\1.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Image\Tiles.png" />
   </ItemGroup>
   <ItemGroup>
@@ -187,6 +184,18 @@
       <Project>{64f4bc55-64ec-47c2-8820-67df01fd3ca8}</Project>
       <Name>Server</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\lemn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\tabla joc.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\lemn2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\blue background.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

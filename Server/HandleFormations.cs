@@ -177,7 +177,6 @@ namespace Server {
                 return "3";
             else
                 return "1";
-
         }
     }
 }
